@@ -155,7 +155,20 @@ const ThemeStorage = {
 
   /** Apply theme to document */
   apply(theme) {
+    document.documentElement.setAttribute('data-theme', theme);
     document.body.setAttribute('data-theme', theme);
+    const critical = document.getElementById('theme-critical');
+    if (theme === 'dark') {
+      if (!critical) {
+        const style = document.createElement('style');
+        style.id = 'theme-critical';
+        style.textContent =
+          'html[data-theme="dark"],html[data-theme="dark"] body{background:#1e2130;color:#ccc;color-scheme:dark}';
+        document.head.appendChild(style);
+      }
+    } else if (critical) {
+      critical.remove();
+    }
     const icon = document.getElementById('themeIcon');
     if (icon) {
       icon.className = theme === 'dark' ? 'fas fa-sun' : 'fas fa-moon';
