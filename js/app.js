@@ -15,14 +15,27 @@ window.addEventListener('scroll', () => {
 const hamburger = document.getElementById('hamburger');
 const navLinks = document.getElementById('navLinks');
 if (hamburger && navLinks) {
-  hamburger.addEventListener('click', () => {
-    navLinks.classList.toggle('open');
-    hamburger.classList.toggle('open');
+  const closeMenu = () => {
+    navLinks.classList.remove('open');
+    hamburger.classList.remove('open');
+    hamburger.setAttribute('aria-expanded', 'false');
+    document.body.classList.remove('nav-open');
+  };
+  hamburger.addEventListener('click', (e) => {
+    e.stopPropagation();
+    const isOpen = navLinks.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+    hamburger.setAttribute('aria-expanded', String(isOpen));
+    document.body.classList.toggle('nav-open', isOpen);
+  });
+  navLinks.querySelectorAll('a').forEach(link => {
+    link.addEventListener('click', closeMenu);
   });
   document.addEventListener('click', (e) => {
-    if (!navbar.contains(e.target)) {
-      navLinks.classList.remove('open');
-    }
+    if (!navbar.contains(e.target)) closeMenu();
+  });
+  window.addEventListener('resize', () => {
+    if (window.innerWidth > 992) closeMenu();
   });
 }
 
@@ -130,22 +143,10 @@ document.querySelectorAll('.newsletter-form button').forEach(btn => {
 
   const initials = session.avatar || (session.name || 'U').substring(0, 2).toUpperCase();
   const html = `
-    <div class="nav-user" style="display:flex;align-items:center;gap:10px;">
-      <div style="width:34px;height:34px;border-radius:50%;
-           background:linear-gradient(135deg,#0abde3,#00d2d3);
-           color:#fff;display:flex;align-items:center;justify-content:center;
-           font-size:0.75rem;font-weight:700;flex-shrink:0;">
-        ${initials}
-      </div>
-      <span style="font-size:0.85rem;font-weight:600;color:inherit;">
-        ${(session.name || '').split(' ')[0]}
-      </span>
-      <button onclick="logoutUser()"
-        style="background:none;border:none;cursor:pointer;color:inherit;
-               font-size:0.82rem;font-family:inherit;opacity:0.7;
-               transition:opacity .2s;"
-        onmouseover="this.style.opacity='1'"
-        onmouseout="this.style.opacity='0.7'">
+    <div class="nav-user">
+      <div class="nav-user-avatar">${initials}</div>
+      <span class="nav-user-name">${(session.name || '').split(' ')[0]}</span>
+      <button class="nav-user-logout" onclick="logoutUser()" title="Logout" aria-label="Logout">
         <i class="fas fa-sign-out-alt"></i>
       </button>
     </div>`;

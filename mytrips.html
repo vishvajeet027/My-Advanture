@@ -13,24 +13,26 @@
   <!-- NAVBAR -->
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <div class="logo">
+      <a href="home.html" class="logo">
         <i class="fas fa-paper-plane logo-icon"></i>
         <span>My<strong>Adventure</strong></span>
-      </div>
+      </a>
       <ul class="nav-links" id="navLinks">
-        <li><a href="home.html">Packages</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+        <li><a href="destinations.html">Packages</a></li>
         <li><a href="destinations.html?view=hotels">Hotels</a></li>
         <li><a href="planner.html">Flights</a></li>
         <li><a href="mytrips.html" class="active">Bookings</a></li>
-        <li><a href="dashboard.html">Dashboard</a></li>
       </ul>
-      <div class="nav-actions">
-        <a href="login.html" class="btn-login">Login</a>
-        <a href="login.html" class="btn-signup">Sign up</a>
-        <div class="lang-select">EN <i class="fas fa-chevron-down"></i></div>
-      </div>
-      <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
+      <div class="nav-end">
+        <div class="nav-actions">
+          <a href="login.html" class="btn-login">Login</a>
+          <a href="login.html" class="btn-signup">Sign up</a>
+          <div class="lang-select">EN <i class="fas fa-chevron-down"></i></div>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
+        </button>
       </div>
     </div>
   </nav>
@@ -148,7 +150,7 @@
       <div class="footer-col">
         <h4>Company</h4>
         <ul>
-          <li><a href="home.html">Packages</a></li>
+          <li><a href="destinations.html">Packages</a></li>
           <li><a href="#">Hotels</a></li>
           <li><a href="#">Flights</a></li>
           <li><a href="#">About Us</a></li>
