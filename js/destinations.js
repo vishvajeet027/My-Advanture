@@ -68,7 +68,7 @@ function renderCards(data) {
         <p style="font-size:0.82rem;color:#777;line-height:1.5;">${d.desc.substring(0, 85)}...</p>
         <div class="card-footer-row">
           <span class="card-days"><i class="fas fa-moon"></i> ${d.days} Days</span>
-          <span class="card-price">$${d.price.toLocaleString()} <span>/ person</span></span>
+          <span class="card-price">₹${d.price.toLocaleString('en-IN')} <span>/ person</span></span>
         </div>
         <button class="btn-card" onclick="event.stopPropagation(); openPkgModal(${d.id})">
           <i class="fas fa-eye"></i> View Package
@@ -132,7 +132,7 @@ function openPkgModal(id) {
     <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #eee;padding-top:16px;">
       <div>
         <div style="font-size:0.75rem;color:#aaa;">From</div>
-        <div style="font-size:1.8rem;font-weight:800;color:#0abde3;">$${p.price.toLocaleString()}<span style="font-size:0.85rem;font-weight:500;color:#aaa;"> / person</span></div>
+        <div style="font-size:1.8rem;font-weight:800;color:#0abde3;">₹${p.price.toLocaleString('en-IN')}<span style="font-size:0.85rem;font-weight:500;color:#aaa;"> / person</span></div>
       </div>
       <button onclick="bookPackage()" style="padding:12px 28px;border-radius:12px;background:linear-gradient(135deg,#0abde3,#00d2d3);border:none;color:#fff;font-size:0.9rem;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;">
         <i class="fas fa-check-circle"></i> Book Now
@@ -321,7 +321,7 @@ function renderHotelCards(data) {
         <div class="hotel-card-footer">
           <div class="hotel-price">
             <span class="hotel-price-from">from</span>
-            <span class="hotel-price-amount">$${h.price}</span>
+            <span class="hotel-price-amount">₹${h.price.toLocaleString('en-IN')}</span>
             <span class="hotel-price-night">/ night</span>
           </div>
           <button class="btn-card" onclick="event.stopPropagation(); openHotelModal(${h.id})">
@@ -400,7 +400,7 @@ function openHotelModal(id) {
         </div>
         <div class="hotel-modal-price-block">
           <div class="hotel-modal-price-label">Per Night</div>
-          <div class="hotel-modal-price-value">$${h.price}</div>
+          <div class="hotel-modal-price-value">₹${h.price.toLocaleString('en-IN')}</div>
         </div>
       </div>
 
@@ -420,7 +420,7 @@ function openHotelModal(id) {
           <span class="info-chip"><i class="fas fa-door-open"></i> ${h.facilities.length} Facilities</span>
         </div>
         <button class="btn-primary" onclick="bookHotel()">
-          <i class="fas fa-calendar-check"></i> Book Now — $${h.price}/night
+          <i class="fas fa-calendar-check"></i> Book Now — ₹${h.price.toLocaleString('en-IN')}/night
         </button>
       </div>
     </div>`;

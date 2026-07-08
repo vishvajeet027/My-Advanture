@@ -1,202 +1,330 @@
-/* ===== PLANNER STATE ===== */
-let tripDays = [];
-let totalBudget = 0;
+/* ================================================================
+   planner.js — Flights Browse, Cards & Modal  (INR ₹)
+   ================================================================ */
 
-/* ===== GENERATE DAYS FROM DATE RANGE ===== */
-function generateDays() {
-  const name = document.getElementById('tripName').value.trim();
-  const dest = document.getElementById('tripDestination').value;
-  const start = document.getElementById('startDate').value;
-  const end = document.getElementById('endDate').value;
-  const budget = parseFloat(document.getElementById('tripBudget').value) || 0;
+let activeFlightClass = 'all';
+let selectedFlight    = null;
+let flightPassengers  = 1;
 
-  if (!name) { showToast('Please enter a trip name.', 'error'); return; }
-  if (!dest) { showToast('Please select a destination.', 'error'); return; }
-  if (!start || !end) { showToast('Please select start and end dates.', 'error'); return; }
-  if (new Date(end) < new Date(start)) { showToast('End date must be after start date.', 'error'); return; }
+const INR = n => '₹' + Number(n).toLocaleString('en-IN');
 
-  const startDate = new Date(start);
-  const endDate = new Date(end);
-  const diff = Math.round((endDate - startDate) / (1000 * 60 * 60 * 24)) + 1;
+/* ── AIRLINE COLORS ── */
+const AIRLINE_COLORS = {
+  'Air France':         { bg: '#002395', text: '#fff' },
+  'British Airways':    { bg: '#075aaa', text: '#fff' },
+  'Emirates':           { bg: '#c8102e', text: '#fff' },
+  'Qantas':             { bg: '#ee0000', text: '#fff' },
+  'Singapore Airlines': { bg: '#041e42', text: '#f5a623' },
+  'Vueling':            { bg: '#f7c900', text: '#333' },
+  'KLM':                { bg: '#009dd9', text: '#fff' },
+  'Thai Airways':       { bg: '#4b0082', text: '#f7c900' },
+  'Air India':          { bg: '#e31837', text: '#fff' },
+  'Kenya Airways':      { bg: '#006633', text: '#fff' },
+  'Air Canada':         { bg: '#f00000', text: '#fff' },
+  'Cathay Pacific':     { bg: '#005f5f', text: '#fff' },
+  'Lufthansa':          { bg: '#05164d', text: '#f9b60e' },
+  'LATAM':              { bg: '#e91b2e', text: '#fff' },
+  'United Airlines':    { bg: '#003087', text: '#fff' },
+  'Aeroflot':           { bg: '#cc0000', text: '#fff' },
+  'Swiss':              { bg: '#d20a11', text: '#fff' },
+  'Malaysia Airlines':  { bg: '#003087', text: '#c8102e' },
+  'American Airlines':  { bg: '#00508f', text: '#fff' },
+  'Korean Air':         { bg: '#00256c', text: '#fff' },
+};
 
-  totalBudget = budget;
-  tripDays = [];
-
-  for (let i = 0; i < diff; i++) {
-    const d = new Date(startDate);
-    d.setDate(d.getDate() + i);
-    tripDays.push({
-      dayNum: i + 1,
-      date: d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' }),
-      activities: []
-    });
-  }
-
-  renderItinerary();
-  document.getElementById('itineraryEmpty').classList.add('hidden');
-
-  const badge = document.getElementById('tripDuration');
-  badge.textContent = `${diff} Day${diff > 1 ? 's' : ''}`;
-  badge.classList.remove('hidden');
-
-  if (budget > 0) {
-    document.getElementById('budgetTracker').classList.remove('hidden');
-    document.getElementById('budgetTotal').textContent = '$' + budget.toLocaleString();
-    updateBudget();
-  }
-
-  document.getElementById('saveSection').classList.remove('hidden');
-  showToast(`${diff}-day itinerary generated for ${dest}!`, 'success');
+function getAirlineStyle(airline) {
+  return AIRLINE_COLORS[airline] || { bg: '#0abde3', text: '#fff' };
 }
 
-/* ===== RENDER ITINERARY ===== */
-function renderItinerary() {
-  const container = document.getElementById('itineraryDays');
-  container.innerHTML = tripDays.map((day, dayIndex) => `
-    <div class="day-block" id="day-${dayIndex}">
-      <div class="day-header" onclick="toggleDay(${dayIndex})">
-        <h4><i class="fas fa-calendar-day"></i> Day ${day.dayNum}</h4>
-        <span class="day-date">${day.date}</span>
-      </div>
-      <div class="day-body" id="day-body-${dayIndex}">
-        <div class="activity-list" id="activities-${dayIndex}">
-          ${day.activities.map((act, actIndex) => renderActivity(dayIndex, actIndex, act)).join('')}
-        </div>
-        <button class="btn-add-activity" onclick="addActivity(${dayIndex})">
-          <i class="fas fa-plus"></i> Add Activity
-        </button>
-      </div>
-    </div>
-  `).join('');
+function durationToMinutes(dur) {
+  const h = parseInt(dur.match(/(\d+)h/)?.[1]   || 0);
+  const m = parseInt(dur.match(/(\d+)min/)?.[1] || 0);
+  return h * 60 + m;
 }
 
-function renderActivity(dayIndex, actIndex, act) {
-  return `
-    <div class="activity-item" id="act-${dayIndex}-${actIndex}">
-      <i class="fas fa-circle" style="color:var(--primary);font-size:0.5rem;flex-shrink:0;"></i>
-      <input type="text" placeholder="Activity description..."
-        value="${act.name || ''}"
-        oninput="updateActivity(${dayIndex}, ${actIndex}, 'name', this.value)"/>
-      <span style="font-size:0.75rem;color:#aaa;flex-shrink:0;">$</span>
-      <input type="number" class="activity-cost" placeholder="0"
-        value="${act.cost || ''}"
-        oninput="updateActivity(${dayIndex}, ${actIndex}, 'cost', this.value)"/>
-      <button class="btn-remove-activity" onclick="removeActivity(${dayIndex}, ${actIndex})">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-  `;
+function timeToNumber(t) {
+  const [h, m] = t.split(':').map(Number);
+  return h * 60 + m;
 }
 
-/* ===== DAY ACTIONS ===== */
-function toggleDay(dayIndex) {
-  const body = document.getElementById(`day-body-${dayIndex}`);
-  if (body) {
-    body.style.display = body.style.display === 'none' ? 'block' : 'none';
-  }
-}
+/* ================================================================
+   RENDER CARDS
+   ================================================================ */
+function renderFlightCards(data) {
+  const grid    = document.getElementById('flightsGrid');
+  const noRes   = document.getElementById('flightNoResults');
+  const countEl = document.getElementById('flightResultsCount');
+  if (!grid) return;
 
-function addActivity(dayIndex) {
-  tripDays[dayIndex].activities.push({ name: '', cost: 0 });
-  const list = document.getElementById(`activities-${dayIndex}`);
-  const actIndex = tripDays[dayIndex].activities.length - 1;
-  const div = document.createElement('div');
-  div.innerHTML = renderActivity(dayIndex, actIndex, { name: '', cost: 0 });
-  list.appendChild(div.firstElementChild);
-  updateBudget();
-}
-
-function removeActivity(dayIndex, actIndex) {
-  tripDays[dayIndex].activities.splice(actIndex, 1);
-  const item = document.getElementById(`act-${dayIndex}-${actIndex}`);
-  if (item) item.remove();
-  updateBudget();
-}
-
-function updateActivity(dayIndex, actIndex, field, value) {
-  if (!tripDays[dayIndex] || !tripDays[dayIndex].activities[actIndex]) return;
-  tripDays[dayIndex].activities[actIndex][field] = field === 'cost' ? parseFloat(value) || 0 : value;
-  if (field === 'cost') updateBudget();
-}
-
-/* ===== BUDGET TRACKER ===== */
-function updateBudget() {
-  if (totalBudget <= 0) return;
-  let spent = 0;
-  tripDays.forEach(day => {
-    day.activities.forEach(act => { spent += act.cost || 0; });
-  });
-  const pct = Math.min((spent / totalBudget) * 100, 100);
-  const fill = document.getElementById('budgetFill');
-  const pctEl = document.getElementById('budgetPercent');
-  const spentEl = document.getElementById('budgetSpent');
-  const remEl = document.getElementById('budgetRemaining');
-
-  if (fill) {
-    fill.style.width = pct + '%';
-    fill.style.background = pct > 90 ? 'linear-gradient(135deg,#e74c3c,#c0392b)' : 'linear-gradient(135deg,#0abde3,#00d2d3)';
-  }
-  if (pctEl) pctEl.textContent = Math.round(pct) + '%';
-  if (spentEl) spentEl.textContent = '$' + spent.toLocaleString();
-  if (remEl) remEl.textContent = '$' + Math.max(0, totalBudget - spent).toLocaleString();
-}
-
-/* ===== SAVE TRIP ===== */
-function saveTrip() {
-  const name = document.getElementById('tripName').value.trim();
-  const dest = document.getElementById('tripDestination').value;
-  const start = document.getElementById('startDate').value;
-  const end = document.getElementById('endDate').value;
-  const budget = parseFloat(document.getElementById('tripBudget').value) || 0;
-  const travelers = parseInt(document.getElementById('tripTravelers').value) || 1;
-  const notes = document.getElementById('tripNotes').value;
-  const type = document.querySelector('input[name="tripType"]:checked')?.value || 'Adventure';
-
-  if (!name || !dest || tripDays.length === 0) {
-    showToast('Please generate the itinerary first!', 'error');
+  if (data.length === 0) {
+    grid.innerHTML = '';
+    noRes.classList.remove('hidden');
+    if (countEl) countEl.innerHTML = 'Showing <strong>0</strong> flights';
     return;
   }
 
-  const trip = {
-    id: Date.now(),
-    name, dest, start, end, budget, travelers, notes, type,
-    days: JSON.parse(JSON.stringify(tripDays)),
-    savedAt: new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
-  };
+  noRes.classList.add('hidden');
+  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> flight${data.length !== 1 ? 's' : ''}`;
 
-  const trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
-  trips.unshift(trip);
-  localStorage.setItem('myAdventureTrips', JSON.stringify(trips));
+  grid.innerHTML = data.map(f => {
+    const style = getAirlineStyle(f.airline);
+    const isBiz = f.flightClass === 'Business';
+    return `
+    <div class="flight-card" onclick="openFlightModal(${f.id})">
+      <div class="flight-card-img">
+        <img src="${f.image}" alt="${f.to}" loading="lazy"/>
+        <div class="flight-card-img-overlay"></div>
+        <span class="flight-weather-badge"><i class="fas fa-cloud-sun"></i> ${f.weather}</span>
+        <span class="flight-class-badge ${isBiz ? 'biz' : 'eco'}">
+          <i class="fas fa-${isBiz ? 'star' : 'chair'}"></i> ${f.flightClass}
+        </span>
+        <div class="flight-dest-label">
+          <span class="flight-dest-city">${f.to}</span>
+          <span class="flight-dest-country">${f.toCountry}</span>
+        </div>
+      </div>
 
-  showToast(`"${name}" saved successfully!`, 'success');
-  setTimeout(() => { window.location.href = 'mytrips.html'; }, 1500);
+      <div class="flight-airline-strip" style="background:${style.bg};color:${style.text};">
+        <i class="fas fa-plane"></i>
+        <span>${f.airline}</span>
+        <span class="flight-number">FL-${String(f.id).padStart(3,'0')}</span>
+      </div>
+
+      <div class="flight-card-body">
+        <div class="flight-route-row">
+          <div class="flight-endpoint">
+            <div class="flight-time">${f.departure}</div>
+            <div class="flight-code">${f.fromCode}</div>
+            <div class="flight-city">${f.from}</div>
+          </div>
+          <div class="flight-arc">
+            <div class="flight-arc-duration">${f.duration}</div>
+            <div class="flight-arc-line">
+              <span class="arc-dot left"></span>
+              <svg class="arc-svg" viewBox="0 0 120 30" preserveAspectRatio="none">
+                <path d="M4,28 Q60,-8 116,28" fill="none" stroke="#0abde3" stroke-width="1.5" stroke-dasharray="4 3"/>
+              </svg>
+              <i class="fas fa-plane arc-plane"></i>
+              <span class="arc-dot right"></span>
+            </div>
+            <div class="flight-arc-label">${f.sameDay ? 'Same Day' : 'Next Day'}</div>
+          </div>
+          <div class="flight-endpoint right">
+            <div class="flight-time">${f.arrival}</div>
+            <div class="flight-code">${f.toCode}</div>
+            <div class="flight-city">${f.to}</div>
+          </div>
+        </div>
+
+        <div class="flight-card-footer">
+          <div class="flight-meta">
+            <span class="flight-pax"><i class="fas fa-user"></i> ${f.passengers} Pax</span>
+            <span class="flight-stops"><i class="fas fa-circle" style="font-size:0.4rem"></i> Direct</span>
+          </div>
+          <div class="flight-price-wrap">
+            <span class="flight-price-amount">${INR(f.price)}</span>
+            <span class="flight-price-label">/ person</span>
+          </div>
+        </div>
+        <button class="btn-card flight-book-btn"
+                onclick="event.stopPropagation(); openFlightModal(${f.id})">
+          <i class="fas fa-ticket-alt"></i> View &amp; Book
+        </button>
+      </div>
+    </div>`;
+  }).join('');
+
+  document.querySelectorAll('.flight-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(20px)';
+    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 60);
+  });
 }
 
-/* ===== INIT ===== */
-document.addEventListener('DOMContentLoaded', () => {
-  // Set min date to today
-  const today = new Date().toISOString().split('T')[0];
-  const startInput = document.getElementById('startDate');
-  const endInput = document.getElementById('endDate');
-  if (startInput) { startInput.min = today; startInput.value = today; }
-  if (endInput) {
-    const nextWeek = new Date();
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    endInput.min = today;
-    endInput.value = nextWeek.toISOString().split('T')[0];
-  }
+/* ================================================================
+   FILTER & SORT
+   ================================================================ */
+function filterFlightsByClass(btn, cls) {
+  document.querySelectorAll('#flightClassFilter .tag').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  activeFlightClass = cls;
+  filterFlights();
+}
 
-  // Pre-fill destination from URL
-  const params = new URLSearchParams(window.location.search);
-  const dest = params.get('dest');
-  if (dest) {
-    const sel = document.getElementById('tripDestination');
-    if (sel) {
-      for (let opt of sel.options) {
-        if (opt.value.toLowerCase().includes(dest.toLowerCase())) {
-          sel.value = opt.value; break;
-        }
-      }
-    }
+function filterFlights() {
+  const query = (document.getElementById('flightSearchInput')?.value || '').toLowerCase();
+  const sort  = document.getElementById('flightSortSelect')?.value || 'default';
+
+  let data = MOCK_FLIGHTS.filter(f => {
+    const matchClass  = activeFlightClass === 'all' || f.flightClass === activeFlightClass;
+    const matchSearch = f.from.toLowerCase().includes(query) ||
+                        f.to.toLowerCase().includes(query)   ||
+                        f.fromCountry.toLowerCase().includes(query) ||
+                        f.toCountry.toLowerCase().includes(query)   ||
+                        f.airline.toLowerCase().includes(query)     ||
+                        f.fromCode.toLowerCase().includes(query)    ||
+                        f.toCode.toLowerCase().includes(query);
+    return matchClass && matchSearch;
+  });
+
+  if (sort === 'price-low')       data.sort((a,b) => a.price - b.price);
+  else if (sort === 'price-high') data.sort((a,b) => b.price - a.price);
+  else if (sort === 'duration')   data.sort((a,b) => durationToMinutes(a.duration) - durationToMinutes(b.duration));
+  else if (sort === 'departure')  data.sort((a,b) => timeToNumber(a.departure)     - timeToNumber(b.departure));
+
+  renderFlightCards(data);
+}
+
+/* ================================================================
+   MODAL — OPEN
+   ================================================================ */
+function openFlightModal(id) {
+  selectedFlight   = MOCK_FLIGHTS.find(f => f.id === id);
+  if (!selectedFlight) return;
+  const f = selectedFlight;
+  flightPassengers = f.passengers;
+
+  const style = getAirlineStyle(f.airline);
+  const isBiz = f.flightClass === 'Business';
+
+  document.getElementById('flightModalRoute').innerHTML = `
+    <span>${f.fromCode}</span>
+    <i class="fas fa-long-arrow-alt-right" style="margin:0 10px;opacity:0.7;"></i>
+    <span>${f.toCode}</span>
+    <span style="margin-left:14px;font-size:0.75rem;opacity:0.75;font-weight:400;">${f.airline}</span>`;
+
+  document.getElementById('flightModalBody').innerHTML = `
+    <div class="fmd-hero">
+      <img src="${f.image}" alt="${f.to}"/>
+      <div class="fmd-hero-overlay">
+        <div class="fmd-hero-text">
+          <div class="fmd-hero-city">${f.to.toUpperCase()}</div>
+          <div class="fmd-hero-country">${f.toCountry}</div>
+        </div>
+        <div class="fmd-hero-weather"><i class="fas fa-cloud-sun"></i> ${f.weather}</div>
+      </div>
+    </div>
+
+    <div class="fmd-route-strip" style="background:${style.bg};">
+      <div class="fmd-route-from">
+        <div class="fmd-route-city">${f.from.toUpperCase()}</div>
+        <div class="fmd-route-country">${f.fromCountry}</div>
+      </div>
+      <div class="fmd-route-center">
+        <i class="fas fa-circle fmd-dot" style="color:${style.text};opacity:0.5;font-size:0.55rem;"></i>
+        <div class="fmd-route-line">
+          <svg viewBox="0 0 180 24" preserveAspectRatio="none">
+            <path d="M4,20 Q90,-10 176,20" fill="none" stroke="rgba(255,255,255,0.55)"
+                  stroke-width="1.5" stroke-dasharray="5 4"/>
+          </svg>
+          <i class="fas fa-plane fmd-plane-icon"></i>
+        </div>
+        <i class="fas fa-circle fmd-dot" style="color:${style.text};opacity:0.5;font-size:0.55rem;"></i>
+      </div>
+      <div class="fmd-route-to">
+        <div class="fmd-route-city">${f.to.toUpperCase()}</div>
+        <div class="fmd-route-country">${f.toCountry}</div>
+      </div>
+    </div>
+
+    <div class="fmd-times-row">
+      <div class="fmd-time-block">
+        <div class="fmd-time-label"><i class="fas fa-plane-departure"></i> Departure</div>
+        <div class="fmd-time-value">${f.departure}</div>
+        <div class="fmd-time-sub">${f.from} · ${f.fromCode}</div>
+      </div>
+      <div class="fmd-time-divider">
+        <div class="fmd-duration-pill"><i class="fas fa-clock"></i> ${f.duration}</div>
+        <div class="fmd-direct-badge">Direct</div>
+      </div>
+      <div class="fmd-time-block right">
+        <div class="fmd-time-label"><i class="fas fa-plane-arrival"></i> Arrival</div>
+        <div class="fmd-time-value">${f.arrival}${!f.sameDay ? '<sup class="fmd-next-day">+1</sup>' : ''}</div>
+        <div class="fmd-time-sub">${f.to} · ${f.toCode}</div>
+      </div>
+    </div>
+
+    <div class="fmd-time-note">
+      <i class="fas fa-info-circle"></i>
+      Flight time: ${f.duration}, ${f.sameDay ? 'same day arrival' : 'next day arrival'}
+    </div>
+
+    <div class="fmd-details-grid">
+      <div class="fmd-detail-item">
+        <div class="fmd-detail-label">Class</div>
+        <div class="fmd-detail-value ${isBiz ? 'biz-text' : ''}">
+          <i class="fas fa-${isBiz ? 'star' : 'chair'}"></i> ${f.flightClass}
+        </div>
+      </div>
+      <div class="fmd-detail-item">
+        <div class="fmd-detail-label">Airline</div>
+        <div class="fmd-detail-value">
+          <span class="fmd-airline-chip" style="background:${style.bg};color:${style.text};">${f.airline}</span>
+        </div>
+      </div>
+      <div class="fmd-detail-item">
+        <div class="fmd-detail-label">Flight No.</div>
+        <div class="fmd-detail-value">FL-${String(f.id).padStart(3,'0')}</div>
+      </div>
+      <div class="fmd-detail-item">
+        <div class="fmd-detail-label">Destination Weather</div>
+        <div class="fmd-detail-value"><i class="fas fa-thermometer-half" style="color:#0abde3;"></i> ${f.weather}</div>
+      </div>
+    </div>
+
+    <div class="fmd-booking-row">
+      <div class="fmd-passenger-block">
+        <div class="fmd-passenger-label">Passengers</div>
+        <div class="fmd-passenger-ctrl">
+          <button class="fmd-pax-btn" onclick="changePax(-1)"><i class="fas fa-minus"></i></button>
+          <span class="fmd-pax-count" id="fmdPaxCount">${flightPassengers}</span>
+          <button class="fmd-pax-btn" onclick="changePax(1)"><i class="fas fa-plus"></i></button>
+        </div>
+      </div>
+      <div class="fmd-price-block">
+        <div class="fmd-price-label">Total Price</div>
+        <div class="fmd-price-value" id="fmdTotalPrice">${INR(f.price * flightPassengers)}</div>
+        <div class="fmd-price-per">${INR(f.price)} / person</div>
+      </div>
+    </div>
+
+    <button class="fmd-book-btn" onclick="bookFlight()">
+      <i class="fas fa-check-circle"></i> BOOK THIS FLIGHT
+    </button>`;
+
+  document.getElementById('flightModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function changePax(delta) {
+  flightPassengers = Math.max(1, Math.min(9, flightPassengers + delta));
+  const countEl = document.getElementById('fmdPaxCount');
+  const priceEl = document.getElementById('fmdTotalPrice');
+  if (countEl) countEl.textContent = flightPassengers;
+  if (priceEl && selectedFlight) priceEl.textContent = INR(selectedFlight.price * flightPassengers);
+}
+
+function closeFlightModal() {
+  document.getElementById('flightModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function handleFlightModalClick(e) {
+  if (e.target.id === 'flightModal') closeFlightModal();
+}
+
+function bookFlight() {
+  closeFlightModal();
+  if (selectedFlight) {
+    showToast(
+      `✈️ ${selectedFlight.from} → ${selectedFlight.to} booked for ${flightPassengers} pax · ${INR(selectedFlight.price * flightPassengers)}`,
+      'success'
+    );
   }
+}
+
+document.addEventListener('DOMContentLoaded', () => {
+  renderFlightCards(MOCK_FLIGHTS);
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlightModal(); });
 });
