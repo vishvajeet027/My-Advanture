@@ -67,7 +67,7 @@ function renderCards(data) {
         <p class="card-country"><i class="fas fa-map-marker-alt"></i> ${d.country}</p>
         <p style="font-size:0.82rem;color:#777;line-height:1.5;">${d.desc.substring(0, 85)}...</p>
         <div class="card-footer-row">
-          <span class="card-days"><i class="fas fa-moon"></i> ${d.days} Days</span>
+          <span class="card-days"><i class="fas fa-calendar-days"></i> ${d.days} Days / ${Math.max(d.days - 1, 0)} Nights</span>
           <span class="card-price">₹${d.price.toLocaleString('en-IN')} <span>/ person</span></span>
         </div>
         <button class="btn-card" onclick="event.stopPropagation(); openPkgModal(${d.id})">
@@ -106,37 +106,94 @@ function filterDestinations() {
 }
 
 /* ── MODAL ── */
+function renderPackageItinerary(pkg) {
+  const plan = getPackageItinerary(pkg);
+  const nights = Math.max(pkg.days - 1, 0);
+
+  return plan.map((day, i) => {
+    const dayNum = i + 1;
+    const isLast = dayNum === pkg.days;
+    const nightLabel = isLast ? 'Checkout' : `Night ${dayNum}`;
+
+    const activitiesHtml = day.activities.map(a =>
+      `<li><i class="fas fa-check"></i><span>${a}</span></li>`
+    ).join('');
+
+    const placesHtml = day.places.map(p =>
+      `<span class="pkg-place-chip"><i class="fas fa-map-marker-alt"></i>${p}</span>`
+    ).join('');
+
+    return `
+      <div class="pkg-day-card${isLast ? ' pkg-day-card--departure' : ''}">
+        <div class="pkg-day-header">
+          <div class="pkg-day-label">
+            <span class="pkg-day-num">Day ${dayNum}</span>
+            <span class="pkg-day-night"><i class="fas fa-moon"></i> ${nightLabel}</span>
+          </div>
+        </div>
+        <div class="pkg-day-stay">
+          <i class="fas fa-hotel"></i>
+          <span><strong>Stay:</strong> ${day.stay}</span>
+        </div>
+        <div class="pkg-day-places">
+          <span class="pkg-day-places-label"><i class="fas fa-map-pin"></i> Places to visit</span>
+          <div class="pkg-day-places-list">${placesHtml}</div>
+        </div>
+        <div class="pkg-day-activities">
+          <span class="pkg-day-activities-label"><i class="fas fa-list-check"></i> What you'll do</span>
+          <ul>${activitiesHtml}</ul>
+        </div>
+      </div>`;
+  }).join('');
+}
+
 function openPkgModal(id) {
   selectedPkg = destinations.find(d => d.id === id);
   if (!selectedPkg) return;
   const p = selectedPkg;
   const color = TAG_COLORS[p.category] || '#0abde3';
+  const nights = Math.max(p.days - 1, 0);
 
   document.getElementById('pkgModalTitle').textContent = p.name;
   document.getElementById('pkgModalBody').innerHTML = `
-    <div style="position:relative;height:220px;overflow:hidden;border-radius:12px;margin-bottom:20px;">
-      <img src="${p.image}" alt="${p.name}" style="width:100%;height:100%;object-fit:cover;"/>
-      <span style="position:absolute;bottom:12px;left:12px;background:${color};color:#fff;padding:4px 12px;border-radius:12px;font-size:0.72rem;font-weight:700;">${p.badge}</span>
+    <div class="pkg-modal-hero">
+      <img src="${p.image}" alt="${p.name}"/>
+      <span class="pkg-modal-badge" style="background:${color}">${p.badge}</span>
     </div>
-    <p style="font-size:0.88rem;color:#555;line-height:1.7;margin-bottom:16px;">${p.desc}</p>
-    <div style="display:flex;flex-wrap:wrap;gap:10px;margin-bottom:18px;">
-      <span style="background:#f0f8ff;color:#0abde3;padding:6px 14px;border-radius:10px;font-size:0.8rem;font-weight:600;"><i class="fas fa-map-marker-alt"></i> ${p.country}</span>
-      <span style="background:#f0f8ff;color:#0abde3;padding:6px 14px;border-radius:10px;font-size:0.8rem;font-weight:600;"><i class="fas fa-moon"></i> ${p.days} Days</span>
-      <span style="background:#fffbf0;color:#e17055;padding:6px 14px;border-radius:10px;font-size:0.8rem;font-weight:600;"><i class="fas fa-star" style="color:#fdcb6e"></i> ${p.rating} Rating</span>
-      <span style="background:#f0fff4;color:#00b894;padding:6px 14px;border-radius:10px;font-size:0.8rem;font-weight:600;"><i class="fas fa-tag"></i> ${p.category.charAt(0).toUpperCase() + p.category.slice(1)}</span>
-    </div>
-    <h4 style="font-size:0.9rem;font-weight:700;color:#333;margin-bottom:10px;"><i class="fas fa-check-circle" style="color:#00b894;margin-right:6px;"></i>What's Included</h4>
-    <div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:20px;">
-      ${p.includes.map(i => `<div style="display:flex;align-items:center;gap:7px;font-size:0.82rem;color:#555;"><i class="fas fa-check" style="color:#00b894;font-size:0.7rem;"></i>${i}</div>`).join('')}
-    </div>
-    <div style="display:flex;align-items:center;justify-content:space-between;border-top:1px solid #eee;padding-top:16px;">
-      <div>
-        <div style="font-size:0.75rem;color:#aaa;">From</div>
-        <div style="font-size:1.8rem;font-weight:800;color:#0abde3;">₹${p.price.toLocaleString('en-IN')}<span style="font-size:0.85rem;font-weight:500;color:#aaa;"> / person</span></div>
+
+    <div class="pkg-modal-content">
+      <p class="pkg-modal-desc">${p.desc}</p>
+
+      <div class="pkg-modal-meta">
+        <span class="pkg-meta-chip"><i class="fas fa-map-marker-alt"></i> ${p.country}</span>
+        <span class="pkg-meta-chip pkg-meta-duration"><i class="fas fa-calendar-days"></i> ${p.days} Days / ${nights} Night${nights !== 1 ? 's' : ''}</span>
+        <span class="pkg-meta-chip"><i class="fas fa-star" style="color:#fdcb6e"></i> ${p.rating} Rating</span>
+        <span class="pkg-meta-chip"><i class="fas fa-tag"></i> ${p.category.charAt(0).toUpperCase() + p.category.slice(1)}</span>
       </div>
-      <button onclick="bookPackage()" style="padding:12px 28px;border-radius:12px;background:linear-gradient(135deg,#0abde3,#00d2d3);border:none;color:#fff;font-size:0.9rem;font-weight:700;font-family:Poppins,sans-serif;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <i class="fas fa-check-circle"></i> Book Now
-      </button>
+
+      <div class="pkg-modal-section-title">
+        <i class="fas fa-route"></i> Day-by-Day Itinerary
+      </div>
+      <div class="pkg-itinerary-list">
+        ${renderPackageItinerary(p)}
+      </div>
+
+      <div class="pkg-modal-section-title">
+        <i class="fas fa-check-circle"></i> What's Included
+      </div>
+      <div class="pkg-includes-grid">
+        ${p.includes.map(i => `<div class="pkg-include-item"><i class="fas fa-check"></i>${i}</div>`).join('')}
+      </div>
+
+      <div class="pkg-modal-footer">
+        <div class="pkg-modal-price">
+          <div class="pkg-price-label">From</div>
+          <div class="pkg-price-value">₹${p.price.toLocaleString('en-IN')}<span>/ person</span></div>
+        </div>
+        <button class="btn-primary pkg-book-btn" onclick="bookPackage()">
+          <i class="fas fa-check-circle"></i> Book ${p.days}-Day Package
+        </button>
+      </div>
     </div>`;
 
   document.getElementById('pkgModal').classList.remove('hidden');
@@ -154,7 +211,10 @@ function handleModalClick(e) {
 
 function bookPackage() {
   closePkgModal();
-  if (selectedPkg) showToast('🎉 ' + selectedPkg.name + ' booked! Check My Trips.', 'success');
+  if (selectedPkg) {
+    const nights = Math.max(selectedPkg.days - 1, 0);
+    showToast(`🎉 ${selectedPkg.name} booked! ${selectedPkg.days} days / ${nights} nights — Check My Trips.`, 'success');
+  }
 }
 
 /* ── INIT ── */
@@ -273,6 +333,112 @@ function initHotelsView() {
 let activeHotelFacility = 'all';
 let selectedHotel = null;
 
+function toInputDate(date) {
+  const y = date.getFullYear();
+  const m = String(date.getMonth() + 1).padStart(2, '0');
+  const d = String(date.getDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+function parseInputDate(str) {
+  const [y, m, d] = str.split('-').map(Number);
+  return new Date(y, m - 1, d);
+}
+
+function formatDisplayDate(str) {
+  if (!str) return '—';
+  const date = parseInputDate(str);
+  return date.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
+}
+
+function calcHotelNights(checkIn, checkOut) {
+  if (!checkIn || !checkOut) return 0;
+  const ms = parseInputDate(checkOut) - parseInputDate(checkIn);
+  return Math.max(0, Math.round(ms / (1000 * 60 * 60 * 24)));
+}
+
+function openHotelDatePicker(field) {
+  const input = document.getElementById(field === 'in' ? 'hotelCheckIn' : 'hotelCheckOut');
+  if (!input) return;
+  if (typeof input.showPicker === 'function') {
+    try { input.showPicker(); } catch (e) { input.focus(); }
+  } else {
+    input.focus();
+  }
+}
+
+function onHotelCheckInChange() {
+  const checkInEl = document.getElementById('hotelCheckIn');
+  const checkOutEl = document.getElementById('hotelCheckOut');
+  if (!checkInEl || !checkOutEl || !checkInEl.value) return;
+
+  const minCheckOut = parseInputDate(checkInEl.value);
+  minCheckOut.setDate(minCheckOut.getDate() + 1);
+  checkOutEl.min = toInputDate(minCheckOut);
+
+  if (!checkOutEl.value || parseInputDate(checkOutEl.value) <= parseInputDate(checkInEl.value)) {
+    checkOutEl.value = toInputDate(minCheckOut);
+  }
+
+  updateHotelStaySummary();
+}
+
+function onHotelCheckOutChange() {
+  updateHotelStaySummary();
+}
+
+function updateHotelStaySummary() {
+  if (!selectedHotel) return;
+
+  const checkInEl = document.getElementById('hotelCheckIn');
+  const checkOutEl = document.getElementById('hotelCheckOut');
+  const nightsEl = document.getElementById('hotelNightsCount');
+  const stayTextEl = document.getElementById('hotelStayText');
+  const totalEl = document.getElementById('hotelTotalPrice');
+  const bookBtn = document.getElementById('hotelBookBtn');
+  if (!checkInEl || !checkOutEl) return;
+
+  const nights = calcHotelNights(checkInEl.value, checkOutEl.value);
+  const validStay = nights >= 1;
+  const total = validStay ? selectedHotel.price * nights : selectedHotel.price;
+
+  if (nightsEl) nightsEl.textContent = validStay ? nights : '—';
+  if (stayTextEl) {
+    stayTextEl.textContent = validStay
+      ? `${nights} night${nights !== 1 ? 's' : ''} (${formatDisplayDate(checkInEl.value)} → ${formatDisplayDate(checkOutEl.value)})`
+      : 'Select valid check-in & check-out dates';
+  }
+  if (totalEl) totalEl.textContent = '₹' + total.toLocaleString('en-IN');
+  if (bookBtn) {
+    bookBtn.innerHTML = validStay
+      ? `<i class="fas fa-calendar-check"></i> Book ${nights} Night${nights !== 1 ? 's' : ''} — ₹${total.toLocaleString('en-IN')}`
+      : `<i class="fas fa-calendar-check"></i> Select Dates to Book`;
+    bookBtn.disabled = !validStay;
+  }
+}
+
+function initHotelStayDates() {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+
+  const checkIn = new Date(today);
+  checkIn.setDate(checkIn.getDate() + 1);
+
+  const checkOut = new Date(checkIn);
+  checkOut.setDate(checkOut.getDate() + 1);
+
+  const checkInEl = document.getElementById('hotelCheckIn');
+  const checkOutEl = document.getElementById('hotelCheckOut');
+  if (!checkInEl || !checkOutEl) return;
+
+  checkInEl.min = toInputDate(today);
+  checkInEl.value = toInputDate(checkIn);
+  checkOutEl.min = toInputDate(checkOut);
+  checkOutEl.value = toInputDate(new Date(checkOut.getTime()));
+
+  updateHotelStaySummary();
+}
+
 function renderHotelCards(data) {
   const grid = document.getElementById('destinationsGrid');
   const noRes = document.getElementById('noResults');
@@ -389,6 +555,7 @@ function openHotelModal(id) {
         <div class="hotel-modal-location">
           <i class="fas fa-map-marker-alt"></i> ${h.city}, ${h.country}
         </div>
+        <span class="hotel-img-scroll-hint"><i class="fas fa-arrows-alt-v"></i> Scroll for full image</span>
       </div>
     </div>
 
@@ -407,6 +574,38 @@ function openHotelModal(id) {
       <p class="hotel-modal-desc">${h.desc}</p>
 
       <div class="hotel-modal-section-title">
+        <i class="fas fa-calendar-alt"></i> Your Stay
+      </div>
+      <div class="hotel-stay-form">
+        <div class="hotel-date-field">
+          <label for="hotelCheckIn">Check-in</label>
+          <div class="hotel-date-input-wrap" onclick="openHotelDatePicker('in')">
+            <i class="fas fa-calendar-day"></i>
+            <input type="date" id="hotelCheckIn" aria-label="Check-in date"
+              onclick="event.stopPropagation(); openHotelDatePicker('in')"
+              onchange="onHotelCheckInChange()"/>
+          </div>
+        </div>
+        <div class="hotel-stay-nights">
+          <span id="hotelNightsCount">1</span>
+          <small>Night(s)</small>
+        </div>
+        <div class="hotel-date-field">
+          <label for="hotelCheckOut">Check-out</label>
+          <div class="hotel-date-input-wrap" onclick="openHotelDatePicker('out')">
+            <i class="fas fa-calendar-day"></i>
+            <input type="date" id="hotelCheckOut" aria-label="Check-out date"
+              onclick="event.stopPropagation(); openHotelDatePicker('out')"
+              onchange="onHotelCheckOutChange()"/>
+          </div>
+        </div>
+      </div>
+      <div class="hotel-stay-summary">
+        <span class="hotel-stay-text"><i class="fas fa-moon"></i> <span id="hotelStayText">1 night</span></span>
+        <span class="hotel-stay-total">Total: <strong id="hotelTotalPrice">₹${h.price.toLocaleString('en-IN')}</strong></span>
+      </div>
+
+      <div class="hotel-modal-section-title">
         <i class="fas fa-concierge-bell"></i> Available Facilities
       </div>
       <div class="hotel-modal-facilities">
@@ -419,12 +618,13 @@ function openHotelModal(id) {
           <span class="info-chip"><i class="fas fa-globe"></i> ${h.country}</span>
           <span class="info-chip"><i class="fas fa-door-open"></i> ${h.facilities.length} Facilities</span>
         </div>
-        <button class="btn-primary" onclick="bookHotel()">
+        <button class="btn-primary" id="hotelBookBtn" onclick="bookHotel()">
           <i class="fas fa-calendar-check"></i> Book Now — ₹${h.price.toLocaleString('en-IN')}/night
         </button>
       </div>
     </div>`;
 
+  initHotelStayDates();
   document.getElementById('hotelModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
 }
@@ -439,6 +639,21 @@ function handleHotelModalClick(e) {
 }
 
 function bookHotel() {
+  if (!selectedHotel) return;
+
+  const checkIn = document.getElementById('hotelCheckIn')?.value;
+  const checkOut = document.getElementById('hotelCheckOut')?.value;
+  const nights = calcHotelNights(checkIn, checkOut);
+
+  if (nights < 1) {
+    showToast('Please select a valid check-out date after check-in.', 'error');
+    return;
+  }
+
+  const total = selectedHotel.price * nights;
   closeHotelModal();
-  if (selectedHotel) showToast('🏨 ' + selectedHotel.name + ' booked! Check My Trips.', 'success');
+  showToast(
+    `🏨 ${selectedHotel.name} booked for ${nights} night${nights !== 1 ? 's' : ''} (${formatDisplayDate(checkIn)} → ${formatDisplayDate(checkOut)}) — ₹${total.toLocaleString('en-IN')}`,
+    'success'
+  );
 }

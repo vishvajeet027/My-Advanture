@@ -133,9 +133,21 @@
 
       <!-- HOTEL SECTION -->
       <div class="builder-section">
-        <h2><i class="fas fa-hotel"></i> Select Hotel</h2>
-        <div class="hotel-selector" id="hotelSelector">
-          <!-- Hotels populated by JS -->
+        <div class="builder-section-header">
+          <h2><i class="fas fa-hotel"></i> Select Hotel</h2>
+          <div class="hotel-scroll-controls">
+            <button type="button" class="hotel-scroll-btn" onclick="scrollHotels(-1)" aria-label="Scroll hotels left">
+              <i class="fas fa-chevron-left"></i>
+            </button>
+            <button type="button" class="hotel-scroll-btn" onclick="scrollHotels(1)" aria-label="Scroll hotels right">
+              <i class="fas fa-chevron-right"></i>
+            </button>
+          </div>
+        </div>
+        <div class="hotel-selector-wrap">
+          <div class="hotel-selector" id="hotelSelector">
+            <!-- Hotels populated by JS -->
+          </div>
         </div>
       </div>
 

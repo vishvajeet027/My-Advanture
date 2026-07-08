@@ -246,7 +246,9 @@ function populateHotels() {
     hotelEl.className = 'hotel-option';
     hotelEl.onclick = () => selectHotel(hotelEl, hotel);
     hotelEl.innerHTML = `
-      <img src="${hotel.image}" alt="${hotel.name}"/>
+      <div class="hotel-option-img-wrap">
+        <img src="${hotel.image}" alt="${hotel.name}"/>
+      </div>
       <div class="hotel-option-info">
         <div class="hotel-option-name">${hotel.name}</div>
         <div class="hotel-option-rating">
@@ -264,6 +266,14 @@ function selectHotel(el, hotel) {
   el.classList.add('selected');
   currentTrip.hotel = hotel;
   showToast(`${hotel.name} selected!`, 'success');
+}
+
+function scrollHotels(direction) {
+  const selector = document.getElementById('hotelSelector');
+  if (!selector) return;
+  const card = selector.querySelector('.hotel-option');
+  const scrollAmount = card ? card.offsetWidth + 20 : 260;
+  selector.scrollBy({ left: direction * scrollAmount, behavior: 'smooth' });
 }
 
 function populateMealOptions() {
