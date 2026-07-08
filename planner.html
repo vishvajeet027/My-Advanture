@@ -1,0 +1,219 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Trip Planner - MyAdventure</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-paper-plane logo-icon"></i>
+        <span>My<strong>Adventure</strong></span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="home.html">Packages</a></li>
+        <li><a href="destinations.html">Hotels</a></li>
+        <li><a href="planner.html" class="active">Flights</a></li>
+        <li><a href="mytrips.html">Bookings</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn-login">Login</a>
+        <a href="login.html" class="btn-signup">Sign up</a>
+        <div class="lang-select">EN <i class="fas fa-chevron-down"></i></div>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" style="background-image:url('https://images.unsplash.com/photo-1488085061387-422e29b40080?w=1600&q=80')">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <h1>Plan Your Trip</h1>
+      <p>Build your perfect itinerary day by day and save it for later</p>
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <i class="fas fa-chevron-right"></i> <span>Trip Planner</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- PLANNER SECTION -->
+  <section class="section planner-section">
+    <div class="container">
+      <div class="planner-layout">
+
+        <!-- LEFT: Trip Details Form -->
+        <div class="planner-form-col">
+          <div class="planner-card">
+            <h3><i class="fas fa-suitcase-rolling"></i> Trip Details</h3>
+            <div class="form-group">
+              <label>Trip Name</label>
+              <input type="text" id="tripName" placeholder="e.g. Europe Summer 2026"/>
+            </div>
+            <div class="form-group">
+              <label>Destination</label>
+              <select id="tripDestination">
+                <option value="">-- Select Destination --</option>
+                <option>Paris, France</option>
+                <option>Rome, Italy</option>
+                <option>London, UK</option>
+                <option>Barcelona, Spain</option>
+                <option>Amsterdam, Netherlands</option>
+                <option>Tokyo, Japan</option>
+                <option>Bali, Indonesia</option>
+                <option>Dubai, UAE</option>
+                <option>Cape Town, South Africa</option>
+                <option>New York, USA</option>
+                <option>Maldives</option>
+                <option>Sydney, Australia</option>
+              </select>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Start Date</label>
+                <input type="date" id="startDate"/>
+              </div>
+              <div class="form-group">
+                <label>End Date</label>
+                <input type="date" id="endDate"/>
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Budget ($)</label>
+                <input type="number" id="tripBudget" placeholder="e.g. 3000" min="0"/>
+              </div>
+              <div class="form-group">
+                <label>Travelers</label>
+                <input type="number" id="tripTravelers" value="2" min="1" max="20"/>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Trip Type</label>
+              <div class="trip-type-options">
+                <label class="type-opt"><input type="radio" name="tripType" value="Adventure" checked/> <i class="fas fa-mountain"></i> Adventure</label>
+                <label class="type-opt"><input type="radio" name="tripType" value="Leisure"/> <i class="fas fa-umbrella-beach"></i> Leisure</label>
+                <label class="type-opt"><input type="radio" name="tripType" value="Cultural"/> <i class="fas fa-landmark"></i> Cultural</label>
+                <label class="type-opt"><input type="radio" name="tripType" value="Business"/> <i class="fas fa-briefcase"></i> Business</label>
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Notes</label>
+              <textarea id="tripNotes" rows="3" placeholder="Any special requirements, visa notes, packing list..."></textarea>
+            </div>
+            <button class="btn-primary full-width" onclick="generateDays()">
+              <i class="fas fa-calendar-alt"></i> Generate Itinerary
+            </button>
+          </div>
+        </div>
+
+        <!-- RIGHT: Itinerary Builder -->
+        <div class="planner-itinerary-col">
+          <div class="planner-card">
+            <div class="itinerary-header">
+              <h3><i class="fas fa-calendar-check"></i> Day-by-Day Itinerary</h3>
+              <div id="tripDuration" class="trip-duration-badge hidden"></div>
+            </div>
+
+            <div id="itineraryEmpty" class="itinerary-empty">
+              <i class="fas fa-map-signs"></i>
+              <p>Fill in trip details and click "Generate Itinerary" to start building your plan!</p>
+            </div>
+
+            <div id="itineraryDays" class="itinerary-days"></div>
+
+            <!-- Budget Tracker -->
+            <div id="budgetTracker" class="budget-tracker hidden">
+              <h4><i class="fas fa-wallet"></i> Budget Tracker</h4>
+              <div class="budget-bar-wrap">
+                <div class="budget-bar">
+                  <div class="budget-fill" id="budgetFill"></div>
+                </div>
+                <span id="budgetPercent">0%</span>
+              </div>
+              <div class="budget-stats">
+                <span>Spent: <strong id="budgetSpent">$0</strong></span>
+                <span>Remaining: <strong id="budgetRemaining">$0</strong></span>
+                <span>Total: <strong id="budgetTotal">$0</strong></span>
+              </div>
+            </div>
+
+            <div id="saveSection" class="save-section hidden">
+              <button class="btn-primary" onclick="saveTrip()">
+                <i class="fas fa-save"></i> Save Trip
+              </button>
+              <a href="mytrips.html" class="btn-outline">
+                <i class="fas fa-list"></i> My Trips
+              </a>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="logo footer-logo">
+          <i class="fas fa-paper-plane logo-icon"></i>
+          <span>My<strong>Adventure</strong></span>
+        </div>
+        <p>Your trusted travel partner for discovering the world's most beautiful destinations.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="home.html">Packages</a></li>
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">Flights</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><i class="fas fa-phone"></i> Call - 008 374 575</li>
+          <li><i class="fas fa-envelope"></i> hello@myadventure.com</li>
+          <li><i class="fas fa-map-marker-alt"></i> 123 Travel Street, NY</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Newsletter</h4>
+        <p>Subscribe for travel tips &amp; exclusive deals!</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Your email address"/>
+          <button><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MyAdventure. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/planner.js"></script>
+</body>
+</html>
