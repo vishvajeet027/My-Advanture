@@ -2522,3 +2522,270 @@ body.nav-open::before {
   .flight-arc { width: 100%; }
   .fmd-hero { height: 160px; }
 }
+
+/* ===== DARK THEME (shared pages — matches dashboard) ===== */
+[data-theme="dark"] {
+  --light-bg: #1e2130;
+  --dark: #f0f0f0;
+  --text: #aaa;
+  --card-shadow: 0 8px 30px rgba(0, 0, 0, 0.35);
+  color-scheme: dark;
+}
+
+[data-theme="dark"] body {
+  color: #ccc;
+  background: #1e2130;
+}
+
+[data-theme="dark"] .section {
+  background: #1e2130;
+}
+
+[data-theme="dark"] .navbar.scrolled {
+  background: rgba(18, 21, 31, 0.97);
+  box-shadow: 0 2px 20px rgba(0, 0, 0, 0.35);
+}
+
+[data-theme="dark"] .navbar.scrolled .logo span { color: #fff; }
+[data-theme="dark"] .navbar.scrolled .logo strong { color: var(--primary); }
+[data-theme="dark"] .navbar.scrolled .nav-links a { color: #aaa; }
+[data-theme="dark"] .navbar.scrolled .nav-links a:hover,
+[data-theme="dark"] .navbar.scrolled .nav-links a.active { color: var(--primary); }
+
+[data-theme="dark"] .btn-theme {
+  background: #252840;
+  border-color: #3a3f55;
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .btn-login {
+  color: #ccc;
+  border-color: #3a3f55;
+}
+
+[data-theme="dark"] .lang-select,
+[data-theme="dark"] .nav-user-name {
+  color: #ccc;
+}
+
+[data-theme="dark"] .filter-section {
+  background: #1a1d2b;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  border-bottom: 1px solid #2a2f45;
+}
+
+[data-theme="dark"] .search-input-wrap input,
+[data-theme="dark"] .sort-select {
+  background: #252840;
+  border-color: #3a3f55;
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .search-input-wrap i {
+  color: #888;
+}
+
+[data-theme="dark"] .search-input-wrap input::placeholder {
+  color: #777;
+}
+
+[data-theme="dark"] .tag {
+  background: #252840;
+  border-color: #3a3f55;
+  color: #bbb;
+}
+
+[data-theme="dark"] .tag:hover,
+[data-theme="dark"] .tag.active {
+  background: rgba(10, 189, 227, 0.15);
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+[data-theme="dark"] .section-header h2,
+[data-theme="dark"] .trips-action-bar h2,
+[data-theme="dark"] .empty-state h3,
+[data-theme="dark"] .stat-item strong,
+[data-theme="dark"] .card-body h3,
+[data-theme="dark"] .hotel-card-name,
+[data-theme="dark"] .flight-time,
+[data-theme="dark"] .flight-code,
+[data-theme="dark"] .fmd-time-value,
+[data-theme="dark"] .hotel-modal-name,
+[data-theme="dark"] .hotel-modal-section-title,
+[data-theme="dark"] .trip-card-header h3,
+[data-theme="dark"] .fmd-detail-value {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .dest-grid-card,
+[data-theme="dark"] .hotel-card,
+[data-theme="dark"] .flight-card,
+[data-theme="dark"] .trip-card,
+[data-theme="dark"] .stat-item,
+[data-theme="dark"] .modal,
+[data-theme="dark"] .flight-modal {
+  background: #1a1d2b;
+  color: #ccc;
+  border: 1px solid #2a2f45;
+}
+
+[data-theme="dark"] .trip-card-body,
+[data-theme="dark"] .hotel-card-body,
+[data-theme="dark"] .flight-card-body,
+[data-theme="dark"] .card-body {
+  background: #1a1d2b;
+}
+
+[data-theme="dark"] .trip-detail-row,
+[data-theme="dark"] .card-country,
+[data-theme="dark"] .card-days,
+[data-theme="dark"] .card-body p,
+[data-theme="dark"] .hotel-card-desc,
+[data-theme="dark"] .hotel-card-location,
+[data-theme="dark"] .flight-city,
+[data-theme="dark"] .flight-meta,
+[data-theme="dark"] .flight-pax,
+[data-theme="dark"] .flight-stops,
+[data-theme="dark"] .flight-price-label,
+[data-theme="dark"] .results-count,
+[data-theme="dark"] .empty-state p,
+[data-theme="dark"] .stat-item span,
+[data-theme="dark"] .fmd-time-sub,
+[data-theme="dark"] .fmd-time-label,
+[data-theme="dark"] .fmd-detail-label,
+[data-theme="dark"] .fmd-price-per,
+[data-theme="dark"] .hotel-modal-desc,
+[data-theme="dark"] .hotel-modal-stars span {
+  color: #aaa;
+}
+
+[data-theme="dark"] .card-price span {
+  color: #888;
+}
+
+[data-theme="dark"] .trip-card-footer,
+[data-theme="dark"] .hotel-card-footer,
+[data-theme="dark"] .hotel-modal-footer,
+[data-theme="dark"] .hotel-modal-section-title {
+  border-color: #2a2f45;
+}
+
+[data-theme="dark"] .hotel-facility-chip {
+  background: #252840;
+  border-color: #3a3f55;
+  color: #bbb;
+}
+
+[data-theme="dark"] .hotel-facility-more {
+  color: #888;
+}
+
+[data-theme="dark"] .btn-delete {
+  background: #252840;
+  border-color: #5a3040;
+  color: #ff6b6b;
+}
+
+[data-theme="dark"] .btn-delete:hover {
+  background: #e74c3c;
+  color: #fff;
+}
+
+[data-theme="dark"] .btn-outline-danger {
+  background: #252840;
+  border-color: #5a3040;
+  color: #ff6b6b;
+}
+
+[data-theme="dark"] .modal-header,
+[data-theme="dark"] .flight-modal-header {
+  background: linear-gradient(135deg, #0097c4, #00b8b9);
+}
+
+[data-theme="dark"] .modal-body,
+[data-theme="dark"] .flight-modal-body,
+[data-theme="dark"] .hotel-modal-body {
+  background: #1a1d2b;
+  color: #ccc;
+}
+
+[data-theme="dark"] .modal-info-item,
+[data-theme="dark"] .modal-day-block,
+[data-theme="dark"] .hotel-modal-facility,
+[data-theme="dark"] .fmd-detail-item,
+[data-theme="dark"] .fmd-times-row,
+[data-theme="dark"] .fmd-booking-row {
+  background: #252840;
+  border-color: #3a3f55;
+}
+
+[data-theme="dark"] .modal-info-item label {
+  color: #888;
+}
+
+[data-theme="dark"] .modal-info-item span,
+[data-theme="dark"] .modal-day-block h4 {
+  color: #e0e0e0;
+}
+
+[data-theme="dark"] .modal-activity {
+  border-bottom-color: #3a3f55;
+  color: #bbb;
+}
+
+[data-theme="dark"] .info-chip {
+  background: rgba(10, 189, 227, 0.12);
+  color: var(--primary);
+}
+
+[data-theme="dark"] .fmd-times-row {
+  border-bottom-color: #3a3f55;
+}
+
+[data-theme="dark"] .fmd-time-note {
+  background: #2a2618;
+  border-left-color: #f39c12;
+  color: #d4a84b;
+}
+
+[data-theme="dark"] .fmd-pax-btn {
+  background: #1a1d2b;
+  border-color: #3a3f55;
+  color: #ccc;
+}
+
+[data-theme="dark"] .fmd-pax-count {
+  color: #f0f0f0;
+}
+
+[data-theme="dark"] .no-results,
+[data-theme="dark"] .empty-state {
+  color: #888;
+}
+
+[data-theme="dark"] .no-results i,
+[data-theme="dark"] .empty-state-icon {
+  color: #555;
+}
+
+[data-theme="dark"] .footer {
+  background: #12151f;
+  border-top: 1px solid #2a2f45;
+}
+
+[data-theme="dark"] .hamburger span {
+  background: #ccc;
+}
+
+[data-theme="dark"] .flight-card-footer {
+  border-top-color: #2a2f45;
+}
+
+[data-theme="dark"] .flight-arc-label {
+  color: #888;
+}
+
+[data-theme="dark"] .flight-arc-duration {
+  color: #bbb;
+}

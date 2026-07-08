@@ -391,12 +391,6 @@ function clearAppData() {
   setTimeout(()=>location.reload(),1200);
 }
 
-document.getElementById('themeToggle')?.addEventListener('click', () => {
-  const theme = ThemeStorage.toggle();
-  const chk = document.getElementById('themeCheckbox');
-  if (chk) chk.checked = theme==='dark';
-});
-
 document.addEventListener('DOMContentLoaded', () => {
   renderWelcomeCard();
   renderKPIs();
