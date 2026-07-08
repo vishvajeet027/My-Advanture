@@ -275,14 +275,7 @@
 }
 
 /* ===== NAVBAR THEME BUTTON ===== */
-.btn-theme {
-  width: 36px; height: 36px; border-radius: 50%;
-  background: var(--light-bg); border: 2px solid #e0e0e0;
-  color: var(--dark); cursor: pointer; font-size: 0.9rem;
-  display: flex; align-items: center; justify-content: center;
-  transition: var(--transition);
-}
-.btn-theme:hover { background: var(--primary); color: #fff; border-color: var(--primary); }
+/* btn-theme styles live in style.css */
 
 /* ===== DARK THEME ===== */
 [data-theme="dark"] body,

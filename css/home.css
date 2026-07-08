@@ -73,7 +73,10 @@ body {
   font-weight: 700;
   color: var(--text);
   text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
 }
+.nav-logo:hover { opacity: 0.85; }
 .nav-logo i {
   color: var(--primary);
   font-size: 1.5rem;
@@ -376,10 +379,22 @@ body {
 @media (max-width: 680px) {
   .cards-grid { grid-template-columns: 1fr; }
   .cards-section { padding: 0 20px 60px; }
-  .home-nav { padding: 16px 20px; }
   .nav-links-row { display: none; }
   .stats-row { gap: 28px; flex-wrap: wrap; padding: 0 20px 48px; }
   .hub-card { min-height: 280px; }
+}
+@media (max-width: 768px) {
+  .home-nav { padding: 14px 16px; }
+  .nav-logo { font-size: 1.15rem; gap: 8px; }
+  .nav-logo i { font-size: 1.25rem; }
+  .nav-user-name { display: none; }
+  .nav-right { gap: 10px; }
+  .btn-logout { padding: 8px 12px; font-size: 0.78rem; }
+  .nav-avatar { width: 34px; height: 34px; font-size: 0.75rem; }
+}
+@media (max-width: 480px) {
+  .btn-logout { font-size: 0; padding: 8px 10px; }
+  .btn-logout i { font-size: 0.9rem; }
 }
 
 /* ================================================================
