@@ -263,11 +263,69 @@
   gap: 10px;
 }
 
+.builder-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  gap: 16px;
+}
+
+.builder-section-header h2 {
+  margin-bottom: 0;
+}
+
 /* Hotel Selector */
+.hotel-selector-wrap {
+  position: relative;
+  overflow: hidden;
+}
+
+.hotel-scroll-controls {
+  display: flex;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+.hotel-scroll-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 2px solid #e5e5e5;
+  background: #fff;
+  color: var(--primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: var(--transition);
+}
+
+.hotel-scroll-btn:hover {
+  background: var(--primary);
+  color: #fff;
+  border-color: var(--primary);
+}
+
 .hotel-selector {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  display: flex;
   gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  padding-bottom: 12px;
+  scrollbar-width: thin;
+  scrollbar-color: var(--primary) #eee;
+}
+
+.hotel-selector::-webkit-scrollbar {
+  height: 6px;
+}
+
+.hotel-selector::-webkit-scrollbar-thumb {
+  background: var(--primary);
+  border-radius: 3px;
 }
 
 .hotel-option {
@@ -277,6 +335,10 @@
   transition: var(--transition);
   cursor: pointer;
   border: 2px solid transparent;
+  flex: 0 0 240px;
+  scroll-snap-align: start;
+  display: flex;
+  flex-direction: column;
 }
 
 .hotel-option:hover {
@@ -284,10 +346,32 @@
   box-shadow: 0 8px 20px rgba(10, 189, 227, 0.15);
 }
 
+.hotel-option-img-wrap {
+  height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background: #e8e8e8;
+  flex-shrink: 0;
+  -webkit-overflow-scrolling: touch;
+  touch-action: pan-y;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(10, 189, 227, 0.45) transparent;
+}
+
+.hotel-option-img-wrap::-webkit-scrollbar {
+  width: 4px;
+}
+
+.hotel-option-img-wrap::-webkit-scrollbar-thumb {
+  background: rgba(10, 189, 227, 0.45);
+  border-radius: 2px;
+}
+
 .hotel-option img {
   width: 100%;
-  height: 160px;
-  object-fit: cover;
+  height: auto;
+  display: block;
+  object-fit: contain;
 }
 
 .hotel-option-info {
@@ -685,7 +769,6 @@
     grid-template-columns: 1fr;
   }
 
-  .hotel-selector,
   .meal-options,
   .attractions-list,
   .transport-list,

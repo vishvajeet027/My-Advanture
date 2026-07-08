@@ -108,12 +108,12 @@
 
   <!-- BOOK MODAL -->
   <div id="pkgModal" class="modal-overlay hidden" onclick="handleModalClick(event)">
-    <div class="modal" style="max-width:600px;">
+    <div class="modal pkg-modal">
       <div class="modal-header">
         <h3 id="pkgModalTitle">Package Details</h3>
         <button class="modal-close" onclick="closePkgModal()"><i class="fas fa-times"></i></button>
       </div>
-      <div class="modal-body" id="pkgModalBody"></div>
+      <div class="modal-body pkg-modal-body" id="pkgModalBody"></div>
     </div>
   </div>
 
@@ -169,6 +169,7 @@
 
   <script src="js/storage.js"></script>
   <script src="js/mockdata.js"></script>
+  <script src="js/package-itineraries.js"></script>
   <script src="js/app.js"></script>
   <script src="js/destinations.js"></script>
 </body>
