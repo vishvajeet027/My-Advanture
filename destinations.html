@@ -88,6 +88,17 @@
     </div>
   </section>
 
+  <!-- HOTEL DETAIL MODAL -->
+  <div id="hotelModal" class="modal-overlay hidden" onclick="handleHotelModalClick(event)">
+    <div class="modal hotel-modal">
+      <div class="modal-header">
+        <h3 id="hotelModalTitle">Hotel Details</h3>
+        <button class="modal-close" onclick="closeHotelModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body hotel-modal-body" id="hotelModalBody"></div>
+    </div>
+  </div>
+
   <!-- BOOK MODAL -->
   <div id="pkgModal" class="modal-overlay hidden" onclick="handleModalClick(event)">
     <div class="modal" style="max-width:600px;">
@@ -149,6 +160,8 @@
     </div>
   </footer>
 
+  <script src="js/storage.js"></script>
+  <script src="js/mockdata.js"></script>
   <script src="js/app.js"></script>
   <script src="js/destinations.js"></script>
 </body>

@@ -1,6 +1,10 @@
 /* ================================================================
-   destinations.js — 20 Travel Packages
+   destinations.js — 20 Travel Packages + 20 Hotels
    ================================================================ */
+
+// Check URL params to determine view mode
+const urlParams = new URLSearchParams(window.location.search);
+const viewMode = urlParams.get('view') || 'packages'; // 'packages' or 'hotels'
 
 const destinations = [
   { id:1,  name:'Bali Bliss',            country:'Indonesia',     category:'beach',     days:7,  price:1299, rating:4.9, badge:'Best Seller', image:'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=600&q=80', desc:'Tropical paradise with rice terraces, temples, and pristine beaches. Includes yoga retreat and cooking class.', includes:['Return Flights','5-Star Resort','Daily Breakfast','Island Tours','Spa Session'] },
@@ -155,6 +159,286 @@ function bookPackage() {
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', () => {
-  renderCards(destinations);
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') closePkgModal(); });
+  if (viewMode === 'hotels') {
+    initHotelsView();
+  } else {
+    renderCards(destinations);
+  }
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') { closePkgModal(); closeHotelModal(); }
+  });
 });
+
+/* ================================================================
+   HOTELS VIEW
+   ================================================================ */
+
+const FACILITY_ICONS = {
+  'Pool':              { icon: 'fas fa-swimming-pool',   color: '#0abde3' },
+  'Beach Access':      { icon: 'fas fa-umbrella-beach',  color: '#e17055' },
+  'Spa':               { icon: 'fas fa-spa',             color: '#a29bfe' },
+  'Gym':               { icon: 'fas fa-dumbbell',        color: '#00b894' },
+  'Restaurant':        { icon: 'fas fa-utensils',        color: '#fdcb6e' },
+  'Bar':               { icon: 'fas fa-glass-martini-alt',color:'#fd79a8' },
+  'WiFi':              { icon: 'fas fa-wifi',            color: '#74b9ff' },
+  'Parking':           { icon: 'fas fa-parking',         color: '#636e72' },
+  'Garden':            { icon: 'fas fa-leaf',            color: '#55efc4' },
+  'Concierge':         { icon: 'fas fa-concierge-bell',  color: '#fdcb6e' },
+  'Conference Room':   { icon: 'fas fa-chalkboard',      color: '#b2bec3' },
+  'Airport Shuttle':   { icon: 'fas fa-shuttle-van',     color: '#0984e3' },
+  'Sauna':             { icon: 'fas fa-hot-tub',         color: '#e17055' },
+  'Jacuzzi':           { icon: 'fas fa-hot-tub',         color: '#a29bfe' },
+  'Room Service':      { icon: 'fas fa-bell',            color: '#fdcb6e' },
+  'Breakfast Included':{ icon: 'fas fa-coffee',          color: '#e17055' },
+  'Business Center':   { icon: 'fas fa-briefcase',       color: '#636e72' },
+  'Water Sports':      { icon: 'fas fa-water',           color: '#0abde3' },
+  'Snorkeling':        { icon: 'fas fa-fish',            color: '#00cec9' },
+  'Casino':            { icon: 'fas fa-dice',            color: '#6c5ce7' },
+  'Shopping':          { icon: 'fas fa-shopping-bag',    color: '#fd79a8' },
+  'Safari Tours':      { icon: 'fas fa-binoculars',      color: '#e17055' },
+  'Nature Tours':      { icon: 'fas fa-tree',            color: '#55efc4' },
+  'Aurora Tours':      { icon: 'fas fa-star',            color: '#a29bfe' },
+  'Campfire':          { icon: 'fas fa-fire',            color: '#e17055' },
+  'Library':           { icon: 'fas fa-book',            color: '#74b9ff' },
+  'Ski Storage':       { icon: 'fas fa-skiing',          color: '#74b9ff' },
+  'Fireplace':         { icon: 'fas fa-fire-alt',        color: '#e17055' },
+  'Onsen Bath':        { icon: 'fas fa-hot-tub',         color: '#fd79a8' },
+  'Tea Ceremony':      { icon: 'fas fa-mug-hot',         color: '#fdcb6e' },
+  'Hammam':            { icon: 'fas fa-spa',             color: '#a29bfe' },
+  'Terrace':           { icon: 'fas fa-building',        color: '#74b9ff' },
+  'Hiking':            { icon: 'fas fa-hiking',          color: '#55efc4' },
+};
+
+function getFacilityIcon(name) {
+  return FACILITY_ICONS[name] || { icon: 'fas fa-check-circle', color: '#0abde3' };
+}
+
+function initHotelsView() {
+  // Update page hero & title
+  document.title = 'Hotels - MyAdventure';
+  const hero = document.querySelector('.page-hero');
+  if (hero) {
+    hero.style.backgroundImage = "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80')";
+    const h1 = hero.querySelector('h1');
+    const p  = hero.querySelector('p');
+    const breadcrumb = hero.querySelector('.breadcrumb span');
+    if (h1) h1.textContent = 'Browse Hotels';
+    if (p)  p.textContent  = 'Find and book top-rated hotels worldwide at the best prices';
+    if (breadcrumb) breadcrumb.textContent = 'Hotels';
+  }
+
+  // Update active nav link
+  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
+  const hotelsLink = document.querySelector('.nav-links a[href="destinations.html?view=hotels"]');
+  if (hotelsLink) hotelsLink.classList.add('active');
+  const packagesLink = document.querySelector('.nav-links a[href="destinations.html"]');
+  if (packagesLink) packagesLink.classList.remove('active');
+
+  // Swap filter section for hotel search
+  const filterSection = document.querySelector('.filter-section');
+  if (filterSection) {
+    filterSection.innerHTML = `
+      <div class="container">
+        <div class="filter-bar">
+          <div class="search-input-wrap">
+            <i class="fas fa-search"></i>
+            <input type="text" id="hotelSearchInput" placeholder="Search hotels, cities, countries..." oninput="filterHotels()"/>
+          </div>
+          <div class="filter-tags" id="hotelFacilityFilter">
+            <button class="tag active" onclick="filterHotelsByFacility(this,'all')">All</button>
+            <button class="tag" onclick="filterHotelsByFacility(this,'Pool')"><i class="fas fa-swimming-pool"></i> Pool</button>
+            <button class="tag" onclick="filterHotelsByFacility(this,'Garden')"><i class="fas fa-leaf"></i> Garden</button>
+            <button class="tag" onclick="filterHotelsByFacility(this,'Spa')"><i class="fas fa-spa"></i> Spa</button>
+            <button class="tag" onclick="filterHotelsByFacility(this,'Gym')"><i class="fas fa-dumbbell"></i> Gym</button>
+            <button class="tag" onclick="filterHotelsByFacility(this,'Beach Access')"><i class="fas fa-umbrella-beach"></i> Beach</button>
+          </div>
+          <select id="hotelSortSelect" onchange="filterHotels()" class="sort-select">
+            <option value="default">Sort By</option>
+            <option value="price-low">Price: Low to High</option>
+            <option value="price-high">Price: High to Low</option>
+            <option value="rating">Top Rated</option>
+            <option value="name">Name A–Z</option>
+          </select>
+        </div>
+      </div>`;
+  }
+
+  // Update results container
+  const resultsCount = document.getElementById('resultsCount');
+  if (resultsCount) resultsCount.innerHTML = 'Showing <strong>20</strong> hotels';
+
+  renderHotelCards(MOCK_HOTELS);
+}
+
+let activeHotelFacility = 'all';
+let selectedHotel = null;
+
+function renderHotelCards(data) {
+  const grid    = document.getElementById('destinationsGrid');
+  const noRes   = document.getElementById('noResults');
+  const countEl = document.getElementById('resultsCount');
+  if (!grid) return;
+
+  if (data.length === 0) {
+    grid.innerHTML = '';
+    if (noRes) noRes.classList.remove('hidden');
+    if (countEl) countEl.innerHTML = 'Showing <strong>0</strong> hotels';
+    return;
+  }
+
+  if (noRes) noRes.classList.add('hidden');
+  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> hotel${data.length !== 1 ? 's' : ''}`;
+
+  grid.innerHTML = data.map(h => {
+    const stars = '★'.repeat(Math.floor(h.rating)) + (h.rating % 1 >= 0.5 ? '½' : '');
+    const topFacilities = h.facilities.slice(0, 4);
+    return `
+    <div class="hotel-card" onclick="openHotelModal(${h.id})">
+      <div class="hotel-card-img" role="button" aria-label="View ${h.name} details">
+        <img src="${h.image}" alt="${h.name}" loading="lazy"/>
+        <span class="hotel-rating-badge"><i class="fas fa-star"></i> ${h.rating}</span>
+        <div class="hotel-img-overlay">
+          <span class="hotel-view-btn"><i class="fas fa-eye"></i> View Details</span>
+        </div>
+      </div>
+      <div class="hotel-card-body">
+        <div class="hotel-card-location">
+          <i class="fas fa-map-marker-alt"></i>
+          <span>${h.city}, ${h.country}</span>
+        </div>
+        <h3 class="hotel-card-name">${h.name}</h3>
+        <p class="hotel-card-desc">${h.desc.substring(0, 80)}...</p>
+        <div class="hotel-facilities-row">
+          ${topFacilities.map(f => {
+            const fi = getFacilityIcon(f);
+            return `<span class="hotel-facility-chip" title="${f}">
+              <i class="${fi.icon}" style="color:${fi.color}"></i>
+              <span>${f}</span>
+            </span>`;
+          }).join('')}
+          ${h.facilities.length > 4 ? `<span class="hotel-facility-more">+${h.facilities.length - 4} more</span>` : ''}
+        </div>
+        <div class="hotel-card-footer">
+          <div class="hotel-price">
+            <span class="hotel-price-from">from</span>
+            <span class="hotel-price-amount">$${h.price}</span>
+            <span class="hotel-price-night">/ night</span>
+          </div>
+          <button class="btn-card" onclick="event.stopPropagation(); openHotelModal(${h.id})">
+            <i class="fas fa-eye"></i> View Hotel
+          </button>
+        </div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function filterHotelsByFacility(btn, facility) {
+  document.querySelectorAll('#hotelFacilityFilter .tag').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  activeHotelFacility = facility;
+  filterHotels();
+}
+
+function filterHotels() {
+  const query = (document.getElementById('hotelSearchInput')?.value || '').toLowerCase();
+  const sort  = document.getElementById('hotelSortSelect')?.value || 'default';
+
+  let data = MOCK_HOTELS.filter(h => {
+    const matchFacility = activeHotelFacility === 'all' || h.facilities.includes(activeHotelFacility);
+    const matchSearch   = h.name.toLowerCase().includes(query) ||
+                          h.city.toLowerCase().includes(query) ||
+                          h.country.toLowerCase().includes(query);
+    return matchFacility && matchSearch;
+  });
+
+  if (sort === 'price-low')  data.sort((a,b) => a.price - b.price);
+  else if (sort === 'price-high') data.sort((a,b) => b.price - a.price);
+  else if (sort === 'rating') data.sort((a,b) => b.rating - a.rating);
+  else if (sort === 'name')   data.sort((a,b) => a.name.localeCompare(b.name));
+
+  renderHotelCards(data);
+}
+
+function openHotelModal(id) {
+  selectedHotel = MOCK_HOTELS.find(h => h.id === id);
+  if (!selectedHotel) return;
+  const h = selectedHotel;
+
+  const starsHtml = Array.from({ length: 5 }, (_, i) => {
+    if (i < Math.floor(h.rating)) return '<i class="fas fa-star" style="color:#ffd700"></i>';
+    if (i < h.rating)             return '<i class="fas fa-star-half-alt" style="color:#ffd700"></i>';
+    return '<i class="far fa-star" style="color:#ddd"></i>';
+  }).join('');
+
+  const facilitiesHtml = h.facilities.map(f => {
+    const fi = getFacilityIcon(f);
+    return `<div class="hotel-modal-facility">
+      <div class="hotel-modal-facility-icon" style="background:${fi.color}22; color:${fi.color}">
+        <i class="${fi.icon}"></i>
+      </div>
+      <span>${f}</span>
+    </div>`;
+  }).join('');
+
+  document.getElementById('hotelModalTitle').textContent = h.name;
+  document.getElementById('hotelModalBody').innerHTML = `
+    <div class="hotel-modal-img-wrap">
+      <img src="${h.image}" alt="${h.name}"/>
+      <div class="hotel-modal-img-overlay">
+        <div class="hotel-modal-location">
+          <i class="fas fa-map-marker-alt"></i> ${h.city}, ${h.country}
+        </div>
+      </div>
+    </div>
+
+    <div class="hotel-modal-content">
+      <div class="hotel-modal-top">
+        <div>
+          <h3 class="hotel-modal-name">${h.name}</h3>
+          <div class="hotel-modal-stars">${starsHtml} <span>${h.rating} / 5.0</span></div>
+        </div>
+        <div class="hotel-modal-price-block">
+          <div class="hotel-modal-price-label">Per Night</div>
+          <div class="hotel-modal-price-value">$${h.price}</div>
+        </div>
+      </div>
+
+      <p class="hotel-modal-desc">${h.desc}</p>
+
+      <div class="hotel-modal-section-title">
+        <i class="fas fa-concierge-bell"></i> Available Facilities
+      </div>
+      <div class="hotel-modal-facilities">
+        ${facilitiesHtml}
+      </div>
+
+      <div class="hotel-modal-footer">
+        <div class="hotel-modal-info-chips">
+          <span class="info-chip"><i class="fas fa-map-marker-alt"></i> ${h.city}</span>
+          <span class="info-chip"><i class="fas fa-globe"></i> ${h.country}</span>
+          <span class="info-chip"><i class="fas fa-door-open"></i> ${h.facilities.length} Facilities</span>
+        </div>
+        <button class="btn-primary" onclick="bookHotel()">
+          <i class="fas fa-calendar-check"></i> Book Now — $${h.price}/night
+        </button>
+      </div>
+    </div>`;
+
+  document.getElementById('hotelModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHotelModal() {
+  document.getElementById('hotelModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function handleHotelModalClick(e) {
+  if (e.target.id === 'hotelModal') closeHotelModal();
+}
+
+function bookHotel() {
+  closeHotelModal();
+  if (selectedHotel) showToast('🏨 ' + selectedHotel.name + ' booked! Check My Trips.', 'success');
+}

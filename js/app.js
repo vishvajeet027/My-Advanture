@@ -83,7 +83,7 @@ function showToast(msg, type = '') {
 }
 
 /* ===== SCROLL REVEAL ANIMATION ===== */
-const revealElements = document.querySelectorAll('.dest-card, .service-card, .review-card, .stat-item, .trip-card, .dest-grid-card');
+const revealElements = document.querySelectorAll('.dest-card, .service-card, .review-card, .stat-item, .trip-card, .dest-grid-card, .hotel-card');
 const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {

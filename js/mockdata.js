@@ -4,6 +4,30 @@
                  20 Favorites, 10 Weather Objects
    ================================================================ */
 
+/* ===== 20 HOTELS ===== */
+const MOCK_HOTELS = [
+  { id: 1,  name: 'Grand Seaside Resort',     city: 'Miami',       country: 'USA',        rating: 4.8, price: 280, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Luxurious beachfront resort with stunning ocean views, world-class dining, and premium amenities.', facilities: ['Pool', 'Beach Access', 'Spa', 'Gym', 'Restaurant', 'WiFi', 'Parking'] },
+  { id: 2,  name: 'Tokyo Imperial Hotel',     city: 'Tokyo',       country: 'Japan',      rating: 4.9, price: 320, image: 'https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?w=600&q=80', desc: 'Elegant hotel in the heart of Tokyo with traditional Japanese hospitality and modern comfort.', facilities: ['Restaurant', 'Bar', 'Gym', 'WiFi', 'Conference Room', 'Garden', 'Spa'] },
+  { id: 3,  name: 'Paradise Beach Villa',     city: 'Bali',        country: 'Indonesia',  rating: 4.7, price: 195, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80', desc: 'Tropical paradise villa with private pool, lush gardens, and authentic Balinese architecture.', facilities: ['Pool', 'Garden', 'Beach Access', 'Restaurant', 'Spa', 'WiFi', 'Airport Shuttle'] },
+  { id: 4,  name: 'Alpine Mountain Lodge',    city: 'Interlaken',  country: 'Switzerland',rating: 4.9, price: 380, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80', desc: 'Cozy mountain lodge with breathtaking Alpine views, perfect for nature lovers and ski enthusiasts.', facilities: ['Restaurant', 'Bar', 'Ski Storage', 'Fireplace', 'WiFi', 'Parking', 'Sauna'] },
+  { id: 5,  name: 'Dubai Skyline Towers',     city: 'Dubai',       country: 'UAE',        rating: 5.0, price: 450, image: 'https://images.unsplash.com/photo-1582719508461-905c673771fd?w=600&q=80', desc: 'Ultra-modern luxury hotel in downtown Dubai with panoramic city views and rooftop infinity pool.', facilities: ['Pool', 'Gym', 'Spa', 'Restaurant', 'Bar', 'WiFi', 'Concierge', 'Parking'] },
+  { id: 6,  name: 'Historic Paris Boutique',  city: 'Paris',       country: 'France',     rating: 4.6, price: 240, image: 'https://images.unsplash.com/photo-1455587734955-081b22074882?w=600&q=80', desc: 'Charming boutique hotel in a historic Parisian building, steps away from the Eiffel Tower.', facilities: ['Restaurant', 'WiFi', 'Concierge', 'Bar', 'Garden', 'Room Service'] },
+  { id: 7,  name: 'Santorini Sunset Suites',  city: 'Santorini',   country: 'Greece',     rating: 4.9, price: 350, image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80', desc: 'Iconic white-washed cave suites with private terraces overlooking the stunning Aegean caldera.', facilities: ['Pool', 'Restaurant', 'WiFi', 'Spa', 'Jacuzzi', 'Breakfast Included'] },
+  { id: 8,  name: 'Amazon Rainforest Lodge',  city: 'Manaus',      country: 'Brazil',     rating: 4.5, price: 175, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80', desc: 'Eco-friendly jungle lodge deep in the Amazon with guided nature tours and wildlife encounters.', facilities: ['Restaurant', 'Garden', 'Nature Tours', 'WiFi', 'Bar', 'Library'] },
+  { id: 9,  name: 'Manhattan Plaza Hotel',    city: 'New York',    country: 'USA',        rating: 4.7, price: 290, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80', desc: 'Prime location hotel in the heart of Manhattan, walking distance to Times Square and Broadway.', facilities: ['Gym', 'Restaurant', 'Bar', 'WiFi', 'Concierge', 'Business Center', 'Parking'] },
+  { id: 10, name: 'Maldives Water Bungalow', city: 'Male',        country: 'Maldives',   rating: 5.0, price: 520, image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80', desc: 'Exclusive overwater bungalow with direct lagoon access, glass floors, and unparalleled privacy.', facilities: ['Pool', 'Beach Access', 'Spa', 'Restaurant', 'Water Sports', 'WiFi', 'Snorkeling'] },
+  { id: 11, name: 'London Heritage Inn',      city: 'London',      country: 'UK',         rating: 4.6, price: 265, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80', desc: 'Classic British hotel with Victorian charm, afternoon tea service, and excellent transport links.', facilities: ['Restaurant', 'Bar', 'WiFi', 'Gym', 'Concierge', 'Business Center'] },
+  { id: 12, name: 'Safari Desert Camp',       city: 'Nairobi',     country: 'Kenya',      rating: 4.8, price: 220, image: 'https://images.unsplash.com/photo-1583037189850-1921ae7c6c22?w=600&q=80', desc: 'Authentic safari camp with luxury tents, game drives, and unforgettable wildlife experiences.', facilities: ['Restaurant', 'Bar', 'Safari Tours', 'Campfire', 'WiFi', 'Garden'] },
+  { id: 13, name: 'Sydney Harbour Hotel',     city: 'Sydney',      country: 'Australia',  rating: 4.7, price: 310, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Modern waterfront hotel with stunning Opera House and Harbour Bridge views from every room.', facilities: ['Pool', 'Gym', 'Restaurant', 'Bar', 'Spa', 'WiFi', 'Parking'] },
+  { id: 14, name: 'Kyoto Traditional Ryokan', city: 'Kyoto',       country: 'Japan',      rating: 4.9, price: 280, image: 'https://images.unsplash.com/photo-1564501049412-61c2a3083791?w=600&q=80', desc: 'Authentic Japanese inn with tatami rooms, onsen baths, and traditional kaiseki dining.', facilities: ['Onsen Bath', 'Garden', 'Restaurant', 'WiFi', 'Tea Ceremony', 'Spa'] },
+  { id: 15, name: 'Barcelona Beach House',    city: 'Barcelona',   country: 'Spain',      rating: 4.5, price: 190, image: 'https://images.unsplash.com/photo-1551882547-ff40c63fe5fa?w=600&q=80', desc: 'Modern beachside hotel with rooftop terrace bar, steps from Barceloneta Beach and Las Ramblas.', facilities: ['Pool', 'Beach Access', 'Restaurant', 'Bar', 'WiFi', 'Gym'] },
+  { id: 16, name: 'Iceland Northern Lights Lodge', city: 'Reykjavik', country: 'Iceland', rating: 4.8, price: 295, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Remote lodge with glass-roofed rooms designed for optimal aurora viewing and geothermal spa.', facilities: ['Spa', 'Restaurant', 'WiFi', 'Sauna', 'Aurora Tours', 'Fireplace'] },
+  { id: 17, name: 'Rome Colosseum Suites',    city: 'Rome',        country: 'Italy',      rating: 4.7, price: 255, image: 'https://images.unsplash.com/photo-1445019980597-93fa8acb246c?w=600&q=80', desc: 'Elegant suites with Colosseum views, Italian marble bathrooms, and authentic Roman hospitality.', facilities: ['Restaurant', 'Bar', 'WiFi', 'Concierge', 'Breakfast Included', 'Terrace'] },
+  { id: 18, name: 'Singapore Marina Bay Hotel', city: 'Singapore', country: 'Singapore',  rating: 5.0, price: 420, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Iconic hotel with rooftop infinity pool, stunning skyline views, and world-class dining options.', facilities: ['Pool', 'Gym', 'Spa', 'Restaurant', 'Bar', 'WiFi', 'Casino', 'Shopping'] },
+  { id: 19, name: 'Morocco Riad Palace',      city: 'Marrakech',   country: 'Morocco',    rating: 4.6, price: 165, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80', desc: 'Traditional Moroccan riad with ornate tile work, courtyard fountain, and rooftop terrace.', facilities: ['Pool', 'Garden', 'Restaurant', 'WiFi', 'Hammam', 'Terrace'] },
+  { id: 20, name: 'Canadian Mountain Retreat', city: 'Banff',      country: 'Canada',     rating: 4.8, price: 270, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80', desc: 'Rustic luxury resort in the Canadian Rockies with hiking trails, hot springs, and mountain views.', facilities: ['Pool', 'Spa', 'Restaurant', 'Bar', 'Gym', 'WiFi', 'Hiking', 'Parking'] },
+];
+
 /* ===== 20 DESTINATIONS ===== */
 const MOCK_DESTINATIONS = [
   { id: 1,  name: 'Paris',        country: 'France',       category: 'europe',     days: 7,  price: 2800, rating: 4.9, trending: true,  image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80', desc: 'The city of love, art, and iconic landmarks like the Eiffel Tower.' },
@@ -187,6 +211,14 @@ const MockData = {
 
   getTopRated(n = 6) {
     return [...MOCK_DESTINATIONS].sort((a, b) => b.rating - a.rating).slice(0, n);
+  },
+
+  getAllHotels() {
+    return MOCK_HOTELS;
+  },
+
+  getHotelById(id) {
+    return MOCK_HOTELS.find(h => h.id === id) || null;
   }
 };
 
