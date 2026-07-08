@@ -14,26 +14,28 @@
   <!-- NAVBAR -->
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
-      <div class="logo">
+      <a href="home.html" class="logo">
         <i class="fas fa-paper-plane logo-icon"></i>
         <span>My<strong>Adventure</strong></span>
-      </div>
+      </a>
       <ul class="nav-links" id="navLinks">
         <li><a href="dashboard.html" class="active">Dashboard</a></li>
-        <li><a href="home.html">Packages</a></li>
+        <li><a href="destinations.html">Packages</a></li>
         <li><a href="destinations.html?view=hotels">Hotels</a></li>
         <li><a href="planner.html">Flights</a></li>
         <li><a href="mytrips.html">Bookings</a></li>
       </ul>
-      <div class="nav-actions">
-        <button class="btn-theme" id="themeToggle" title="Toggle theme">
-          <i class="fas fa-moon" id="themeIcon"></i>
+      <div class="nav-end">
+        <div class="nav-actions">
+          <button class="btn-theme" id="themeToggle" title="Toggle theme">
+            <i class="fas fa-moon" id="themeIcon"></i>
+          </button>
+          <a href="login.html" class="btn-login" id="navLoginBtn">Login</a>
+          <a href="login.html" class="btn-signup" id="navSignupBtn">Sign up</a>
+        </div>
+        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
+          <span></span><span></span><span></span>
         </button>
-        <a href="login.html" class="btn-login" id="navLoginBtn">Login</a>
-        <a href="login.html" class="btn-signup" id="navSignupBtn">Sign up</a>
-      </div>
-      <div class="hamburger" id="hamburger">
-        <span></span><span></span><span></span>
       </div>
     </div>
   </nav>
