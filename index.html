@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MyAdventure</title>
+  <script>
+    // Redirect based on login session
+    (function() {
+      try {
+        var session = JSON.parse(localStorage.getItem('myAdventureSession'));
+        if (session && session.id) {
+          window.location.replace('home.html');
+        } else {
+          window.location.replace('login.html');
+        }
+      } catch(e) {
+        window.location.replace('login.html');
+      }
+    })();
+  </script>
+</head>
+<body></body>
+</html>

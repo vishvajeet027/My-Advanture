@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>My Trips - MyAdventure</title>
+  <link rel="stylesheet" href="css/style.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+</head>
+<body>
+
+  <!-- NAVBAR -->
+  <nav class="navbar scrolled" id="navbar">
+    <div class="nav-container">
+      <div class="logo">
+        <i class="fas fa-paper-plane logo-icon"></i>
+        <span>My<strong>Adventure</strong></span>
+      </div>
+      <ul class="nav-links" id="navLinks">
+        <li><a href="home.html">Packages</a></li>
+        <li><a href="destinations.html">Hotels</a></li>
+        <li><a href="planner.html">Flights</a></li>
+        <li><a href="mytrips.html" class="active">Bookings</a></li>
+        <li><a href="dashboard.html">Dashboard</a></li>
+      </ul>
+      <div class="nav-actions">
+        <a href="login.html" class="btn-login">Login</a>
+        <a href="login.html" class="btn-signup">Sign up</a>
+        <div class="lang-select">EN <i class="fas fa-chevron-down"></i></div>
+      </div>
+      <div class="hamburger" id="hamburger">
+        <span></span><span></span><span></span>
+      </div>
+    </div>
+  </nav>
+
+  <!-- PAGE HERO -->
+  <section class="page-hero" style="background-image:url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?w=1600&q=80')">
+    <div class="page-hero-overlay"></div>
+    <div class="page-hero-content">
+      <h1>My Trips</h1>
+      <p>View and manage all your saved travel itineraries</p>
+      <div class="breadcrumb">
+        <a href="index.html">Home</a> <i class="fas fa-chevron-right"></i> <span>My Trips</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- MY TRIPS SECTION -->
+  <section class="section">
+    <div class="container">
+
+      <!-- Stats Bar -->
+      <div class="trips-stats" id="tripsStats">
+        <div class="stat-item">
+          <i class="fas fa-suitcase-rolling"></i>
+          <div>
+            <strong id="totalTrips">0</strong>
+            <span>Total Trips</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-globe-americas"></i>
+          <div>
+            <strong id="totalDestinations">0</strong>
+            <span>Packages</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-calendar-day"></i>
+          <div>
+            <strong id="totalDays">0</strong>
+            <span>Days Planned</span>
+          </div>
+        </div>
+        <div class="stat-item">
+          <i class="fas fa-dollar-sign"></i>
+          <div>
+            <strong id="totalBudget">$0</strong>
+            <span>Total Budget</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Action Bar -->
+      <div class="trips-action-bar">
+        <h2>Saved Itineraries</h2>
+        <div class="trips-actions">
+          <a href="planner.html" class="btn-primary">
+            <i class="fas fa-plus"></i> New Trip
+          </a>
+          <button class="btn-outline-danger" onclick="clearAllTrips()">
+            <i class="fas fa-trash"></i> Clear All
+          </button>
+        </div>
+      </div>
+
+      <!-- Trips Grid -->
+      <div class="trips-grid" id="tripsGrid">
+        <!-- Populated by JS -->
+      </div>
+
+      <!-- Empty State -->
+      <div class="empty-state hidden" id="emptyState">
+        <div class="empty-state-icon"><i class="fas fa-suitcase-rolling"></i></div>
+        <h3>No trips saved yet!</h3>
+        <p>Start planning your dream vacation. Create your first itinerary now.</p>
+        <a href="planner.html" class="btn-primary">
+          <i class="fas fa-plus"></i> Plan a Trip
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- TRIP DETAIL MODAL -->
+  <div class="modal-overlay hidden" id="tripModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTripName">Trip Details</h3>
+        <button class="modal-close" onclick="closeModal()"><i class="fas fa-times"></i></button>
+      </div>
+      <div class="modal-body" id="modalBody">
+        <!-- Populated by JS -->
+      </div>
+    </div>
+  </div>
+
+  <!-- TOAST -->
+  <div class="toast" id="toast"></div>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-container">
+      <div class="footer-col">
+        <div class="logo footer-logo">
+          <i class="fas fa-paper-plane logo-icon"></i>
+          <span>My<strong>Adventure</strong></span>
+        </div>
+        <p>Your trusted travel partner for discovering the world's most beautiful destinations.</p>
+        <div class="social-links">
+          <a href="#"><i class="fab fa-facebook-f"></i></a>
+          <a href="#"><i class="fab fa-twitter"></i></a>
+          <a href="#"><i class="fab fa-instagram"></i></a>
+          <a href="#"><i class="fab fa-youtube"></i></a>
+        </div>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <ul>
+          <li><a href="home.html">Packages</a></li>
+          <li><a href="#">Hotels</a></li>
+          <li><a href="#">Flights</a></li>
+          <li><a href="#">About Us</a></li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <ul>
+          <li><i class="fas fa-phone"></i> Call - 008 374 575</li>
+          <li><i class="fas fa-envelope"></i> hello@myadventure.com</li>
+          <li><i class="fas fa-map-marker-alt"></i> 123 Travel Street, NY</li>
+        </ul>
+      </div>
+      <div class="footer-col">
+        <h4>Newsletter</h4>
+        <p>Subscribe for travel tips &amp; exclusive deals!</p>
+        <div class="newsletter-form">
+          <input type="email" placeholder="Your email address"/>
+          <button><i class="fas fa-paper-plane"></i></button>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>&copy; 2026 MyAdventure. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <script src="js/app.js"></script>
+  <script src="js/mytrips.js"></script>
+</body>
+</html>
