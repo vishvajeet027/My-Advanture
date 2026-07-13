@@ -387,6 +387,7 @@ function reseedData() {
 function clearAppData() {
   if (!confirm('Clear ALL app data? This cannot be undone.')) return;
   Storage.clearAll();
+  localStorage.setItem('myAdventureDataCleared', '1');
   showToast('All data cleared.','error');
   setTimeout(()=>location.reload(),1200);
 }
