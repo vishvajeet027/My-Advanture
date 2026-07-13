@@ -56,9 +56,9 @@ const MOCK_HOTELS = [
 const MOCK_CITY_PLACES = {
   Paris: [
     { id: 1, name: 'Eiffel Tower', type: 'Landmark', rating: 4.9, price: 2490, image: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&q=80', desc: 'Iconic iron lattice tower with panoramic city views.' },
-    { id: 2, name: 'Louvre Museum', type: 'Museum', rating: 4.8, price: 1826, image: 'https://images.unsplash.com/photo-1499856871958-5b962179113d?w=600&q=80', desc: 'World\'s largest art museum — home to the Mona Lisa.' },
+    { id: 2, name: 'Louvre Museum', type: 'Museum', rating: 4.8, price: 1826, image: 'https://images.unsplash.com/photo-1549144511-f099eac38c67?w=600&q=80', desc: 'World\'s largest art museum — home to the Mona Lisa.' },
     { id: 3, name: 'Notre-Dame Cathedral', type: 'Heritage', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80', desc: 'Gothic masterpiece on the Île de la Cité.' },
-    { id: 4, name: 'Montmartre & Sacré-Cœur', type: 'Scenic', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1431274172761-fca41d894122?w=600&q=80', desc: 'Artists\' quarter with hilltop basilica and city views.' },
+    { id: 4, name: 'Montmartre & Sacré-Cœur', type: 'Scenic', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80', desc: 'Artists\' quarter with hilltop basilica and city views.' },
   ],
   Rome: [
     { id: 1, name: 'Colosseum', type: 'Landmark', rating: 4.9, price: 1660, image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&q=80', desc: 'Ancient amphitheatre — symbol of Imperial Rome.' },

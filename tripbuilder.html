@@ -45,7 +45,7 @@
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1>Create Your Dream Trip</h1>
-      <p>Pick a city, then choose transport, hotels, places &amp; rentals</p>
+      <p>Pick a city &amp; dates, then plan each day — hotels, places &amp; rentals</p>
       <div class="breadcrumb">
         <a href="home.html">Home</a> <i class="fas fa-chevron-right"></i> <span>Create Trip</span>
       </div>
@@ -73,6 +73,30 @@
             </div>
           </div>
 
+          <div id="tripDaysPicker" class="sidebar-days-picker hidden">
+            <label><i class="fas fa-calendar-alt"></i> Trip Days</label>
+            <p class="cal-instruction" id="calInstruction">Select start &amp; end dates</p>
+            <div class="trip-calendar" id="tripCalendar">
+              <div class="cal-header">
+                <button type="button" class="cal-nav" id="calPrev" onclick="shiftCalendar(-1)" aria-label="Previous month">
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <strong id="calMonthLabel">Month</strong>
+                <button type="button" class="cal-nav" id="calNext" onclick="shiftCalendar(1)" aria-label="Next month">
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+              <div class="cal-weekdays">
+                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
+              </div>
+              <div class="cal-grid" id="calGrid"></div>
+            </div>
+            <div class="cal-summary" id="calSummary">
+              <span class="days-hint" id="tripDaysHint">Pick a date range</span>
+              <button type="button" class="cal-clear hidden" id="calClearBtn" onclick="clearTripDates()">Clear</button>
+            </div>
+          </div>
+
           <nav class="sidebar-nav">
             <button class="sidebar-item active" data-tab="transport" onclick="switchTab('transport', this)">
               <i class="fas fa-plane"></i>
@@ -97,10 +121,10 @@
           </nav>
 
           <div class="sidebar-selections">
-            <h4>Your Selections</h4>
-            <ul id="selectionList">
-              <li class="empty-selection">Nothing selected yet</li>
-            </ul>
+            <h4>Your Itinerary</h4>
+            <div id="selectionList" class="itinerary-summary">
+              <p class="empty-selection">Nothing selected yet</p>
+            </div>
             <button class="btn-save-trip" onclick="saveTrip()" id="saveTripBtn">
               <i class="fas fa-check-circle"></i> Save Trip
             </button>
@@ -109,6 +133,30 @@
 
         <!-- RIGHT CONTENT -->
         <main class="trip-content">
+          <div id="dayStripWrap" class="day-strip-wrap hidden">
+            <div class="day-strip-label">
+              <i class="fas fa-route"></i> Day-by-day itinerary
+            </div>
+            <div class="day-strip" id="dayStrip" role="tablist" aria-label="Trip days"></div>
+            <div id="applyAllWrap" class="day-apply-all hidden">
+              <label class="apply-all-toggle">
+                <input type="checkbox" id="applyToAllDays" onchange="onApplyToAllChange()"/>
+                <span>Same option for all trip days</span>
+              </label>
+              <div class="day-apply-actions">
+                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('hotels')" title="Copy this day's hotel to every day">
+                  <i class="fas fa-hotel"></i> Same hotel for all
+                </button>
+                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('places')" title="Copy this day's places to every day">
+                  <i class="fas fa-landmark"></i> Same places for all
+                </button>
+                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('rentals')" title="Copy this day's rental to every day">
+                  <i class="fas fa-motorcycle"></i> Same rental for all
+                </button>
+              </div>
+            </div>
+          </div>
+
           <div class="content-header">
             <div>
               <h2 id="contentTitle">Flights</h2>
@@ -117,10 +165,12 @@
             <span class="content-count" id="contentCount"></span>
           </div>
 
+          <div id="daySelectionBanner" class="day-selection-banner hidden"></div>
+
           <div id="contentEmpty" class="content-empty">
             <i class="fas fa-map-marked-alt"></i>
-            <h3>Select a city first</h3>
-            <p>Choose your destination from the sidebar to see available options.</p>
+            <h3 id="emptyTitle">Select a city first</h3>
+            <p id="emptyMessage">Choose your destination from the sidebar to see available options.</p>
           </div>
 
           <div id="contentGrid" class="content-grid hidden"></div>
