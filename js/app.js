@@ -159,3 +159,13 @@ function logoutUser() {
   localStorage.removeItem('myAdventureSession');
   window.location.href = 'login.html';
 }
+
+/* ===== THEME TOGGLE ===== */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('themeToggle')?.addEventListener('click', () => {
+    if (typeof ThemeStorage === 'undefined') return;
+    const theme = ThemeStorage.toggle();
+    const chk = document.getElementById('themeCheckbox');
+    if (chk) chk.checked = theme === 'dark';
+  });
+});
