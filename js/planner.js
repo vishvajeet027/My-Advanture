@@ -16,7 +16,7 @@ const AIRLINE_COLORS = {
   'Qantas':             { bg: '#ee0000', text: '#fff' },
   'Singapore Airlines': { bg: '#041e42', text: '#f5a623' },
   'Vueling':            { bg: '#f7c900', text: '#333' },
-  'KLM':                { bg: '#009dd9', text: '#fff' },
+  'KLM':                { bg: '#009dd9', text: '#fff' }, 
   'Thai Airways':       { bg: '#4b0082', text: '#f7c900' },
   'Air India':          { bg: '#e31837', text: '#fff' },
   'Kenya Airways':      { bg: '#006633', text: '#fff' },
@@ -27,7 +27,7 @@ const AIRLINE_COLORS = {
   'United Airlines':    { bg: '#003087', text: '#fff' },
   'Aeroflot':           { bg: '#cc0000', text: '#fff' },
   'Swiss':              { bg: '#d20a11', text: '#fff' },
-  'Malaysia Airlines':  { bg: '#003087', text: '#c8102e' },
+  'Malaysia Airlines':  { bg: '#003087', text: '#c8102e'},
   'American Airlines':  { bg: '#00508f', text: '#fff' },
   'Korean Air':         { bg: '#00256c', text: '#fff' },
 };
