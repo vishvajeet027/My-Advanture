@@ -52,6 +52,140 @@ const MOCK_HOTELS = [
   { id: 20, name: 'Canadian Mountain Retreat',     city: 'Banff',      country: 'Canada',       rating: 4.8, price: 22410, image: 'https://images.unsplash.com/photo-1542314831-068cd1dbfeeb?w=600&q=80', desc: 'Rustic luxury resort in the Canadian Rockies with hiking trails, hot springs, and mountain views.', facilities: ['Pool', 'Spa', 'Restaurant', 'Bar', 'Gym', 'WiFi', 'Hiking', 'Parking'] },
 ];
 
+/* ===== CITY FAMOUS PLACES ===== */
+const MOCK_CITY_PLACES = {
+  Paris: [
+    { id: 1, name: 'Eiffel Tower', type: 'Landmark', rating: 4.9, price: 2490, image: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&q=80', desc: 'Iconic iron lattice tower with panoramic city views.' },
+    { id: 2, name: 'Louvre Museum', type: 'Museum', rating: 4.8, price: 1826, image: 'https://images.unsplash.com/photo-1499856871958-5b962179113d?w=600&q=80', desc: 'World\'s largest art museum — home to the Mona Lisa.' },
+    { id: 3, name: 'Notre-Dame Cathedral', type: 'Heritage', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=600&q=80', desc: 'Gothic masterpiece on the Île de la Cité.' },
+    { id: 4, name: 'Montmartre & Sacré-Cœur', type: 'Scenic', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1431274172761-fca41d894122?w=600&q=80', desc: 'Artists\' quarter with hilltop basilica and city views.' },
+  ],
+  Rome: [
+    { id: 1, name: 'Colosseum', type: 'Landmark', rating: 4.9, price: 1660, image: 'https://images.unsplash.com/photo-1552832230-c0197dd311b5?w=600&q=80', desc: 'Ancient amphitheatre — symbol of Imperial Rome.' },
+    { id: 2, name: 'Vatican Museums', type: 'Museum', rating: 4.8, price: 2075, image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&q=80', desc: 'Sistine Chapel and priceless Renaissance art.' },
+    { id: 3, name: 'Trevi Fountain', type: 'Landmark', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1529260830195-0031076ff735?w=600&q=80', desc: 'Baroque fountain — toss a coin for good luck.' },
+    { id: 4, name: 'Roman Forum', type: 'Heritage', rating: 4.6, price: 1245, image: 'https://images.unsplash.com/photo-1525874685865-d9ffeb975113?w=600&q=80', desc: 'Ruins of ancient Rome\'s political and social heart.' },
+  ],
+  Barcelona: [
+    { id: 1, name: 'Sagrada Familia', type: 'Landmark', rating: 4.9, price: 2158, image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=80', desc: 'Gaudí\'s unfinished basilica — a UNESCO wonder.' },
+    { id: 2, name: 'Park Güell', type: 'Park', rating: 4.7, price: 830, image: 'https://images.unsplash.com/photo-1583422409519-3200b89e7af4?w=600&q=80', desc: 'Whimsical mosaic park with Mediterranean views.' },
+    { id: 3, name: 'La Rambla', type: 'Street', rating: 4.5, price: 0, image: 'https://images.unsplash.com/photo-1583422409519-3200b89e7af4?w=600&q=80', desc: 'Vibrant tree-lined boulevard in the heart of the city.' },
+    { id: 4, name: 'Barceloneta Beach', type: 'Beach', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1558642452-9d2ab7c1f266?w=600&q=80', desc: 'Golden sand beach steps from the city centre.' },
+  ],
+  Amsterdam: [
+    { id: 1, name: 'Anne Frank House', type: 'Museum', rating: 4.8, price: 1245, image: 'https://images.unsplash.com/photo-1512470876302-972faa2aa9a4?w=600&q=80', desc: 'Moving museum in the secret annex where Anne Frank hid.' },
+    { id: 2, name: 'Van Gogh Museum', type: 'Museum', rating: 4.9, price: 2075, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Largest collection of Van Gogh paintings in the world.' },
+    { id: 3, name: 'Canal Cruise', type: 'Experience', rating: 4.7, price: 1660, image: 'https://images.unsplash.com/photo-1534351590666-13e3e96fdad6?w=600&q=80', desc: 'Scenic boat ride through UNESCO-listed canals.' },
+    { id: 4, name: 'Rijksmuseum', type: 'Museum', rating: 4.8, price: 2075, image: 'https://images.unsplash.com/photo-1555993539-1732b0258235?w=600&q=80', desc: 'Dutch Golden Age masterpieces including Rembrandt.' },
+  ],
+  London: [
+    { id: 1, name: 'Big Ben & Westminster', type: 'Landmark', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?w=600&q=80', desc: 'Iconic clock tower and Houses of Parliament.' },
+    { id: 2, name: 'British Museum', type: 'Museum', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1529655683829-aba272195f69?w=600&q=80', desc: 'World-class collection spanning human history.' },
+    { id: 3, name: 'Tower of London', type: 'Heritage', rating: 4.6, price: 2490, image: 'https://images.unsplash.com/photo-1511739001486-6bfe10ce785f?w=600&q=80', desc: 'Historic castle and home of the Crown Jewels.' },
+    { id: 4, name: 'London Eye', type: 'Experience', rating: 4.5, price: 2324, image: 'https://images.unsplash.com/photo-1529655683829-aba272195f69?w=600&q=80', desc: 'Giant observation wheel on the South Bank.' },
+  ],
+  Tokyo: [
+    { id: 1, name: 'Senso-ji Temple', type: 'Temple', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1540959733332-eab4deabeeaf?w=600&q=80', desc: 'Tokyo\'s oldest temple in historic Asakusa.' },
+    { id: 2, name: 'Shibuya Crossing', type: 'Landmark', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1542051841857-5f90071e7989?w=600&q=80', desc: 'World\'s busiest pedestrian scramble intersection.' },
+    { id: 3, name: 'teamLab Planets', type: 'Experience', rating: 4.9, price: 2656, image: 'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=600&q=80', desc: 'Immersive digital art museum experience.' },
+    { id: 4, name: 'Meiji Shrine', type: 'Shrine', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', desc: 'Serene Shinto shrine surrounded by forest.' },
+  ],
+  Bali: [
+    { id: 1, name: 'Tanah Lot Temple', type: 'Temple', rating: 4.8, price: 1245, image: 'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=600&q=80', desc: 'Sea temple perched on a rock — stunning at sunset.' },
+    { id: 2, name: 'Tegallalang Rice Terraces', type: 'Scenic', rating: 4.7, price: 415, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80', desc: 'Lush green terraces in Ubud countryside.' },
+    { id: 3, name: 'Uluwatu Temple', type: 'Temple', rating: 4.8, price: 830, image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80', desc: 'Clifftop temple with Kecak fire dance performances.' },
+    { id: 4, name: 'Sacred Monkey Forest', type: 'Nature', rating: 4.6, price: 580, image: 'https://images.unsplash.com/photo-1537996194471-e657df975ab4?w=600&q=80', desc: 'Ubud sanctuary home to hundreds of macaques.' },
+  ],
+  'Taj Mahal': [
+    { id: 1, name: 'Taj Mahal', type: 'Landmark', rating: 4.9, price: 1245, image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80', desc: 'White marble mausoleum — one of the Seven Wonders.' },
+    { id: 2, name: 'Agra Fort', type: 'Heritage', rating: 4.7, price: 580, image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80', desc: 'Mughal red sandstone fortress overlooking the Yamuna.' },
+    { id: 3, name: 'Mehtab Bagh', type: 'Garden', rating: 4.6, price: 250, image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80', desc: 'Moonlight garden with Taj Mahal river views.' },
+    { id: 4, name: 'Fatehpur Sikri', type: 'Heritage', rating: 4.5, price: 580, image: 'https://images.unsplash.com/photo-1564507592333-c60657eea523?w=600&q=80', desc: 'Abandoned Mughal city — UNESCO World Heritage Site.' },
+  ],
+  Singapore: [
+    { id: 1, name: 'Marina Bay Sands', type: 'Landmark', rating: 4.8, price: 1909, image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=80', desc: 'Iconic rooftop infinity pool and skyline views.' },
+    { id: 2, name: 'Gardens by the Bay', type: 'Nature', rating: 4.9, price: 1245, image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=80', desc: 'Supertree Grove and climate-controlled domes.' },
+    { id: 3, name: 'Sentosa Island', type: 'Resort', rating: 4.6, price: 1660, image: 'https://images.unsplash.com/photo-1559827260-dc66d52bef19?w=600&q=80', desc: 'Beach resort island with Universal Studios.' },
+    { id: 4, name: 'Chinatown Heritage Centre', type: 'Museum', rating: 4.5, price: 830, image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?w=600&q=80', desc: 'Living museum of Singapore\'s immigrant history.' },
+  ],
+  'Cape Town': [
+    { id: 1, name: 'Table Mountain', type: 'Nature', rating: 4.9, price: 2905, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80', desc: 'Cable car to flat-topped mountain with 360° views.' },
+    { id: 2, name: 'Cape of Good Hope', type: 'Scenic', rating: 4.7, price: 1660, image: 'https://images.unsplash.com/photo-1489392191049-fc10c97e64b6?w=600&q=80', desc: 'Dramatic cliffs at Africa\'s southwestern tip.' },
+    { id: 3, name: 'V&A Waterfront', type: 'Entertainment', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80', desc: 'Harbourfront shopping, dining and entertainment hub.' },
+    { id: 4, name: 'Boulders Beach Penguins', type: 'Wildlife', rating: 4.8, price: 1245, image: 'https://images.unsplash.com/photo-1580060839134-75a5edca2e99?w=600&q=80', desc: 'Colony of African penguins on a sheltered beach.' },
+  ],
+  Marrakech: [
+    { id: 1, name: 'Jemaa el-Fnaa', type: 'Market', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1597212618440-806262de4f2b?w=600&q=80', desc: 'Bustling square with food stalls, performers and souks.' },
+    { id: 2, name: 'Bahia Palace', type: 'Heritage', rating: 4.6, price: 580, image: 'https://images.unsplash.com/photo-1597212618440-806262de4f2b?w=600&q=80', desc: '19th-century palace with ornate courtyards and tiles.' },
+    { id: 3, name: 'Majorelle Garden', type: 'Garden', rating: 4.8, price: 830, image: 'https://images.unsplash.com/photo-1571896349842-33c89424de2d?w=600&q=80', desc: 'Vibrant blue garden designed by Yves Saint Laurent.' },
+    { id: 4, name: 'Sahara Desert Trip', type: 'Adventure', rating: 4.9, price: 9960, image: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&q=80', desc: 'Overnight camel trek and desert camp under the stars.' },
+  ],
+  'New York': [
+    { id: 1, name: 'Statue of Liberty', type: 'Landmark', rating: 4.8, price: 2075, image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80', desc: 'Symbol of freedom on Liberty Island.' },
+    { id: 2, name: 'Central Park', type: 'Park', rating: 4.9, price: 0, image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80', desc: '843-acre urban oasis in the heart of Manhattan.' },
+    { id: 3, name: 'Times Square', type: 'Landmark', rating: 4.5, price: 0, image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80', desc: 'Neon-lit crossroads — the city that never sleeps.' },
+    { id: 4, name: 'Empire State Building', type: 'Landmark', rating: 4.7, price: 2490, image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80', desc: 'Art Deco skyscraper with iconic observation decks.' },
+  ],
+  'Machu Picchu': [
+    { id: 1, name: 'Machu Picchu Citadel', type: 'Heritage', rating: 4.9, price: 4150, image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80', desc: 'Incan citadel set high in the Andes mountains.' },
+    { id: 2, name: 'Huayna Picchu', type: 'Adventure', rating: 4.8, price: 2490, image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80', desc: 'Steep hike to the peak overlooking the ruins.' },
+    { id: 3, name: 'Sacred Valley', type: 'Scenic', rating: 4.7, price: 3320, image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80', desc: 'Inca ruins and Andean villages between Cusco and Machu Picchu.' },
+    { id: 4, name: 'Inca Trail', type: 'Adventure', rating: 4.9, price: 12450, image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80', desc: 'Classic 4-day trek through cloud forest to the citadel.' },
+  ],
+  Dubai: [
+    { id: 1, name: 'Burj Khalifa', type: 'Landmark', rating: 4.9, price: 3735, image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&q=80', desc: 'World\'s tallest building — At the Top observation deck.' },
+    { id: 2, name: 'Desert Safari', type: 'Adventure', rating: 4.8, price: 9960, image: 'https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=600&q=80', desc: 'Dune bashing, camel rides and Bedouin camp dinner.' },
+    { id: 3, name: 'Dubai Mall & Fountain', type: 'Entertainment', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&q=80', desc: 'Massive mall with dancing fountain show at Burj Lake.' },
+    { id: 4, name: 'Palm Jumeirah', type: 'Landmark', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&q=80', desc: 'Man-made palm-shaped island with luxury resorts.' },
+  ],
+  Maldives: [
+    { id: 1, name: 'Snorkelling House Reef', type: 'Water Sports', rating: 4.9, price: 3320, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&q=80', desc: 'Crystal-clear lagoon teeming with tropical fish.' },
+    { id: 2, name: 'Sandbank Picnic', type: 'Experience', rating: 4.8, price: 7470, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&q=80', desc: 'Private sandbank escape in the Indian Ocean.' },
+    { id: 3, name: 'Dolphin Sunset Cruise', type: 'Experience', rating: 4.7, price: 4980, image: 'https://images.unsplash.com/photo-1514282401047-d79a71a590e8?w=600&q=80', desc: 'Evening boat ride to spot spinner dolphins.' },
+    { id: 4, name: 'Underwater Restaurant', type: 'Dining', rating: 4.8, price: 16600, image: 'https://images.unsplash.com/photo-1540541338287-41700207dee6?w=600&q=80', desc: 'Dine surrounded by marine life below the surface.' },
+  ],
+  Sydney: [
+    { id: 1, name: 'Sydney Opera House', type: 'Landmark', rating: 4.9, price: 2075, image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80', desc: 'Architectural icon on Bennelong Point harbour.' },
+    { id: 2, name: 'Harbour Bridge Climb', type: 'Adventure', rating: 4.8, price: 12450, image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80', desc: 'Guided climb to the summit of the coathanger bridge.' },
+    { id: 3, name: 'Bondi Beach', type: 'Beach', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80', desc: 'World-famous surf beach and coastal walk.' },
+    { id: 4, name: 'Taronga Zoo', type: 'Wildlife', rating: 4.6, price: 3320, image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80', desc: 'Harbour-side zoo with native Australian animals.' },
+  ],
+  Santorini: [
+    { id: 1, name: 'Oia Sunset Viewpoint', type: 'Scenic', rating: 4.9, price: 0, image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80', desc: 'World-famous sunset over the caldera and blue domes.' },
+    { id: 2, name: 'Red Beach', type: 'Beach', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80', desc: 'Dramatic volcanic red sand beach near Akrotiri.' },
+    { id: 3, name: 'Akrotiri Ruins', type: 'Heritage', rating: 4.7, price: 1245, image: 'https://images.unsplash.com/photo-1570077188670-e3a8d69ac5ff?w=600&q=80', desc: 'Bronze Age Minoan settlement preserved by volcanic ash.' },
+    { id: 4, name: 'Catamaran Cruise', type: 'Experience', rating: 4.8, price: 7470, image: 'https://images.unsplash.com/photo-1613490493576-7fde63acd811?w=600&q=80', desc: 'Sail the caldera with swim stops and onboard BBQ.' },
+  ],
+  Kyoto: [
+    { id: 1, name: 'Fushimi Inari Shrine', type: 'Shrine', rating: 4.9, price: 0, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', desc: 'Thousands of vermillion torii gates up the mountain.' },
+    { id: 2, name: 'Arashiyama Bamboo Grove', type: 'Nature', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', desc: 'Towering bamboo forest path in western Kyoto.' },
+    { id: 3, name: 'Kinkaku-ji (Golden Pavilion)', type: 'Temple', rating: 4.7, price: 415, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', desc: 'Zen temple covered in gold leaf beside a mirror pond.' },
+    { id: 4, name: 'Gion District', type: 'Culture', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1493976040374-85c8e12f0c0e?w=600&q=80', desc: 'Historic geisha quarter with traditional teahouses.' },
+  ],
+  'Rio de Janeiro': [
+    { id: 1, name: 'Christ the Redeemer', type: 'Landmark', rating: 4.9, price: 1660, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&q=80', desc: 'Art Deco statue atop Corcovado mountain.' },
+    { id: 2, name: 'Sugarloaf Mountain', type: 'Scenic', rating: 4.8, price: 2905, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&q=80', desc: 'Cable car to granite peak with panoramic bay views.' },
+    { id: 3, name: 'Copacabana Beach', type: 'Beach', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&q=80', desc: 'Legendary 4 km crescent beach with black-and-white promenade.' },
+    { id: 4, name: 'Selarón Steps', type: 'Landmark', rating: 4.6, price: 0, image: 'https://images.unsplash.com/photo-1483729558449-99ef09a8c325?w=600&q=80', desc: 'Colourful mosaic tile staircase in Santa Teresa.' },
+  ],
+  Istanbul: [
+    { id: 1, name: 'Hagia Sophia', type: 'Heritage', rating: 4.9, price: 830, image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80', desc: 'Byzantine masterpiece turned mosque with massive dome.' },
+    { id: 2, name: 'Blue Mosque', type: 'Mosque', rating: 4.8, price: 0, image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80', desc: 'Ottoman mosque famed for its six minarets and blue tiles.' },
+    { id: 3, name: 'Grand Bazaar', type: 'Market', rating: 4.7, price: 0, image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80', desc: 'One of the world\'s oldest and largest covered markets.' },
+    { id: 4, name: 'Bosphorus Cruise', type: 'Experience', rating: 4.8, price: 1660, image: 'https://images.unsplash.com/photo-1524231757912-21f4fe3a7200?w=600&q=80', desc: 'Boat tour along the strait dividing Europe and Asia.' },
+  ],
+};
+
+/* ===== RENTAL OPTIONS (Bike & Car) ===== */
+const MOCK_RENTALS = [
+  { id: 1, name: 'City Scooter', type: 'Bike', vehicle: '125cc Scooter', price: 800, rating: 4.5, image: 'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=600&q=80', desc: 'Perfect for city exploring — helmet included.' },
+  { id: 2, name: 'Mountain Bike', type: 'Bike', vehicle: 'MTB', price: 600, rating: 4.6, image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80', desc: 'Trail-ready bike for parks and countryside rides.' },
+  { id: 3, name: 'Electric Bike', type: 'Bike', vehicle: 'E-Bike', price: 1200, rating: 4.8, image: 'https://images.unsplash.com/photo-1571068316344-75bc76f77890?w=600&q=80', desc: 'Effortless sightseeing with pedal-assist technology.' },
+  { id: 4, name: 'Economy Car', type: 'Car', vehicle: 'Hatchback', price: 2500, rating: 4.4, image: 'https://images.unsplash.com/photo-1549317661-bd32c8ce0db2?w=600&q=80', desc: 'Fuel-efficient compact car for 4 passengers.' },
+  { id: 5, name: 'SUV Rental', type: 'Car', vehicle: 'SUV', price: 4500, rating: 4.7, image: 'https://images.unsplash.com/photo-1519641471654-76ecead37a40?w=600&q=80', desc: 'Spacious SUV for family trips and long drives.' },
+  { id: 6, name: 'Convertible', type: 'Car', vehicle: 'Convertible', price: 6500, rating: 4.9, image: 'https://images.unsplash.com/photo-1494976388531-d105849445bf?w=600&q=80', desc: 'Open-top luxury drive along coastal roads.' },
+];
+
 /* ===== 20 DESTINATIONS ===== */
 const MOCK_DESTINATIONS = [
   { id: 1,  name: 'Paris',          country: 'France',       category: 'europe',     days: 7,  price: 232400, rating: 4.9, trending: true,  image: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?w=500&q=80', desc: 'The city of love, art, and iconic landmarks like the Eiffel Tower.' },
@@ -251,6 +385,29 @@ const MockData = {
 
   getFlightById(id) {
     return MOCK_FLIGHTS.find(f => f.id === id) || null;
+  },
+
+  getPlacesByCity(city) {
+    return MOCK_CITY_PLACES[city] || [];
+  },
+
+  getHotelsByCity(city) {
+    const aliases = { 'Taj Mahal': 'Agra', Maldives: 'Male', 'Machu Picchu': 'Cusco' };
+    const hotelCity = aliases[city] || city;
+    return MOCK_HOTELS.filter(h => h.city.toLowerCase() === hotelCity.toLowerCase());
+  },
+
+  getFlightsToCity(city) {
+    const aliases = { 'Taj Mahal': 'Delhi', Maldives: 'Maldives', 'Machu Picchu': 'Lima', 'Rio de Janeiro': 'Rio' };
+    const target = (aliases[city] || city).toLowerCase();
+    return MOCK_FLIGHTS.filter(f =>
+      f.to.toLowerCase().includes(target) ||
+      f.toCountry.toLowerCase().includes(target)
+    );
+  },
+
+  getAllRentals() {
+    return MOCK_RENTALS;
   }
 };
 

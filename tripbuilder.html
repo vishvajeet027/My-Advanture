@@ -12,7 +12,6 @@
 </head>
 <body>
 
-  <!-- NAVBAR -->
   <nav class="navbar scrolled" id="navbar">
     <div class="nav-container">
       <a href="home.html" class="logo">
@@ -34,7 +33,6 @@
           </button>
           <a href="login.html" class="btn-login">Login</a>
           <a href="login.html" class="btn-signup">Sign up</a>
-          <div class="lang-select">EN <i class="fas fa-chevron-down"></i></div>
         </div>
         <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
           <span></span><span></span><span></span>
@@ -43,194 +41,97 @@
     </div>
   </nav>
 
-  <!-- PAGE HERO -->
-  <section class="page-hero" style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=80')">
+  <section class="page-hero trip-hero" style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=80')">
     <div class="page-hero-overlay"></div>
     <div class="page-hero-content">
       <h1>Create Your Dream Trip</h1>
-      <p>Design a custom day-by-day itinerary with hotels, dining, attractions, and transport</p>
+      <p>Pick a city, then choose transport, hotels, places &amp; rentals</p>
       <div class="breadcrumb">
         <a href="home.html">Home</a> <i class="fas fa-chevron-right"></i> <span>Create Trip</span>
       </div>
     </div>
   </section>
 
-  <!-- TRIP BUILDER SECTION -->
   <section class="section trip-builder-section">
-    <div class="container">
-      
-      <!-- TRIP CONFIGURATION -->
-      <div class="trip-builder-wrapper">
-        
-        <!-- LEFT PANEL -->
-        <div class="builder-config-panel">
-          <h2><i class="fas fa-cog"></i> Trip Details</h2>
-          
-          <div class="form-group">
-            <label>Trip Name</label>
-            <input type="text" id="tripName" placeholder="e.g., Paris Honeymoon" value="My Adventure"/>
-          </div>
+    <div class="container trip-builder-container">
 
-          <div class="form-group">
-            <label>Destination</label>
-            <select id="destinationSelect" onchange="updateDestination()">
-              <option value="">Select a destination...</option>
+      <div class="trip-builder-layout">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="trip-sidebar">
+          <div class="sidebar-city-picker">
+            <label for="citySelect"><i class="fas fa-map-marker-alt"></i> Choose City</label>
+            <select id="citySelect" onchange="onCityChange()">
+              <option value="">Select destination...</option>
             </select>
-            <div id="destInfo" class="dest-info hidden">
-              <p id="destDesc"></p>
-              <p id="destCountry" style="font-size:0.85rem;color:#999;margin-top:4px;"></p>
+            <div id="cityPreview" class="city-preview hidden">
+              <img id="cityPreviewImg" src="" alt=""/>
+              <div>
+                <strong id="cityPreviewName"></strong>
+                <span id="cityPreviewCountry"></span>
+              </div>
             </div>
           </div>
 
-          <div class="form-group">
-            <label>Number of Days</label>
-            <div class="duration-selector">
-              <button class="duration-btn" onclick="changeDays(-1)">−</button>
-              <input type="number" id="tripDays" value="3" min="1" max="30" onchange="updateDays()"/>
-              <button class="duration-btn" onclick="changeDays(1)">+</button>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Trip Type</label>
-            <div class="trip-type-selector">
-              <button class="type-btn active" onclick="selectTripType(this, 'Leisure')">
-                <i class="fas fa-umbrella-beach"></i> Leisure
-              </button>
-              <button class="type-btn" onclick="selectTripType(this, 'Adventure')">
-                <i class="fas fa-mountain"></i> Adventure
-              </button>
-              <button class="type-btn" onclick="selectTripType(this, 'Cultural')">
-                <i class="fas fa-landmark"></i> Cultural
-              </button>
-              <button class="type-btn" onclick="selectTripType(this, 'Business')">
-                <i class="fas fa-briefcase"></i> Business
-              </button>
-            </div>
-            <input type="hidden" id="tripType" value="Leisure"/>
-          </div>
-
-          <div class="form-group">
-            <label>Budget (₹)</label>
-            <input type="number" id="tripBudget" placeholder="0" min="0" onchange="updateBudget()"/>
-          </div>
-
-          <div class="form-group">
-            <label>Number of Travelers</label>
-            <input type="number" id="tripTravelers" value="1" min="1" max="20" onchange="updateTravelers()"/>
-          </div>
-
-          <button class="btn-save-trip" onclick="saveTrip()">
-            <i class="fas fa-save"></i> Save This Trip
-          </button>
-        </div>
-
-        <!-- RIGHT PANEL: ITINERARY -->
-        <div class="builder-itinerary-panel">
-          <h2><i class="fas fa-calendar"></i> Your Itinerary</h2>
-          <div class="itinerary-container" id="itineraryContainer">
-            <!-- Days populated by JS -->
-          </div>
-        </div>
-
-      </div>
-
-      <!-- HOTEL SECTION -->
-      <div class="builder-section">
-        <div class="builder-section-header">
-          <h2><i class="fas fa-hotel"></i> Select Hotel</h2>
-          <div class="hotel-scroll-controls">
-            <button type="button" class="hotel-scroll-btn" onclick="scrollHotels(-1)" aria-label="Scroll hotels left">
-              <i class="fas fa-chevron-left"></i>
+          <nav class="sidebar-nav">
+            <button class="sidebar-item active" data-tab="transport" onclick="switchTab('transport', this)">
+              <i class="fas fa-plane"></i>
+              <span>Transport</span>
+              <small>Flights</small>
             </button>
-            <button type="button" class="hotel-scroll-btn" onclick="scrollHotels(1)" aria-label="Scroll hotels right">
-              <i class="fas fa-chevron-right"></i>
+            <button class="sidebar-item" data-tab="hotels" onclick="switchTab('hotels', this)">
+              <i class="fas fa-hotel"></i>
+              <span>Hotels</span>
+              <small>Stay options</small>
+            </button>
+            <button class="sidebar-item" data-tab="places" onclick="switchTab('places', this)">
+              <i class="fas fa-landmark"></i>
+              <span>Places</span>
+              <small>Famous spots</small>
+            </button>
+            <button class="sidebar-item" data-tab="rentals" onclick="switchTab('rentals', this)">
+              <i class="fas fa-motorcycle"></i>
+              <span>Rent Bike or Car</span>
+              <small>Local transport</small>
+            </button>
+          </nav>
+
+          <div class="sidebar-selections">
+            <h4>Your Selections</h4>
+            <ul id="selectionList">
+              <li class="empty-selection">Nothing selected yet</li>
+            </ul>
+            <button class="btn-save-trip" onclick="saveTrip()" id="saveTripBtn">
+              <i class="fas fa-check-circle"></i> Save Trip
             </button>
           </div>
-        </div>
-        <div class="hotel-selector-wrap">
-          <div class="hotel-selector" id="hotelSelector">
-            <!-- Hotels populated by JS -->
+        </aside>
+
+        <!-- RIGHT CONTENT -->
+        <main class="trip-content">
+          <div class="content-header">
+            <div>
+              <h2 id="contentTitle">Flights</h2>
+              <p id="contentSubtitle">Select a flight to your destination</p>
+            </div>
+            <span class="content-count" id="contentCount"></span>
           </div>
-        </div>
-      </div>
 
-      <!-- ACTIVITIES SECTION -->
-      <div class="builder-section">
-        <h2><i class="fas fa-tasks"></i> Add Activities & Services</h2>
-        
-        <div class="activity-tabs">
-          <button class="activity-tab active" onclick="switchActivityTab(this, 'dining')">
-            <i class="fas fa-utensils"></i> Dining
-          </button>
-          <button class="activity-tab" onclick="switchActivityTab(this, 'sightseeing')">
-            <i class="fas fa-binoculars"></i> Sightseeing
-          </button>
-          <button class="activity-tab" onclick="switchActivityTab(this, 'transport')">
-            <i class="fas fa-taxi"></i> Transport
-          </button>
-          <button class="activity-tab" onclick="switchActivityTab(this, 'recreation')">
-            <i class="fas fa-gamepad"></i> Recreation
-          </button>
-        </div>
-
-        <!-- Dining -->
-        <div class="activity-content active" id="dining-tab">
-          <div class="meal-type-selector">
-            <button class="meal-btn active" onclick="switchMealType(this, 'lunch')">Lunch</button>
-            <button class="meal-btn" onclick="switchMealType(this, 'dinner')">Dinner</button>
-            <button class="meal-btn" onclick="switchMealType(this, 'breakfast')">Breakfast</button>
+          <div id="contentEmpty" class="content-empty">
+            <i class="fas fa-map-marked-alt"></i>
+            <h3>Select a city first</h3>
+            <p>Choose your destination from the sidebar to see available options.</p>
           </div>
-          <div class="meal-options" id="mealOptions"></div>
-        </div>
 
-        <!-- Sightseeing -->
-        <div class="activity-content" id="sightseeing-tab">
-          <div class="attractions-list" id="attractionsList"></div>
-        </div>
+          <div id="contentGrid" class="content-grid hidden"></div>
+        </main>
 
-        <!-- Transport -->
-        <div class="activity-content" id="transport-tab">
-          <div class="transport-list" id="transportList"></div>
-        </div>
-
-        <!-- Recreation -->
-        <div class="activity-content" id="recreation-tab">
-          <div class="recreation-list" id="recreationList"></div>
-        </div>
       </div>
-
-      <!-- DAY SELECTOR -->
-      <div class="builder-section">
-        <h2><i class="fas fa-plus-circle"></i> Add to Day</h2>
-        <div class="day-selector" id="daySelector"></div>
-        <button class="btn-add-activity" onclick="addSelectedActivity()">
-          <i class="fas fa-plus"></i> Add to Selected Day
-        </button>
-      </div>
-
     </div>
   </section>
 
-  <!-- PREVIEW MODAL -->
-  <div class="modal-overlay hidden" id="previewModal" onclick="handlePreviewModalClick(event)">
-    <div class="modal preview-modal">
-      <div class="modal-header">
-        <h3>Trip Preview</h3>
-        <button class="modal-close" onclick="closePreviewModal()"><i class="fas fa-times"></i></button>
-      </div>
-      <div class="modal-body" id="previewBody"></div>
-      <div class="modal-footer">
-        <button class="btn-outline" onclick="closePreviewModal()">Back</button>
-        <button class="btn-primary" onclick="confirmSaveTrip()">Save Trip</button>
-      </div>
-    </div>
-  </div>
-
-  <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
-  <!-- FOOTER -->
   <footer class="footer">
     <div class="footer-container">
       <div class="footer-col">
@@ -239,39 +140,6 @@
           <span>My<strong>Adventure</strong></span>
         </div>
         <p>Your trusted travel partner for discovering the world's most beautiful destinations.</p>
-        <div class="social-links">
-          <a href="#"><i class="fab fa-facebook-f"></i></a>
-          <a href="#"><i class="fab fa-twitter"></i></a>
-          <a href="#"><i class="fab fa-instagram"></i></a>
-          <a href="#"><i class="fab fa-youtube"></i></a>
-        </div>
-      </div>
-      <div class="footer-col">
-        <h4>Company</h4>
-        <ul>
-          <li><a href="#">About Us</a></li>
-          <li><a href="#">Careers</a></li>
-          <li><a href="#">Blog</a></li>
-          <li><a href="#">Press</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Support</h4>
-        <ul>
-          <li><a href="#">Help Center</a></li>
-          <li><a href="#">Contact Us</a></li>
-          <li><a href="#">Safety Tips</a></li>
-          <li><a href="#">Privacy Policy</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <h4>Resources</h4>
-        <ul>
-          <li><a href="#">Travel Guides</a></li>
-          <li><a href="#">Packing Lists</a></li>
-          <li><a href="#">Travel Tips</a></li>
-          <li><a href="#">Visa Info</a></li>
-        </ul>
       </div>
     </div>
     <div class="footer-bottom">
