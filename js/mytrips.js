@@ -79,18 +79,21 @@ function viewTrip(id) {
   if (trip.days && trip.days.length > 0) {
     daysHTML = trip.days.map(day => {
       const hasActs  = day.activities && day.activities.length > 0;
-      const dayTotal = hasActs ? day.activities.reduce((s, a) => s + (a.cost || 0), 0) : 0;
+      const dayTotal = hasActs ? day.activities.reduce((s, a) => s + (a.cost || a.price || 0), 0) : 0;
       return `
         <div class="modal-day-block">
           <h4>
             <span>Day ${day.dayNum} — ${day.date}</span>
             ${dayTotal > 0 ? `<span>${INR(dayTotal)}</span>` : ''}
           </h4>
-          ${hasActs ? day.activities.map(act => `
+          ${hasActs ? day.activities.map(act => {
+            const amount = act.cost || act.price || 0;
+            return `
             <div class="modal-activity">
               <span><i class="fas fa-circle" style="color:var(--primary);font-size:0.45rem;margin-right:6px;"></i> ${act.name || 'Unnamed activity'}</span>
-              ${act.cost > 0 ? `<strong>${INR(act.cost)}</strong>` : '<span style="color:#bbb;">Free</span>'}
-            </div>`).join('') : '<p style="font-size:0.82rem;color:#aaa;padding:8px 0;">No activities added for this day.</p>'}
+              ${amount > 0 ? `<strong>${INR(amount)}</strong>` : '<span style="color:#bbb;">Free</span>'}
+            </div>`;
+          }).join('') : '<p style="font-size:0.82rem;color:#aaa;padding:8px 0;">No activities added for this day.</p>'}
         </div>`;
     }).join('');
   }
@@ -119,24 +122,102 @@ function closeModal() {
   document.getElementById('tripModal').classList.add('hidden');
   document.body.style.overflow = '';
 }
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
-document.getElementById('tripModal')?.addEventListener('click', e => { if (e.target.id === 'tripModal') closeModal(); });
+
+let pendingDeleteId = null;
+let pendingClearAll = false;
+
+function openDeleteModal({ id = null, clearAll = false, name = '', dest = '' } = {}) {
+  pendingDeleteId = id;
+  pendingClearAll = clearAll;
+
+  const title = document.getElementById('deleteModalTitle');
+  const message = document.getElementById('deleteModalMessage');
+  const preview = document.getElementById('deleteTripPreview');
+  const confirmBtn = document.getElementById('confirmDeleteBtn');
+
+  if (clearAll) {
+    title.textContent = 'Clear All Trips?';
+    message.textContent = 'This will permanently remove every saved itinerary. This action cannot be undone.';
+    preview.classList.add('hidden');
+    confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Clear All';
+  } else {
+    title.textContent = 'Delete Trip?';
+    message.textContent = 'This action cannot be undone. Your itinerary and all saved details will be permanently removed.';
+    preview.classList.remove('hidden');
+    document.getElementById('deleteTripName').textContent = name || 'This trip';
+    document.getElementById('deleteTripDest').textContent = dest || 'Saved itinerary';
+    confirmBtn.innerHTML = '<i class="fas fa-trash"></i> Yes, Delete';
+  }
+
+  confirmBtn.classList.remove('is-loading');
+  document.getElementById('deleteModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeDeleteModal() {
+  document.getElementById('deleteModal').classList.add('hidden');
+  document.body.style.overflow = '';
+  pendingDeleteId = null;
+  pendingClearAll = false;
+  const confirmBtn = document.getElementById('confirmDeleteBtn');
+  if (confirmBtn) confirmBtn.classList.remove('is-loading');
+}
 
 function deleteTrip(id) {
-  if (!confirm('Delete this trip? This cannot be undone.')) return;
-  let trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
-  trips = trips.filter(t => t.id !== id);
-  localStorage.setItem('myAdventureTrips', JSON.stringify(trips));
-  showToast('Trip deleted.', 'error');
-  loadTrips();
+  const trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+  const trip = trips.find(t => t.id === id);
+  if (!trip) return;
+  openDeleteModal({ id, name: trip.name, dest: trip.dest });
+}
+
+function confirmDeleteTrip() {
+  const confirmBtn = document.getElementById('confirmDeleteBtn');
+  if (confirmBtn) {
+    confirmBtn.classList.add('is-loading');
+    confirmBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Deleting...';
+  }
+
+  setTimeout(() => {
+    if (pendingClearAll) {
+      localStorage.removeItem('myAdventureTrips');
+      showToast('All trips cleared.', 'error');
+    } else if (pendingDeleteId != null) {
+      let trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+      trips = trips.filter(t => t.id !== pendingDeleteId);
+      localStorage.setItem('myAdventureTrips', JSON.stringify(trips));
+      showToast('Trip deleted.', 'error');
+    }
+
+    closeDeleteModal();
+    loadTrips();
+  }, 280);
 }
 
 function clearAllTrips() {
-  if (!confirm('Clear ALL saved trips? This cannot be undone.')) return;
-  localStorage.removeItem('myAdventureTrips');
-  showToast('All trips cleared.', 'error');
-  loadTrips();
+  const trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+  if (trips.length === 0) {
+    showToast('No trips to clear.', 'info');
+    return;
+  }
+  openDeleteModal({ clearAll: true });
 }
+
+document.addEventListener('keydown', e => {
+  if (e.key !== 'Escape') return;
+  if (!document.getElementById('deleteModal')?.classList.contains('hidden')) {
+    closeDeleteModal();
+    return;
+  }
+  closeModal();
+});
+
+document.getElementById('tripModal')?.addEventListener('click', e => {
+  if (e.target.id === 'tripModal') closeModal();
+});
+
+document.getElementById('deleteModal')?.addEventListener('click', e => {
+  if (e.target.id === 'deleteModal') closeDeleteModal();
+});
 
 function getDayCount(start, end) {
   if (!start || !end) return 0;

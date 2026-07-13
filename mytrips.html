@@ -133,6 +133,37 @@
     </div>
   </div>
 
+  <!-- DELETE CONFIRM MODAL -->
+  <div class="modal-overlay hidden" id="deleteModal" role="dialog" aria-modal="true" aria-labelledby="deleteModalTitle">
+    <div class="modal delete-modal" onclick="event.stopPropagation()">
+      <button class="delete-modal-close" onclick="closeDeleteModal()" aria-label="Close">
+        <i class="fas fa-times"></i>
+      </button>
+      <div class="delete-modal-icon" aria-hidden="true">
+        <i class="fas fa-trash-alt"></i>
+      </div>
+      <h3 id="deleteModalTitle">Delete Trip?</h3>
+      <p class="delete-modal-message" id="deleteModalMessage">
+        This action cannot be undone. Your itinerary and all saved details will be permanently removed.
+      </p>
+      <div class="delete-trip-preview" id="deleteTripPreview">
+        <div class="delete-trip-preview-icon"><i class="fas fa-suitcase-rolling"></i></div>
+        <div>
+          <strong id="deleteTripName">Trip Name</strong>
+          <span id="deleteTripDest">Destination</span>
+        </div>
+      </div>
+      <div class="delete-modal-actions">
+        <button type="button" class="btn-delete-cancel" onclick="closeDeleteModal()">
+          <i class="fas fa-arrow-left"></i> Keep Trip
+        </button>
+        <button type="button" class="btn-delete-confirm" id="confirmDeleteBtn" onclick="confirmDeleteTrip()">
+          <i class="fas fa-trash"></i> Yes, Delete
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- TOAST -->
   <div class="toast" id="toast"></div>
 
