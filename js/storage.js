@@ -316,23 +316,23 @@ const ExpensesStorage = {
 };
 
 /* ================================================================
-   MIGRATION — clears old auto-seeded data from previous versions.
-   Bumping APP_VERSION wipes trips/expenses/favorites so the app
-   starts clean. Weather is always kept (it's not user data).
+   MIGRATION — on version bump, clear old collections so default
+   mock data can be re-seeded by mockdata.js on the same load.
+   Weather is always kept (it's not user data).
    ================================================================ */
-const APP_VERSION = '2.0';
+const APP_VERSION = '2.1';
 
 document.addEventListener('DOMContentLoaded', () => {
   ThemeStorage.init();
 
-  // If the stored version doesn't match, wipe seeded collections
   const storedVersion = localStorage.getItem('myAdventureVersion');
   if (storedVersion !== APP_VERSION) {
     localStorage.removeItem(STORAGE_KEYS.TRIPS);
     localStorage.removeItem(STORAGE_KEYS.EXPENSES);
     localStorage.removeItem(STORAGE_KEYS.FAVORITES);
     localStorage.removeItem(STORAGE_KEYS.NEWSLETTER);
+    localStorage.removeItem('myAdventureDataCleared');
     localStorage.setItem('myAdventureVersion', APP_VERSION);
-    console.info('App updated to v' + APP_VERSION + '. Data reset to empty state.');
+    console.info('App updated to v' + APP_VERSION + '. Default mock data will be loaded.');
   }
 });

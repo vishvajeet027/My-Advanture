@@ -333,21 +333,34 @@ const MOCK_WEATHER = [
 ];
 
 /* ================================================================
-   MockData — read-only helpers
-   Trips, expenses and favorites are NOT seeded automatically.
-   The app starts empty; users create their own data.
-   Weather is always loaded from MOCK_WEATHER (no real API).
-   Call MockData.seed(true) manually from Settings if you want
-   sample data for demo purposes.
+   MockData — read-only helpers + default seed
+   On first visit (empty trips), sample trips/expenses/favorites
+   are loaded so the dashboard is useful out of the box.
+   Weather always comes from MOCK_WEATHER (no real API).
+   Call MockData.seed(true) from Settings to force-reload samples.
    ================================================================ */
+const MOCK_CLEARED_KEY = 'myAdventureDataCleared';
+
 const MockData = {
-  /** Manual demo seed — only called explicitly from Settings page */
+  /**
+   * Seed sample data into localStorage.
+   * @param {boolean} force — overwrite even if user data exists
+   */
   seed(force = false) {
-    if (!force) return;
+    if (!force && localStorage.getItem(MOCK_CLEARED_KEY) === '1') return;
+
+    if (!force) {
+      try {
+        const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRIPS) || '[]');
+        if (Array.isArray(existing) && existing.length > 0) return;
+      } catch (e) { /* seed below */ }
+    }
+
     localStorage.setItem(STORAGE_KEYS.TRIPS,     JSON.stringify(MOCK_TRIPS));
     localStorage.setItem(STORAGE_KEYS.EXPENSES,  JSON.stringify(MOCK_EXPENSES));
     localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(MOCK_FAVORITES));
     localStorage.setItem(STORAGE_KEYS.WEATHER,   JSON.stringify(MOCK_WEATHER));
+    localStorage.removeItem(MOCK_CLEARED_KEY);
     console.info('MockData seeded: 15 trips, 50 expenses, 20 favorites, 10 weather objects.');
   },
 
@@ -411,8 +424,9 @@ const MockData = {
   }
 };
 
-/* Load weather into localStorage once so weather section always has data */
+/* Default mock data + weather — runs before dashboard render (script order) */
 document.addEventListener('DOMContentLoaded', () => {
+  MockData.seed(false);
   if (!localStorage.getItem(STORAGE_KEYS.WEATHER)) {
     localStorage.setItem(STORAGE_KEYS.WEATHER, JSON.stringify(MOCK_WEATHER));
   }
