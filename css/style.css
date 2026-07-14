@@ -865,6 +865,44 @@ body.nav-open::before {
   border-top: 1px solid #eef2f7;
 }
 
+/* Admin cannot book — notice in place of Book CTAs */
+.admin-book-notice {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  width: 100%;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(10, 189, 227, 0.08), rgba(0, 210, 211, 0.1));
+  border: 1.5px solid rgba(10, 189, 227, 0.28);
+}
+.admin-book-notice > i {
+  font-size: 1.25rem;
+  color: var(--primary);
+  flex-shrink: 0;
+}
+.admin-book-notice div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  flex: 1;
+  min-width: 160px;
+}
+.admin-book-notice strong {
+  font-size: 0.9rem;
+  color: var(--dark);
+}
+.admin-book-notice span {
+  font-size: 0.78rem;
+  color: var(--text);
+  line-height: 1.4;
+}
+.admin-book-link {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
 /* ===== DELETE CONFIRM MODAL ===== */
 .delete-modal {
   max-width: 440px;
@@ -1881,6 +1919,10 @@ body.nav-open::before {
   border-top: 1px solid #eee;
   padding-top: 18px;
   flex-wrap: wrap;
+}
+.hotel-modal-footer .admin-book-notice,
+.pkg-modal-footer .admin-book-notice {
+  flex: 1 1 220px;
 }
 .hotel-modal-info-chips {
   display: flex;
