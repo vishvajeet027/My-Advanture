@@ -133,6 +133,12 @@ function resetItinerary() {
 }
 
 function initializePage() {
+  if (typeof AuthSession !== 'undefined' && AuthSession.isAdmin()) {
+    showToast('Admins manage the catalog — travelers create and book trips.', 'error');
+    setTimeout(() => { window.location.replace('admin.html'); }, 900);
+    return;
+  }
+
   calViewDate = new Date(todayStart().getFullYear(), todayStart().getMonth(), 1);
   populateCities();
   renderCalendar();
@@ -1102,6 +1108,7 @@ function buildSavedDayActivities(day, index) {
 }
 
 function saveTrip() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('create trips')) return;
   if (!selectedCity) {
     showToast('Please select a city first!', 'error');
     return;

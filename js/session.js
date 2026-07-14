@@ -31,6 +31,23 @@ const AuthSession = {
     return this.role() === 'tourist';
   },
 
+  /** Travelers book packages/hotels/flights/trips; admins manage catalog only. */
+  canBook() {
+    return !this.isAdmin();
+  },
+
+  /**
+   * Block booking actions for admin. Returns true if booking is allowed.
+   * Shows a toast when blocked.
+   */
+  guardBooking(actionLabel = 'book') {
+    if (this.canBook()) return true;
+    const msg = `Admins cannot ${actionLabel}. Switch to a Traveler account to book trips.`;
+    if (typeof showToast === 'function') showToast(msg, 'error');
+    else alert(msg);
+    return false;
+  },
+
   /** Redirect to login if not signed in. Returns session or null. */
   requireAuth() {
     const s = this.get();
@@ -80,7 +97,6 @@ function applyRoleBasedNav() {
         { href: 'destinations.html?view=hotels', label: 'Hotels' },
         { href: 'planner.html', label: 'Flights' },
         { href: 'mytrips.html', label: 'All Trips' },
-        { href: 'tripbuilder.html', label: 'Create Trip', highlight: true, icon: 'fas fa-pencil-alt' },
       ]
     : [
         { href: 'dashboard.html', label: 'Dashboard' },
@@ -132,3 +148,20 @@ document.addEventListener('DOMContentLoaded', () => {
     applyRoleVisibility();
   }
 });
+
+function isAdminUser() {
+  return typeof AuthSession !== 'undefined' && AuthSession.isAdmin();
+}
+
+/** UI block shown instead of Book buttons for admin users */
+function adminBookNotice(label = 'Booking') {
+  return `
+    <div class="admin-book-notice">
+      <i class="fas fa-user-shield"></i>
+      <div>
+        <strong>${label} is for travelers</strong>
+        <span>Admins manage the catalog — switch to a Traveler account to book.</span>
+      </div>
+      <a href="admin.html" class="btn-outline admin-book-link"><i class="fas fa-database"></i> Manage Catalog</a>
+    </div>`;
+}

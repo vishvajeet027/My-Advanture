@@ -190,9 +190,11 @@ function openPkgModal(id) {
           <div class="pkg-price-label">From</div>
           <div class="pkg-price-value">₹${p.price.toLocaleString('en-IN')}<span>/ person</span></div>
         </div>
-        <button class="btn-primary pkg-book-btn" onclick="bookPackage()">
-          <i class="fas fa-check-circle"></i> Book ${p.days}-Day Package
-        </button>
+        ${isAdminUser()
+          ? adminBookNotice('Package booking')
+          : `<button class="btn-primary pkg-book-btn" onclick="bookPackage()">
+              <i class="fas fa-check-circle"></i> Book ${p.days}-Day Package
+            </button>`}
       </div>
     </div>`;
 
@@ -210,6 +212,7 @@ function handleModalClick(e) {
 }
 
 function bookPackage() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book packages')) return;
   closePkgModal();
   if (selectedPkg) {
     const nights = Math.max(selectedPkg.days - 1, 0);
@@ -619,9 +622,11 @@ function openHotelModal(id) {
           <span class="info-chip"><i class="fas fa-globe"></i> ${h.country}</span>
           <span class="info-chip"><i class="fas fa-door-open"></i> ${h.facilities.length} Facilities</span>
         </div>
-        <button class="btn-primary" id="hotelBookBtn" onclick="bookHotel()">
-          <i class="fas fa-calendar-check"></i> Book Now — ₹${h.price.toLocaleString('en-IN')}/night
-        </button>
+        ${isAdminUser()
+          ? adminBookNotice('Hotel booking')
+          : `<button class="btn-primary" id="hotelBookBtn" onclick="bookHotel()">
+              <i class="fas fa-calendar-check"></i> Book Now — ₹${h.price.toLocaleString('en-IN')}/night
+            </button>`}
       </div>
     </div>`;
 
@@ -640,6 +645,7 @@ function handleHotelModalClick(e) {
 }
 
 function bookHotel() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book hotels')) return;
   if (!selectedHotel) return;
 
   const checkIn = document.getElementById('hotelCheckIn')?.value;

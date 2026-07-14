@@ -128,7 +128,7 @@ function renderFlightCards(data) {
         </div>
         <button class="btn-card flight-book-btn"
                 onclick="event.stopPropagation(); openFlightModal(${f.id})">
-          <i class="fas fa-ticket-alt"></i> View &amp; Book
+          <i class="fas fa-ticket-alt"></i> ${isAdminUser() ? 'View Details' : 'View &amp; Book'}
         </button>
       </div>
     </div>`;
@@ -289,9 +289,11 @@ function openFlightModal(id) {
       </div>
     </div>
 
-    <button class="fmd-book-btn" onclick="bookFlight()">
-      <i class="fas fa-check-circle"></i> BOOK THIS FLIGHT
-    </button>`;
+    ${isAdminUser()
+      ? adminBookNotice('Flight booking')
+      : `<button class="fmd-book-btn" onclick="bookFlight()">
+          <i class="fas fa-check-circle"></i> BOOK THIS FLIGHT
+        </button>`}`;
 
   document.getElementById('flightModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -315,6 +317,7 @@ function handleFlightModalClick(e) {
 }
 
 function bookFlight() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book flights')) return;
   closeFlightModal();
   if (selectedFlight) {
     showToast(
