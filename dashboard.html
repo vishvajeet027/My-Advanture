@@ -303,9 +303,9 @@
             <button class="btn-primary" onclick="savePreferences()"><i class="fas fa-save"></i> Save Preferences</button>
           </div>
 
-          <div class="dash-card settings-card danger-card">
+          <div class="dash-card settings-card danger-card" data-role="admin">
             <h4><i class="fas fa-database"></i> Data Management</h4>
-            <p style="font-size:0.85rem;color:var(--text);margin-bottom:16px;">Manage your stored app data. Seeding reloads all sample data.</p>
+            <p style="font-size:0.85rem;color:var(--text);margin-bottom:16px;">Admin only — seeding reloads sample trips and catalog data.</p>
             <div style="display:flex;flex-direction:column;gap:10px;">
               <button class="btn-primary" onclick="reseedData()"><i class="fas fa-seedling"></i> Re-seed Mock Data</button>
               <button class="btn-outline-danger" onclick="clearAppData()"><i class="fas fa-trash"></i> Clear All App Data</button>
@@ -323,6 +323,7 @@
   <div class="toast" id="toast"></div>
 
   <script src="js/storage.js"></script>
+  <script src="js/session.js"></script>
   <script src="js/mockdata.js"></script>
   <script src="js/app.js"></script>
   <script src="js/dashboard.js"></script>

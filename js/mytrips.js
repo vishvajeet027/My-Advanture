@@ -15,7 +15,10 @@ const GRADIENTS = [
 
 /* ===== LOAD TRIPS ===== */
 function loadTrips() {
-  const trips      = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
+  const trips = (typeof MockData !== 'undefined' && MockData.getTripsForSession)
+    ? MockData.getTripsForSession(session)
+    : JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
   const grid       = document.getElementById('tripsGrid');
   const emptyState = document.getElementById('emptyState');
   updateStats(trips);
@@ -164,10 +167,15 @@ function closeDeleteModal() {
 }
 
 function deleteTrip(id) {
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
   const trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
-  const trip = trips.find(t => t.id === id);
+  const trip = trips.find(t => String(t.id) === String(id));
   if (!trip) return;
-  openDeleteModal({ id, name: trip.name, dest: trip.dest });
+  if (session && session.role !== 'admin' && trip.userId && trip.userId !== session.id) {
+    showToast('You can only delete your own trips.', 'error');
+    return;
+  }
+  openDeleteModal({ id: trip.id, name: trip.name, dest: trip.dest });
 }
 
 function confirmDeleteTrip() {
@@ -178,12 +186,21 @@ function confirmDeleteTrip() {
   }
 
   setTimeout(() => {
+    const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
     if (pendingClearAll) {
-      localStorage.removeItem('myAdventureTrips');
+      if (session && session.role === 'admin') {
+        localStorage.removeItem('myAdventureTrips');
+      } else if (session) {
+        let trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+        trips = trips.filter(t => t.userId && t.userId !== session.id);
+        localStorage.setItem('myAdventureTrips', JSON.stringify(trips));
+      } else {
+        localStorage.removeItem('myAdventureTrips');
+      }
       showToast('All trips cleared.', 'error');
     } else if (pendingDeleteId != null) {
       let trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
-      trips = trips.filter(t => t.id !== pendingDeleteId);
+      trips = trips.filter(t => String(t.id) !== String(pendingDeleteId));
       localStorage.setItem('myAdventureTrips', JSON.stringify(trips));
       showToast('Trip deleted.', 'error');
     }
@@ -194,7 +211,10 @@ function confirmDeleteTrip() {
 }
 
 function clearAllTrips() {
-  const trips = JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
+  const trips = (typeof MockData !== 'undefined' && MockData.getTripsForSession)
+    ? MockData.getTripsForSession(session)
+    : JSON.parse(localStorage.getItem('myAdventureTrips') || '[]');
   if (trips.length === 0) {
     showToast('No trips to clear.', 'info');
     return;
@@ -228,4 +248,14 @@ function formatDate(d) {
   return new Date(d).toLocaleDateString('en-IN', { month:'short', day:'numeric', year:'numeric' });
 }
 
-document.addEventListener('DOMContentLoaded', loadTrips);
+document.addEventListener('DOMContentLoaded', () => {
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
+  const heroH1 = document.querySelector('.page-hero-content h1');
+  const heroP = document.querySelector('.page-hero-content p');
+  if (session && session.role === 'admin') {
+    if (heroH1) heroH1.textContent = 'All Trips';
+    if (heroP) heroP.textContent = 'Review every traveler itinerary saved in MyAdventure';
+  }
+  loadTrips();
+});
+

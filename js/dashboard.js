@@ -24,7 +24,13 @@ document.querySelectorAll('.sidebar-link').forEach(link => {
 });
 
 /* ===== HELPERS ===== */
-function getTrips()       { return Storage.get(STORAGE_KEYS.TRIPS, []); }
+function getTrips() {
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
+  if (typeof MockData !== 'undefined' && MockData.getTripsForSession) {
+    return MockData.getTripsForSession(session);
+  }
+  return Storage.get(STORAGE_KEYS.TRIPS, []);
+}
 function getExpenses()    { return Storage.get(STORAGE_KEYS.EXPENSES, []); }
 function getFavs()        { return Storage.get(STORAGE_KEYS.FAVORITES, []); }
 function getWeatherData() { return Storage.get(STORAGE_KEYS.WEATHER, []); }
@@ -53,12 +59,13 @@ const GRADIENTS = [
    ================================================================ */
 function renderWelcomeCard() {
   const settings = SettingsStorage.getAll();
-  const name = settings.userName || 'Traveler';
+  const session = typeof AuthSession !== 'undefined' ? AuthSession.get() : null;
+  const name = (session && session.name) || settings.userName || 'Traveler';
   const hour = new Date().getHours();
   const greeting = hour < 12 ? 'Good morning,' : hour < 17 ? 'Good afternoon,' : 'Good evening,';
   const el = id => document.getElementById(id);
   if (el('welcomeGreeting')) el('welcomeGreeting').textContent = greeting;
-  if (el('welcomeName'))     el('welcomeName').textContent = name + '! 👋';
+  if (el('welcomeName'))     el('welcomeName').textContent = name.split(' ')[0] + '!';
   const trips   = getTrips();
   const today   = new Date();
   const upcoming = trips.filter(t => t.start && new Date(t.start) >= today).length;
@@ -66,7 +73,37 @@ function renderWelcomeCard() {
   const initials = name.split(' ').map(w => w[0]).join('').toUpperCase().slice(0,2);
   if (el('sidebarAvatar')) el('sidebarAvatar').textContent = initials;
   if (el('sidebarName'))   el('sidebarName').textContent   = name;
-  if (el('sidebarEmail'))  el('sidebarEmail').textContent  = settings.userEmail || 'traveler@example.com';
+  if (el('sidebarEmail'))  el('sidebarEmail').textContent  =
+    (session && session.email) || settings.userEmail || 'traveler@example.com';
+
+  const sub = el('welcomeSubtext');
+  if (sub && session) {
+    sub.innerHTML = session.role === 'admin'
+      ? `Signed in as <strong>Admin</strong>. Manage catalog data or review <strong>${upcoming}</strong> upcoming traveler trips.`
+      : `You have <strong id="upcomingCount">${upcoming}</strong> upcoming trips. Ready for your next adventure?`;
+  }
+
+  const newTripBtn = document.querySelector('.sidebar-bottom .btn-primary');
+  if (newTripBtn && session) {
+    if (session.role === 'admin') {
+      newTripBtn.href = 'admin.html';
+      newTripBtn.innerHTML = '<i class="fas fa-database"></i> Manage Catalog';
+    } else {
+      newTripBtn.href = 'tripbuilder.html';
+      newTripBtn.innerHTML = '<i class="fas fa-plus"></i> New Trip';
+    }
+  }
+
+  const planBtn = document.querySelector('.welcome-actions .btn-primary');
+  if (planBtn && session) {
+    if (session.role === 'admin') {
+      planBtn.href = 'admin.html';
+      planBtn.innerHTML = '<i class="fas fa-database"></i> Manage Catalog';
+    } else {
+      planBtn.href = 'tripbuilder.html';
+      planBtn.innerHTML = '<i class="fas fa-plus"></i> Plan Trip';
+    }
+  }
 }
 
 /* ================================================================
@@ -379,17 +416,25 @@ function toggleThemeFromSettings() {
   if (themeChk) themeChk.checked = ThemeStorage.get()==='dark';
 }
 function reseedData() {
-  if (!confirm('This will overwrite all trips, expenses and favorites with sample data. Continue?')) return;
+  if (typeof AuthSession !== 'undefined' && !AuthSession.isAdmin()) {
+    showToast('Only admins can re-seed mock data.', 'error');
+    return;
+  }
+  if (!confirm('This will overwrite all trips, expenses, favorites and catalog data with samples. Continue?')) return;
   MockData.seed(true);
-  showToast('Mock data re-seeded!','success');
-  setTimeout(()=>location.reload(),1200);
+  showToast('Mock data re-seeded!', 'success');
+  setTimeout(() => location.reload(), 1200);
 }
 function clearAppData() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.isAdmin()) {
+    showToast('Only admins can clear app data.', 'error');
+    return;
+  }
   if (!confirm('Clear ALL app data? This cannot be undone.')) return;
   Storage.clearAll();
   localStorage.setItem('myAdventureDataCleared', '1');
-  showToast('All data cleared.','error');
-  setTimeout(()=>location.reload(),1200);
+  showToast('All data cleared.', 'error');
+  setTimeout(() => location.reload(), 1200);
 }
 
 document.addEventListener('DOMContentLoaded', () => {

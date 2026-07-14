@@ -333,17 +333,27 @@ const MOCK_WEATHER = [
 ];
 
 /* ================================================================
-   MockData — read-only helpers + default seed
-   On first visit (empty trips), sample trips/expenses/favorites
-   are loaded so the dashboard is useful out of the box.
-   Weather always comes from MOCK_WEATHER (no real API).
-   Call MockData.seed(true) from Settings to force-reload samples.
+   MockData — helpers + default seed
+   Catalog (hotels/places/vehicles/flights) is persisted so admins
+   can add/edit/delete. Trips seed tagged to demo tourist account.
    ================================================================ */
 const MOCK_CLEARED_KEY = 'myAdventureDataCleared';
+const DEMO_TOURIST_ID = 'demo-tourist';
+
+function flattenCityPlaces() {
+  const places = [];
+  let nextId = 1;
+  Object.entries(MOCK_CITY_PLACES).forEach(([city, list]) => {
+    list.forEach(p => {
+      places.push({ ...p, id: nextId++, city });
+    });
+  });
+  return places;
+}
 
 const MockData = {
   /**
-   * Seed sample data into localStorage.
+   * Seed sample trip/expense/favorite data into localStorage.
    * @param {boolean} force — overwrite even if user data exists
    */
   seed(force = false) {
@@ -352,16 +362,37 @@ const MockData = {
     if (!force) {
       try {
         const existing = JSON.parse(localStorage.getItem(STORAGE_KEYS.TRIPS) || '[]');
-        if (Array.isArray(existing) && existing.length > 0) return;
+        if (Array.isArray(existing) && existing.length > 0) {
+          this.seedCatalog(false);
+          return;
+        }
       } catch (e) { /* seed below */ }
     }
 
-    localStorage.setItem(STORAGE_KEYS.TRIPS,     JSON.stringify(MOCK_TRIPS));
+    const trips = MOCK_TRIPS.map(t => ({ ...t, userId: t.userId || DEMO_TOURIST_ID }));
+    localStorage.setItem(STORAGE_KEYS.TRIPS,     JSON.stringify(trips));
     localStorage.setItem(STORAGE_KEYS.EXPENSES,  JSON.stringify(MOCK_EXPENSES));
     localStorage.setItem(STORAGE_KEYS.FAVORITES, JSON.stringify(MOCK_FAVORITES));
     localStorage.setItem(STORAGE_KEYS.WEATHER,   JSON.stringify(MOCK_WEATHER));
     localStorage.removeItem(MOCK_CLEARED_KEY);
-    console.info('MockData seeded: 15 trips, 50 expenses, 20 favorites, 10 weather objects.');
+    this.seedCatalog(force);
+    console.info('MockData seeded: trips, expenses, favorites, weather + catalog.');
+  },
+
+  /** Seed hotels / places / rentals / flights if empty (or force). */
+  seedCatalog(force = false) {
+    if (force || !Storage.get(STORAGE_KEYS.HOTELS, []).length) {
+      Storage.set(STORAGE_KEYS.HOTELS, JSON.parse(JSON.stringify(MOCK_HOTELS)));
+    }
+    if (force || !Storage.get(STORAGE_KEYS.PLACES, []).length) {
+      Storage.set(STORAGE_KEYS.PLACES, flattenCityPlaces());
+    }
+    if (force || !Storage.get(STORAGE_KEYS.RENTALS, []).length) {
+      Storage.set(STORAGE_KEYS.RENTALS, JSON.parse(JSON.stringify(MOCK_RENTALS)));
+    }
+    if (force || !Storage.get(STORAGE_KEYS.FLIGHTS, []).length) {
+      Storage.set(STORAGE_KEYS.FLIGHTS, JSON.parse(JSON.stringify(MOCK_FLIGHTS)));
+    }
   },
 
   getTrendingDestinations() {
@@ -385,48 +416,82 @@ const MockData = {
   },
 
   getAllHotels() {
-    return MOCK_HOTELS;
+    const list = CatalogStorage.hotels();
+    return list.length ? list : MOCK_HOTELS;
   },
 
   getHotelById(id) {
-    return MOCK_HOTELS.find(h => h.id === id) || null;
+    return this.getAllHotels().find(h => String(h.id) === String(id)) || null;
   },
 
   getAllFlights() {
-    return MOCK_FLIGHTS;
+    const list = CatalogStorage.flights();
+    return list.length ? list : MOCK_FLIGHTS;
   },
 
   getFlightById(id) {
-    return MOCK_FLIGHTS.find(f => f.id === id) || null;
+    return this.getAllFlights().find(f => String(f.id) === String(id)) || null;
   },
 
   getPlacesByCity(city) {
+    const fromStore = CatalogStorage.placesByCity(city);
+    if (fromStore.length) return fromStore;
     return MOCK_CITY_PLACES[city] || [];
+  },
+
+  getAllPlaces() {
+    const list = CatalogStorage.places();
+    return list.length ? list : flattenCityPlaces();
   },
 
   getHotelsByCity(city) {
     const aliases = { 'Taj Mahal': 'Agra', Maldives: 'Male', 'Machu Picchu': 'Cusco' };
     const hotelCity = aliases[city] || city;
-    return MOCK_HOTELS.filter(h => h.city.toLowerCase() === hotelCity.toLowerCase());
+    return this.getAllHotels().filter(h =>
+      String(h.city || '').toLowerCase() === hotelCity.toLowerCase()
+    );
   },
 
   getFlightsToCity(city) {
     const aliases = { 'Taj Mahal': 'Delhi', Maldives: 'Maldives', 'Machu Picchu': 'Lima', 'Rio de Janeiro': 'Rio' };
     const target = (aliases[city] || city).toLowerCase();
-    return MOCK_FLIGHTS.filter(f =>
-      f.to.toLowerCase().includes(target) ||
-      f.toCountry.toLowerCase().includes(target)
+    return this.getAllFlights().filter(f =>
+      String(f.to || '').toLowerCase().includes(target) ||
+      String(f.toCountry || '').toLowerCase().includes(target)
     );
   },
 
   getAllRentals() {
-    return MOCK_RENTALS;
-  }
+    const list = CatalogStorage.rentals();
+    return list.length ? list : MOCK_RENTALS;
+  },
+
+  /** Trips visible for the current session (admin = all, tourist = own). */
+  getTripsForSession(session) {
+    this.ensureTripOwnership();
+    const trips = Storage.get(STORAGE_KEYS.TRIPS, []);
+    if (!session || session.role === 'admin') return trips;
+    return trips.filter(t => t.userId === session.id);
+  },
+
+  /** Assign unscoped seeded trips to the demo tourist account. */
+  ensureTripOwnership() {
+    const trips = Storage.get(STORAGE_KEYS.TRIPS, []);
+    let changed = false;
+    trips.forEach(t => {
+      if (!t.userId) {
+        t.userId = DEMO_TOURIST_ID;
+        changed = true;
+      }
+    });
+    if (changed) Storage.set(STORAGE_KEYS.TRIPS, trips);
+  },
 };
 
 /* Default mock data + weather — runs before dashboard render (script order) */
 document.addEventListener('DOMContentLoaded', () => {
   MockData.seed(false);
+  MockData.seedCatalog(false);
   if (!localStorage.getItem(STORAGE_KEYS.WEATHER)) {
     localStorage.setItem(STORAGE_KEYS.WEATHER, JSON.stringify(MOCK_WEATHER));
   }

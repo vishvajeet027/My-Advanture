@@ -107,6 +107,22 @@ body {
   font-weight: 600;
   color: var(--dark);
 }
+.nav-role-badge {
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  padding: 4px 10px;
+  border-radius: 999px;
+  background: rgba(10, 189, 227, 0.12);
+  color: var(--primary-dark);
+  border: 1px solid rgba(10, 189, 227, 0.28);
+}
+.nav-role-badge.admin {
+  background: rgba(26, 26, 46, 0.08);
+  color: #1a1a2e;
+  border-color: rgba(26, 26, 46, 0.2);
+}
 .nav-links-row {
   display: flex;
   align-items: center;
@@ -186,7 +202,7 @@ body {
 
 .cards-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 24px;
 }
 
@@ -257,6 +273,8 @@ body {
 .hub-card.hotels   .card-overlay  { background: rgba(108,92,231,0.22); }
 .hub-card.flights  .card-overlay  { background: rgba(0,184,148,0.20); }
 .hub-card.create   .card-overlay  { background: rgba(253,203,110,0.18); }
+.hub-card.bookings .card-overlay  { background: rgba(225,112,85,0.20); }
+.hub-card.dash     .card-overlay  { background: rgba(45,52,54,0.22); }
 
 /* Accent top bar */
 .hub-card::before {
@@ -275,6 +293,8 @@ body {
 .hub-card.hotels::before   { background: linear-gradient(90deg, #6c5ce7, #a29bfe); }
 .hub-card.flights::before  { background: linear-gradient(90deg, #00b894, #00cec9); }
 .hub-card.create::before   { background: linear-gradient(90deg, #fdcb6e, #e17055); }
+.hub-card.bookings::before { background: linear-gradient(90deg, #e17055, #d63031); }
+.hub-card.dash::before     { background: linear-gradient(90deg, #636e72, #2d3436); }
 
 /* Card content */
 .card-content {
@@ -300,6 +320,8 @@ body {
 .hub-card.hotels   .card-icon { background: rgba(108,92,231,0.25);  color: #a29bfe; }
 .hub-card.flights  .card-icon { background: rgba(0,184,148,0.25);   color: #00cec9; }
 .hub-card.create   .card-icon { background: rgba(253,203,110,0.25); color: #fdcb6e; }
+.hub-card.bookings .card-icon { background: rgba(225,112,85,0.25);  color: #e17055; }
+.hub-card.dash     .card-icon { background: rgba(99,110,114,0.30);  color: #dfe6e9; }
 
 .card-title {
   font-size: 1.5rem;
@@ -328,6 +350,8 @@ body {
 .hub-card.hotels   .card-arrow { color: #a29bfe; }
 .hub-card.flights  .card-arrow { color: #00cec9; }
 .hub-card.create   .card-arrow { color: #fdcb6e; }
+.hub-card.bookings .card-arrow { color: #e17055; }
+.hub-card.dash     .card-arrow { color: #b2bec3; }
 
 /* Badge */
 .card-badge {
@@ -346,6 +370,8 @@ body {
 .hub-card.hotels   .card-badge { background: rgba(108,92,231,0.25);  color: #a29bfe;  border: 1px solid rgba(108,92,231,0.4); }
 .hub-card.flights  .card-badge { background: rgba(0,184,148,0.25);   color: #00cec9;  border: 1px solid rgba(0,184,148,0.4); }
 .hub-card.create   .card-badge { background: rgba(253,203,110,0.25); color: #fdcb6e;  border: 1px solid rgba(253,203,110,0.4); }
+.hub-card.bookings .card-badge { background: rgba(225,112,85,0.25);  color: #fab1a0; border: 1px solid rgba(225,112,85,0.4); }
+.hub-card.dash     .card-badge { background: rgba(99,110,114,0.3);   color: #dfe6e9; border: 1px solid rgba(178,190,195,0.4); }
 
 /* ── STATS ROW ── */
 .stats-row {

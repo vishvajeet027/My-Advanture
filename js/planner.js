@@ -156,7 +156,7 @@ function filterFlights() {
   const query = (document.getElementById('flightSearchInput')?.value || '').toLowerCase();
   const sort  = document.getElementById('flightSortSelect')?.value || 'default';
 
-  let data = MOCK_FLIGHTS.filter(f => {
+  let data = MockData.getAllFlights().filter(f => {
     const matchClass  = activeFlightClass === 'all' || f.flightClass === activeFlightClass;
     const matchSearch = f.from.toLowerCase().includes(query) ||
                         f.to.toLowerCase().includes(query)   ||
@@ -180,7 +180,7 @@ function filterFlights() {
    MODAL — OPEN
    ================================================================ */
 function openFlightModal(id) {
-  selectedFlight   = MOCK_FLIGHTS.find(f => f.id === id);
+  selectedFlight   = MockData.getAllFlights().find(f => String(f.id) === String(id));
   if (!selectedFlight) return;
   const f = selectedFlight;
   flightPassengers = f.passengers;
@@ -325,6 +325,6 @@ function bookFlight() {
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderFlightCards(MOCK_FLIGHTS);
+  renderFlightCards(MockData.getAllFlights());
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlightModal(); });
 });
