@@ -84,16 +84,6 @@ function showPanel(id) {
   const panel = document.getElementById(id);
   if (panel) panel.classList.add('active');
 
-  // Sync Sign Up / Log In pill toggle
-  document.querySelectorAll('.mode-btn').forEach(btn => {
-    const isLoginish = id === 'loginPanel' || id === 'forgotPanel' || id === 'successPanel';
-    const target = btn.dataset.panel;
-    btn.classList.toggle('active',
-      (isLoginish && target === 'loginPanel') ||
-      (id === 'signupPanel' && target === 'signupPanel')
-    );
-  });
-
   // Reset forgot success view when leaving
   if (id === 'loginPanel') {
     const form = document.getElementById('forgotForm');
@@ -118,9 +108,21 @@ let bgIndex = 0;
 let bgSlides = [];
 let bgDots = [];
 
+const VISUAL_LOCATIONS = [
+  'Cappadocia, Turkey',
+  'Swiss Alps',
+  'Mountain Peaks',
+  'Lake Como Escape',
+];
+
 function syncVisualSlides() {
   bgSlides = Array.from(document.querySelectorAll('.auth-slide'));
   bgDots = Array.from(document.querySelectorAll('.auth-dot'));
+}
+
+function updateVisualLocation() {
+  const el = document.getElementById('visualLocationName');
+  if (el) el.textContent = VISUAL_LOCATIONS[bgIndex] || VISUAL_LOCATIONS[0];
 }
 
 function goToVisual(index) {
@@ -132,6 +134,7 @@ function goToVisual(index) {
   bgIndex = (index + bgSlides.length) % bgSlides.length;
   bgSlides[bgIndex]?.classList.add('active');
   bgDots[bgIndex]?.classList.add('active');
+  updateVisualLocation();
 }
 
 function nextVisual() { goToVisual(bgIndex + 1); }
@@ -141,6 +144,7 @@ function cycleBg() { nextVisual(); }
 
 document.addEventListener('DOMContentLoaded', () => {
   syncVisualSlides();
+  updateVisualLocation();
   bgDots.forEach((dot, i) => {
     dot.addEventListener('click', () => goToVisual(i));
   });
@@ -164,8 +168,10 @@ function toast(msg, type = '') {
 function setError(fieldId, errId, msg) {
   const field = document.getElementById(fieldId);
   const err   = document.getElementById(errId);
-  if (field) field.classList.add('error');
-  if (err)   err.textContent = msg;
+  const wrap  = field?.closest?.('.auth-field')?.querySelector('.input-wrap') || field?.querySelector?.('.input-wrap');
+  if (wrap) wrap.classList.add('error');
+  if (field && field.classList) field.classList.add('error');
+  if (err) err.textContent = msg;
 }
 
 function clearErrors(...errIds) {
@@ -173,6 +179,7 @@ function clearErrors(...errIds) {
     const el = document.getElementById(id);
     if (el) el.textContent = '';
   });
+  document.querySelectorAll('.input-wrap').forEach(w => w.classList.remove('error'));
   document.querySelectorAll('.input-wrap input').forEach(i => i.classList.remove('error', 'success'));
 }
 
@@ -191,13 +198,14 @@ function setLoading(btnId, loading) {
    ================================================================ */
 function togglePass(inputId, btn) {
   const input = document.getElementById(inputId);
-  const icon  = btn.querySelector('i');
+  const icon  = btn?.querySelector('i');
+  if (!input) return;
   if (input.type === 'password') {
     input.type = 'text';
-    icon.className = 'fas fa-eye-slash';
+    if (icon) icon.className = 'fas fa-eye';
   } else {
     input.type = 'password';
-    icon.className = 'fas fa-eye';
+    if (icon) icon.className = 'fas fa-eye-slash';
   }
 }
 
