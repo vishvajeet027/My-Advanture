@@ -6,43 +6,147 @@
 const AUTH_KEY    = 'myAdventureUsers';
 const SESSION_KEY = 'myAdventureSession';
 
-/* ================================================================
-   BACKGROUND SLIDER
-   ================================================================ */
-let bgIndex = 0;
-const bgSlides = document.querySelectorAll('.auth-slide');
-const bgDots   = document.querySelectorAll('.auth-dot');
+/* Dummy demo accounts — select on login to autofill credentials */
+const DEMO_USERS = {
+  admin: {
+    id:        'demo-admin',
+    firstName: 'Admin',
+    lastName:  'User',
+    username:  'admin',
+    email:     'admin@myadventure.com',
+    password:  'Admin@123',
+    role:      'admin',
+  },
+  tourist: {
+    id:        'demo-tourist',
+    firstName: 'Local',
+    lastName:  'Tourist',
+    username:  'tourist',
+    email:     'tourist@myadventure.com',
+    password:  'Tourist@123',
+    role:      'tourist',
+  },
+};
 
-function cycleBg() {
-  bgSlides[bgIndex].classList.remove('active');
-  bgDots[bgIndex].classList.remove('active');
-  bgIndex = (bgIndex + 1) % bgSlides.length;
-  bgSlides[bgIndex].classList.add('active');
-  bgDots[bgIndex].classList.add('active');
-}
-setInterval(cycleBg, 5000);
+/** Ensure demo Admin + Tourist accounts exist in localStorage */
+function ensureDemoUsers() {
+  const users = getUsers();
+  let changed = false;
 
-bgDots.forEach((dot, i) => {
-  dot.addEventListener('click', () => {
-    bgSlides[bgIndex].classList.remove('active');
-    bgDots[bgIndex].classList.remove('active');
-    bgIndex = i;
-    bgSlides[bgIndex].classList.add('active');
-    bgDots[bgIndex].classList.add('active');
+  Object.values(DEMO_USERS).forEach(demo => {
+    const existing = users.find(u => u.email.toLowerCase() === demo.email.toLowerCase());
+    if (!existing) {
+      users.push({
+        id:        demo.id,
+        firstName: demo.firstName,
+        lastName:  demo.lastName,
+        username:  demo.username,
+        email:     demo.email,
+        password:  btoa(demo.password),
+        role:      demo.role,
+        createdAt: new Date().toISOString(),
+      });
+      changed = true;
+    } else {
+      if (!existing.role) existing.role = demo.role;
+      if (!existing.username) existing.username = demo.username;
+      existing.password = btoa(demo.password);
+      changed = true;
+    }
   });
-});
+
+  if (changed) saveUsers(users);
+}
+
+/** Autofill login fields for selected demo role */
+function selectDemoRole(role) {
+  const demo = DEMO_USERS[role];
+  if (!demo) return;
+
+  ensureDemoUsers();
+
+  const userInput = document.getElementById('loginEmail');
+  const passInput = document.getElementById('loginPass');
+  if (userInput) userInput.value = demo.username;
+  if (passInput) passInput.value = demo.password;
+
+  clearErrors('loginEmailErr', 'loginPassErr');
+  document.querySelectorAll('.demo-login-btn').forEach(btn => {
+    btn.classList.toggle('active', btn.dataset.role === role);
+  });
+}
 
 /* ================================================================
    PANEL SWITCHING
    ================================================================ */
 function showPanel(id) {
   document.querySelectorAll('.auth-panel').forEach(p => p.classList.remove('active'));
-  document.getElementById(id).classList.add('active');
+  const panel = document.getElementById(id);
+  if (panel) panel.classList.add('active');
+
+  // Sync Sign Up / Log In pill toggle
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    const isLoginish = id === 'loginPanel' || id === 'forgotPanel' || id === 'successPanel';
+    const target = btn.dataset.panel;
+    btn.classList.toggle('active',
+      (isLoginish && target === 'loginPanel') ||
+      (id === 'signupPanel' && target === 'signupPanel')
+    );
+  });
+
+  // Reset forgot success view when leaving
+  if (id === 'loginPanel') {
+    const form = document.getElementById('forgotForm');
+    const success = document.getElementById('forgotSuccess');
+    if (form) form.classList.remove('hidden');
+    if (success) success.classList.add('hidden');
+  }
+}
+
+function switchAuthMode(panelId) {
+  showPanel(panelId);
 }
 
 function showForgot() {
   showPanel('forgotPanel');
 }
+
+/* ================================================================
+   VISUAL SLIDER
+   ================================================================ */
+let bgIndex = 0;
+let bgSlides = [];
+let bgDots = [];
+
+function syncVisualSlides() {
+  bgSlides = Array.from(document.querySelectorAll('.auth-slide'));
+  bgDots = Array.from(document.querySelectorAll('.auth-dot'));
+}
+
+function goToVisual(index) {
+  if (!bgSlides.length) syncVisualSlides();
+  if (!bgSlides.length) return;
+
+  bgSlides[bgIndex]?.classList.remove('active');
+  bgDots[bgIndex]?.classList.remove('active');
+  bgIndex = (index + bgSlides.length) % bgSlides.length;
+  bgSlides[bgIndex]?.classList.add('active');
+  bgDots[bgIndex]?.classList.add('active');
+}
+
+function nextVisual() { goToVisual(bgIndex + 1); }
+function prevVisual() { goToVisual(bgIndex - 1); }
+
+function cycleBg() { nextVisual(); }
+
+document.addEventListener('DOMContentLoaded', () => {
+  syncVisualSlides();
+  bgDots.forEach((dot, i) => {
+    dot.addEventListener('click', () => goToVisual(i));
+  });
+});
+
+setInterval(cycleBg, 5500);
 
 /* ================================================================
    TOAST
@@ -145,7 +249,8 @@ function createSession(user) {
     firstName: user.firstName,
     lastName:  user.lastName,
     email:     user.email,
-    avatar:    (user.firstName[0] + user.lastName[0]).toUpperCase(),
+    role:      user.role || 'tourist',
+    avatar:    ((user.firstName[0] || 'U') + (user.lastName[0] || '')).toUpperCase(),
     loginAt:   new Date().toISOString(),
   };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
@@ -167,8 +272,11 @@ function getSession() {
    ================================================================ */
 function redirectToDashboard(name) {
   showPanel('successPanel');
+  const session = getSession();
+  const roleLabel = session && session.role === 'admin' ? 'Admin' : 'Tourist';
   document.getElementById('successTitle').textContent = 'Welcome, ' + name.split(' ')[0] + '!';
-  document.getElementById('successMsg').textContent   = 'You\'re signed in. Redirecting...';
+  document.getElementById('successMsg').textContent =
+    `Signed in as ${roleLabel}. Redirecting...`;
 
   // animate progress bar
   setTimeout(() => {
@@ -188,12 +296,12 @@ function handleLogin(e) {
   e.preventDefault();
   clearErrors('loginEmailErr', 'loginPassErr');
 
-  const email = document.getElementById('loginEmail').value.trim();
-  const pass  = document.getElementById('loginPass').value;
+  const loginId = document.getElementById('loginEmail').value.trim();
+  const pass    = document.getElementById('loginPass').value;
   let valid = true;
 
-  if (!email || !email.includes('@')) {
-    setError('loginEmail', 'loginEmailErr', 'Please enter a valid email address.');
+  if (!loginId) {
+    setError('loginEmail', 'loginEmailErr', 'Please enter your username or email.');
     valid = false;
   }
   if (!pass) {
@@ -207,11 +315,16 @@ function handleLogin(e) {
   // Simulate network delay
   setTimeout(() => {
     const users = getUsers();
-    const user  = users.find(u => u.email.toLowerCase() === email.toLowerCase());
+    const key = loginId.toLowerCase();
+    const user = users.find(u =>
+      (u.email && u.email.toLowerCase() === key) ||
+      (u.username && u.username.toLowerCase() === key) ||
+      (u.firstName && u.firstName.toLowerCase() === key)
+    );
 
     if (!user) {
       setLoading('loginBtn', false);
-      setError('loginEmail', 'loginEmailErr', 'No account found with this email.');
+      setError('loginEmail', 'loginEmailErr', 'No account found with this username.');
       return;
     }
 
@@ -223,7 +336,7 @@ function handleLogin(e) {
 
     // Remember me
     if (document.getElementById('rememberMe')?.checked) {
-      localStorage.setItem('myAdventureRemember', email);
+      localStorage.setItem('myAdventureRemember', user.username || user.email);
     }
 
     createSession(user);
@@ -240,15 +353,18 @@ function handleSignup(e) {
   clearErrors('signupFirstErr', 'signupEmailErr', 'signupPassErr', 'signupConfirmErr');
 
   const first   = document.getElementById('signupFirst').value.trim();
-  const last    = document.getElementById('signupLast').value.trim();
+  const last    = (document.getElementById('signupLast')?.value || '').trim();
   const email   = document.getElementById('signupEmail').value.trim();
   const pass    = document.getElementById('signupPass').value;
-  const confirm = document.getElementById('signupConfirm').value;
-  const terms   = document.getElementById('termsCheck').checked;
+  const confirmEl = document.getElementById('signupConfirm');
+  if (confirmEl) confirmEl.value = pass;
+  const confirm = pass;
+  const termsEl = document.getElementById('termsCheck');
+  const terms   = termsEl ? termsEl.checked : true;
   let valid = true;
 
   if (!first) {
-    setError('signupFirst', 'signupFirstErr', 'First name is required.');
+    setError('signupFirst', 'signupFirstErr', 'Username is required.');
     valid = false;
   }
   if (!email || !email.includes('@')) {
@@ -283,8 +399,10 @@ function handleSignup(e) {
       id:        Date.now(),
       firstName: first,
       lastName:  last || '',
+      username:  first.toLowerCase().replace(/\s+/g, '_'),
       email:     email,
       password:  btoa(pass),           // base64 — demo only, not real security
+      role:      'tourist',
       createdAt: new Date().toISOString(),
     };
     users.push(newUser);
@@ -355,6 +473,8 @@ function handleGoogleLogin() {
    AUTO-FILL REMEMBERED EMAIL
    ================================================================ */
 document.addEventListener('DOMContentLoaded', () => {
+  ensureDemoUsers();
+
   const remembered = localStorage.getItem('myAdventureRemember');
   if (remembered) {
     const emailInput = document.getElementById('loginEmail');

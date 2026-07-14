@@ -325,9 +325,10 @@ function initHotelsView() {
 
   // Update results container
   const resultsCount = document.getElementById('resultsCount');
-  if (resultsCount) resultsCount.innerHTML = 'Showing <strong>20</strong> hotels';
+  const hotels = MockData.getAllHotels();
+  if (resultsCount) resultsCount.innerHTML = `Showing <strong>${hotels.length}</strong> hotels`;
 
-  renderHotelCards(MOCK_HOTELS);
+  renderHotelCards(hotels);
 }
 
 let activeHotelFacility = 'all';
@@ -510,7 +511,7 @@ function filterHotels() {
   const query = (document.getElementById('hotelSearchInput')?.value || '').toLowerCase();
   const sort = document.getElementById('hotelSortSelect')?.value || 'default';
 
-  let data = MOCK_HOTELS.filter(h => {
+  let data = MockData.getAllHotels().filter(h => {
     const matchFacility = activeHotelFacility === 'all' || h.facilities.includes(activeHotelFacility);
     const matchSearch = h.name.toLowerCase().includes(query) ||
       h.city.toLowerCase().includes(query) ||
@@ -527,7 +528,7 @@ function filterHotels() {
 }
 
 function openHotelModal(id) {
-  selectedHotel = MOCK_HOTELS.find(h => h.id === id);
+  selectedHotel = MockData.getAllHotels().find(h => String(h.id) === String(id));
   if (!selectedHotel) return;
   const h = selectedHotel;
 

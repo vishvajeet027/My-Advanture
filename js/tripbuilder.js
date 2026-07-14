@@ -699,7 +699,7 @@ function renderContent() {
   switch (activeTab) {
     case 'transport':
       html = renderFlights();
-      count = MockData.getFlightsToCity(selectedCity).length || MOCK_FLIGHTS.slice(0, 8).length;
+      count = MockData.getFlightsToCity(selectedCity).length || MockData.getAllFlights().slice(0, 8).length;
       break;
     case 'hotels':
       html = renderHotels();
@@ -711,7 +711,7 @@ function renderContent() {
       break;
     case 'rentals':
       html = renderRentals();
-      count = MOCK_RENTALS.length;
+      count = MockData.getAllRentals().length;
       break;
   }
 
@@ -722,20 +722,21 @@ function renderContent() {
 
 function getHotelsForCity() {
   let hotels = MockData.getHotelsByCity(selectedCity);
+  const allHotels = MockData.getAllHotels();
   if (hotels.length === 0) {
-    hotels = MOCK_HOTELS.filter(h =>
-      h.country.toLowerCase() === (selectedCityObj?.country || '').toLowerCase()
+    hotels = allHotels.filter(h =>
+      String(h.country || '').toLowerCase() === (selectedCityObj?.country || '').toLowerCase()
     );
   }
   if (hotels.length === 0) {
-    hotels = MOCK_HOTELS.slice(0, 6);
+    hotels = allHotels.slice(0, 6);
   }
   return hotels;
 }
 
 function renderFlights() {
   let flights = MockData.getFlightsToCity(selectedCity);
-  if (flights.length === 0) flights = MOCK_FLIGHTS.slice(0, 8);
+  if (flights.length === 0) flights = MockData.getAllFlights().slice(0, 8);
 
   return flights.map(f => {
     const isSelected = tripFlight?.id === f.id;
@@ -835,11 +836,11 @@ function renderPlaces() {
 function renderRentals() {
   const day = getActiveDay();
 
-  return MOCK_RENTALS.map(r => {
+  return MockData.getAllRentals().map(r => {
     const isSelected = day?.rental && sameId(day.rental.id, r.id);
     const tagClass = r.type === 'Bike' ? 'bike' : 'car';
     return `
-      <div class="trip-card${isSelected ? ' selected' : ''}" onclick="selectRental(${r.id})">
+      <div class="trip-card${isSelected ? ' selected' : ''}" onclick="selectRental(${JSON.stringify(r.id)})">
         <div class="trip-card-img">
           ${cardImageHTML(r.image, r.name, 'fa-motorcycle')}
           <span class="trip-card-badge">${r.vehicle}</span>
@@ -862,7 +863,7 @@ function renderRentals() {
 }
 
 function selectFlight(id) {
-  tripFlight = MOCK_FLIGHTS.find(f => f.id === id);
+  tripFlight = MockData.getAllFlights().find(f => sameId(f.id, id));
   updateDayStrip();
   updateSelectionList();
   renderContent();
@@ -872,7 +873,7 @@ function selectFlight(id) {
 function selectHotel(id) {
   const day = getActiveDay();
   if (!day) return;
-  const hotel = MOCK_HOTELS.find(h => sameId(h.id, id));
+  const hotel = MockData.getAllHotels().find(h => sameId(h.id, id));
   if (!hotel) return;
 
   // Toggle off if clicking the same hotel again on this day
@@ -957,7 +958,7 @@ function togglePlace(id) {
 function selectRental(id) {
   const day = getActiveDay();
   if (!day) return;
-  const rental = MOCK_RENTALS.find(r => sameId(r.id, id));
+  const rental = MockData.getAllRentals().find(r => sameId(r.id, id));
   if (!rental) return;
 
   if (day.rental && sameId(day.rental.id, rental.id) && !applyToAllDays) {
@@ -1135,6 +1136,9 @@ function saveTrip() {
 
   const tripData = {
     id: Date.now(),
+    userId: (typeof AuthSession !== 'undefined' && AuthSession.get())
+      ? AuthSession.get().id
+      : null,
     name: `${selectedCity} Adventure`,
     dest: `${selectedCity}, ${selectedCityObj?.country || ''}`,
     type: 'Custom',

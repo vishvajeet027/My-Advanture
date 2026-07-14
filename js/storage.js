@@ -70,6 +70,59 @@ const STORAGE_KEYS = {
   NEWSLETTER:   'myAdventureNewsletter',
   WEATHER:      'myAdventureWeather',
   USER:         'myAdventureUser',
+  HOTELS:       'myAdventureHotels',
+  PLACES:       'myAdventurePlaces',
+  RENTALS:      'myAdventureRentals',
+  FLIGHTS:      'myAdventureFlights',
+};
+
+/* ================================================================
+   CATALOG STORAGE — hotels, places, vehicles, flights (admin CRUD)
+   ================================================================ */
+const CatalogStorage = {
+  hotels()  { return CRUDHelper.getAll(STORAGE_KEYS.HOTELS); },
+  places()  { return CRUDHelper.getAll(STORAGE_KEYS.PLACES); },
+  rentals() { return CRUDHelper.getAll(STORAGE_KEYS.RENTALS); },
+  flights() { return CRUDHelper.getAll(STORAGE_KEYS.FLIGHTS); },
+
+  saveHotels(list)  { Storage.set(STORAGE_KEYS.HOTELS, list); },
+  savePlaces(list)  { Storage.set(STORAGE_KEYS.PLACES, list); },
+  saveRentals(list) { Storage.set(STORAGE_KEYS.RENTALS, list); },
+  saveFlights(list) { Storage.set(STORAGE_KEYS.FLIGHTS, list); },
+
+  add(type, item) {
+    const key = STORAGE_KEYS[type.toUpperCase()];
+    if (!key) return null;
+    return CRUDHelper.add(key, item);
+  },
+
+  update(type, id, updates) {
+    const key = STORAGE_KEYS[type.toUpperCase()];
+    if (!key) return null;
+    const items = CRUDHelper.getAll(key);
+    const idx = items.findIndex(i => String(i.id) === String(id));
+    if (idx === -1) return null;
+    items[idx] = { ...items[idx], ...updates, updatedAt: new Date().toISOString() };
+    Storage.set(key, items);
+    return items[idx];
+  },
+
+  remove(type, id) {
+    const key = STORAGE_KEYS[type.toUpperCase()];
+    if (!key) return false;
+    const items = CRUDHelper.getAll(key);
+    const filtered = items.filter(i => String(i.id) !== String(id));
+    if (filtered.length === items.length) return false;
+    Storage.set(key, filtered);
+    return true;
+  },
+
+  placesByCity(city) {
+    if (!city) return [];
+    return this.places().filter(p =>
+      String(p.city || '').toLowerCase() === String(city).toLowerCase()
+    );
+  },
 };
 
 /* ================================================================

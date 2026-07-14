@@ -11,16 +11,15 @@
 </head>
 <body>
 
-  <!-- BACKGROUND --> 
   <div class="home-bg"></div>
 
-  <!-- NAVBAR -->
   <nav class="home-nav">
     <a href="home.html" class="nav-logo">
       <i class="fas fa-paper-plane"></i>
       <span>My<strong>Adventure</strong></span>
     </a>
-    <div class="nav-right"> 
+    <div class="nav-right">
+      <span class="nav-role-badge" id="navRoleBadge">Tourist</span>
       <div class="nav-avatar" id="navAvatar">T</div>
       <span class="nav-user-name" id="navUserName">Traveler</span>
       <button class="btn-logout" onclick="logoutUser()">
@@ -29,107 +28,155 @@
     </div>
   </nav>
 
-  <!-- HERO TEXT -->
   <div class="home-hero">
     <p class="greeting" id="heroGreeting">Welcome back</p>
     <h1 id="heroTitle">Where do you want<br>to go today?</h1>
-    <p>Pick an option below to start planning your next adventure.</p>
+    <p id="heroSub">Pick an option below to start planning your next adventure.</p>
   </div>
 
-  <!-- 4 BIG CARDS -->
   <div class="cards-section">
-    <div class="cards-grid">
-
-      <!-- PACKAGES -->
-      <a href="destinations.html" class="hub-card packages">
-        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80')"></div>
-        <div class="card-gradient"></div>
-        <div class="card-overlay"></div>
-        <span class="card-badge">Popular</span>
-        <div class="card-content">
-          <div class="card-icon"><i class="fas fa-box-open"></i></div>
-          <div class="card-title">Packages</div>
-          <div class="card-desc">Curated all-inclusive travel packages for every budget and style.</div>
-          <div class="card-arrow">Explore Packages <i class="fas fa-arrow-right"></i></div>
-        </div>
-      </a>
-
-      <!-- HOTELS -->
-      <a href="destinations.html?view=hotels" class="hub-card hotels">
-        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80')"></div>
-        <div class="card-gradient"></div>
-        <div class="card-overlay"></div>
-        <span class="card-badge">Top Rated</span>
-        <div class="card-content">
-          <div class="card-icon"><i class="fas fa-hotel"></i></div>
-          <div class="card-title">Hotels</div>
-          <div class="card-desc">Browse and book top-rated hotels worldwide at the best prices.</div>
-          <div class="card-arrow">Browse Hotels <i class="fas fa-arrow-right"></i></div>
-        </div>
-      </a>
-
-      <!-- FLIGHTS -->
-      <a href="planner.html" class="hub-card flights">
-        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80')"></div>
-        <div class="card-gradient"></div>
-        <div class="card-overlay"></div>
-        <span class="card-badge">Best Deals</span>
-        <div class="card-content">
-          <div class="card-icon"><i class="fas fa-plane-departure"></i></div>
-          <div class="card-title">Flights</div>
-          <div class="card-desc">Find the cheapest flights to your dream destinations worldwide.</div>
-          <div class="card-arrow">Search Flights <i class="fas fa-arrow-right"></i></div>
-        </div>
-      </a>
-
-      <!-- CREATE YOUR TRIP -->
-      <a href="tripbuilder.html" class="hub-card create">
-        <div class="card-bg" style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80')"></div>
-        <div class="card-gradient"></div>
-        <div class="card-overlay"></div>
-        <span class="card-badge">Custom</span>
-        <div class="card-content">
-          <div class="card-icon"><i class="fas fa-map-marked-alt"></i></div>
-          <div class="card-title">Create Your Trip</div>
-          <div class="card-desc">Build a personalised day-by-day itinerary from scratch, your way.</div>
-          <div class="card-arrow">Start Planning <i class="fas fa-arrow-right"></i></div>
-        </div>
-      </a>
-    </div>
+    <div class="cards-grid" id="hubCards"></div>
   </div>
 
-  <!-- STATS ROW -->
-  <div class="stats-row">
+  <div class="stats-row" id="statsRow">
     <div class="stat-item"><strong>200+</strong><span>Packages</span></div>
     <div class="stat-item"><strong>50K+</strong><span>Happy Travelers</span></div>
     <div class="stat-item"><strong>1000+</strong><span>Hotels</span></div>
     <div class="stat-item"><strong>500+</strong><span>Flight Routes</span></div>
   </div>
 
+  <script src="js/session.js"></script>
   <script>
-    const SESSION_KEY = 'myAdventureSession';
-    (function() {
-      try {
-        var s = JSON.parse(localStorage.getItem(SESSION_KEY));
-        if (!s || !s.id) window.location.replace('login.html');
-      } catch(e) { window.location.replace('login.html'); }
+    (function () {
+      var s = AuthSession.requireAuth();
+      if (!s) return;
+
+      var fn = (s.firstName || s.name || 'Traveler').split(' ')[0];
+      var h = new Date().getHours();
+      var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
+      var isAdmin = s.role === 'admin';
+
+      document.getElementById('heroGreeting').textContent = g + ', ' + fn + '!';
+      document.getElementById('navAvatar').textContent = (s.avatar || fn.substring(0, 2)).toUpperCase();
+      document.getElementById('navUserName').textContent = fn;
+
+      var badge = document.getElementById('navRoleBadge');
+      badge.textContent = isAdmin ? 'Admin' : 'Tourist';
+      badge.classList.toggle('admin', isAdmin);
+
+      document.getElementById('heroTitle').innerHTML = isAdmin
+        ? 'Manage the travel<br>catalog'
+        : 'Where do you want<br>to go today?';
+      document.getElementById('heroSub').textContent = isAdmin
+        ? 'Add hotels, places, vehicles, and flights — or review traveler activity.'
+        : 'Pick an option below to start planning your next adventure.';
+
+      var touristCards = [
+        {
+          href: 'destinations.html', cls: 'packages', badge: 'Popular', icon: 'fa-box-open',
+          title: 'Packages', desc: 'Curated all-inclusive travel packages for every budget and style.',
+          cta: 'Explore Packages'
+        },
+        {
+          href: 'destinations.html?view=hotels', cls: 'hotels', badge: 'Top Rated', icon: 'fa-hotel',
+          title: 'Hotels', desc: 'Browse and book top-rated hotels worldwide at the best prices.',
+          cta: 'Browse Hotels'
+        },
+        {
+          href: 'planner.html', cls: 'flights', badge: 'Best Deals', icon: 'fa-plane-departure',
+          title: 'Flights', desc: 'Find the cheapest flights to your dream destinations worldwide.',
+          cta: 'Search Flights'
+        },
+        {
+          href: 'tripbuilder.html', cls: 'create', badge: 'Custom', icon: 'fa-map-marked-alt',
+          title: 'Create Your Trip', desc: 'Build a personalised day-by-day itinerary from scratch, your way.',
+          cta: 'Start Planning'
+        },
+        {
+          href: 'mytrips.html', cls: 'bookings', badge: 'Yours', icon: 'fa-suitcase-rolling',
+          title: 'My Bookings', desc: 'View, manage, and revisit the trips you have saved.',
+          cta: 'Open Bookings'
+        },
+        {
+          href: 'dashboard.html', cls: 'dash', badge: 'Overview', icon: 'fa-chart-pie',
+          title: 'Dashboard', desc: 'Track budgets, favorites, weather, and trip stats in one place.',
+          cta: 'Open Dashboard'
+        }
+      ];
+
+      var adminCards = [
+        {
+          href: 'admin.html', cls: 'create', badge: 'Admin', icon: 'fa-database',
+          title: 'Manage Catalog', desc: 'Add and edit hotels, places, vehicles, and flights for the whole app.',
+          cta: 'Open Catalog'
+        },
+        {
+          href: 'destinations.html?view=hotels', cls: 'hotels', badge: 'Hotels', icon: 'fa-hotel',
+          title: 'Hotels Preview', desc: 'See how travelers browse the hotel catalog you manage.',
+          cta: 'View Hotels'
+        },
+        {
+          href: 'planner.html', cls: 'flights', badge: 'Flights', icon: 'fa-plane-departure',
+          title: 'Flights Preview', desc: 'Review the flight options available to tourists.',
+          cta: 'View Flights'
+        },
+        {
+          href: 'destinations.html', cls: 'packages', badge: 'Packages', icon: 'fa-box-open',
+          title: 'Packages', desc: 'Browse destination packages shown on the tourist side.',
+          cta: 'View Packages'
+        },
+        {
+          href: 'mytrips.html', cls: 'bookings', badge: 'All', icon: 'fa-suitcase-rolling',
+          title: 'All Trips', desc: 'Review every traveler trip saved in the system.',
+          cta: 'View Trips'
+        },
+        {
+          href: 'dashboard.html', cls: 'dash', badge: 'Analytics', icon: 'fa-chart-pie',
+          title: 'Dashboard', desc: 'System overview plus mock data reseed and clear tools.',
+          cta: 'Open Dashboard'
+        }
+      ];
+
+      var cards = isAdmin ? adminCards : touristCards;
+      document.getElementById('hubCards').innerHTML = cards.map(function (c) {
+        return (
+          '<a href="' + c.href + '" class="hub-card ' + c.cls + '">' +
+            '<div class="card-bg" style="background-image:url(\'\')"></div>' +
+            '<div class="card-gradient"></div>' +
+            '<div class="card-overlay"></div>' +
+            '<span class="card-badge">' + c.badge + '</span>' +
+            '<div class="card-content">' +
+              '<div class="card-icon"><i class="fas ' + c.icon + '"></i></div>' +
+              '<div class="card-title">' + c.title + '</div>' +
+              '<div class="card-desc">' + c.desc + '</div>' +
+              '<div class="card-arrow">' + c.cta + ' <i class="fas fa-arrow-right"></i></div>' +
+            '</div>' +
+          '</a>'
+        );
+      }).join('');
+
+      // restore photo backgrounds
+      var bgs = isAdmin
+        ? [
+            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+            'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
+            'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+          ]
+        : [
+            'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
+            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+            'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
+            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
+            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+          ];
+      document.querySelectorAll('#hubCards .card-bg').forEach(function (el, i) {
+        el.style.backgroundImage = "url('" + bgs[i] + "')";
+      });
     })();
-    (function() {
-      try {
-        var s = JSON.parse(localStorage.getItem(SESSION_KEY));
-        if (!s) return;
-        var fn = (s.firstName || s.name || 'Traveler').split(' ')[0];
-        var h = new Date().getHours();
-        var g = h < 12 ? 'Good morning' : h < 17 ? 'Good afternoon' : 'Good evening';
-        document.getElementById('heroGreeting').textContent = g + ', ' + fn + '!';
-        document.getElementById('navAvatar').textContent = (s.avatar || fn.substring(0,2)).toUpperCase();
-        document.getElementById('navUserName').textContent = fn;
-      } catch(e) {}
-    })();
-    function logoutUser() {
-      localStorage.removeItem(SESSION_KEY);
-      window.location.href = 'login.html';
-    }
   </script>
 </body>
 </html>
