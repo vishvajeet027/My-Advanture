@@ -3,28 +3,28 @@
    Uses localStorage via Storage (storage.js)
    ================================================================ */
 
-const AUTH_KEY    = 'myAdventureUsers';
+const AUTH_KEY = 'myAdventureUsers';
 const SESSION_KEY = 'myAdventureSession';
 
 /* Dummy demo accounts — select on login to autofill credentials */
 const DEMO_USERS = {
   admin: {
-    id:        'demo-admin',
+    id: 'demo-admin',
     firstName: 'Admin',
-    lastName:  'User',
-    username:  'admin',
-    email:     'admin@myadventure.com',
-    password:  'Admin@123',
-    role:      'admin',
+    lastName: 'User',
+    username: 'admin',
+    email: 'admin@myadventure.com',
+    password: 'Admin@123',
+    role: 'admin',
   },
   tourist: {
-    id:        'demo-tourist',
+    id: 'demo-tourist',
     firstName: 'Local',
-    lastName:  'Tourist',
-    username:  'tourist',
-    email:     'tourist@myadventure.com',
-    password:  'Tourist@123',
-    role:      'tourist',
+    lastName: 'Tourist',
+    username: 'tourist',
+    email: 'tourist@myadventure.com',
+    password: 'Tourist@123',
+    role: 'tourist',
   },
 };
 
@@ -37,13 +37,13 @@ function ensureDemoUsers() {
     const existing = users.find(u => u.email.toLowerCase() === demo.email.toLowerCase());
     if (!existing) {
       users.push({
-        id:        demo.id,
+        id: demo.id,
         firstName: demo.firstName,
-        lastName:  demo.lastName,
-        username:  demo.username,
-        email:     demo.email,
-        password:  btoa(demo.password),
-        role:      demo.role,
+        lastName: demo.lastName,
+        username: demo.username,
+        email: demo.email,
+        password: btoa(demo.password),
+        role: demo.role,
         createdAt: new Date().toISOString(),
       });
       changed = true;
@@ -109,10 +109,10 @@ let bgSlides = [];
 let bgDots = [];
 
 const VISUAL_LOCATIONS = [
+  'Swiss Alps, Switzerland',
+  'Rocky Mountains',
+  'Peak Wilderness',
   'Cappadocia, Turkey',
-  'Swiss Alps',
-  'Mountain Peaks',
-  'Lake Como Escape',
 ];
 
 function syncVisualSlides() {
@@ -167,8 +167,8 @@ function toast(msg, type = '') {
    ================================================================ */
 function setError(fieldId, errId, msg) {
   const field = document.getElementById(fieldId);
-  const err   = document.getElementById(errId);
-  const wrap  = field?.closest?.('.auth-field')?.querySelector('.input-wrap') || field?.querySelector?.('.input-wrap');
+  const err = document.getElementById(errId);
+  const wrap = field?.closest?.('.auth-field')?.querySelector('.input-wrap') || field?.querySelector?.('.input-wrap');
   if (wrap) wrap.classList.add('error');
   if (field && field.classList) field.classList.add('error');
   if (err) err.textContent = msg;
@@ -184,12 +184,12 @@ function clearErrors(...errIds) {
 }
 
 function setLoading(btnId, loading) {
-  const btn    = document.getElementById(btnId);
+  const btn = document.getElementById(btnId);
   if (!btn) return;
-  const text   = btn.querySelector('.btn-text');
+  const text = btn.querySelector('.btn-text');
   const loader = btn.querySelector('.btn-loader');
   btn.disabled = loading;
-  if (text)   text.classList.toggle('hidden', loading);
+  if (text) text.classList.toggle('hidden', loading);
   if (loader) loader.classList.toggle('hidden', !loading);
 }
 
@@ -198,7 +198,7 @@ function setLoading(btnId, loading) {
    ================================================================ */
 function togglePass(inputId, btn) {
   const input = document.getElementById(inputId);
-  const icon  = btn?.querySelector('i');
+  const icon = btn?.querySelector('i');
   if (!input) return;
   if (input.type === 'password') {
     input.type = 'text';
@@ -213,29 +213,29 @@ function togglePass(inputId, btn) {
    PASSWORD STRENGTH
    ================================================================ */
 function checkStrength(val) {
-  const fill  = document.getElementById('strengthFill');
+  const fill = document.getElementById('strengthFill');
   const label = document.getElementById('strengthLabel');
   if (!fill || !label) return;
 
   let score = 0;
-  if (val.length >= 8)               score++;
-  if (/[A-Z]/.test(val))             score++;
-  if (/[0-9]/.test(val))             score++;
-  if (/[^A-Za-z0-9]/.test(val))      score++;
+  if (val.length >= 8) score++;
+  if (/[A-Z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
 
   const levels = [
-    { pct: '0%',   bg: 'transparent',                     text: '',           color: 'transparent' },
-    { pct: '25%',  bg: '#e74c3c',                         text: 'Weak',       color: '#e74c3c' },
-    { pct: '50%',  bg: '#e67e22',                         text: 'Fair',       color: '#e67e22' },
-    { pct: '75%',  bg: '#f1c40f',                         text: 'Good',       color: '#f1c40f' },
+    { pct: '0%', bg: 'transparent', text: '', color: 'transparent' },
+    { pct: '25%', bg: '#e74c3c', text: 'Weak', color: '#e74c3c' },
+    { pct: '50%', bg: '#e67e22', text: 'Fair', color: '#e67e22' },
+    { pct: '75%', bg: '#f1c40f', text: 'Good', color: '#f1c40f' },
     { pct: '100%', bg: 'linear-gradient(90deg,#0abde3,#00b894)', text: 'Strong', color: '#00b894' },
   ];
 
   const lvl = val.length === 0 ? 0 : score;
-  fill.style.width      = levels[lvl].pct;
+  fill.style.width = levels[lvl].pct;
   fill.style.background = levels[lvl].bg;
-  label.textContent     = levels[lvl].text;
-  label.style.color     = levels[lvl].color;
+  label.textContent = levels[lvl].text;
+  label.style.color = levels[lvl].color;
 }
 
 /* ================================================================
@@ -252,14 +252,14 @@ function saveUsers(users) {
 
 function createSession(user) {
   const session = {
-    id:        user.id,
-    name:      user.firstName + ' ' + user.lastName,
+    id: user.id,
+    name: user.firstName + ' ' + user.lastName,
     firstName: user.firstName,
-    lastName:  user.lastName,
-    email:     user.email,
-    role:      user.role || 'tourist',
-    avatar:    ((user.firstName[0] || 'U') + (user.lastName[0] || '')).toUpperCase(),
-    loginAt:   new Date().toISOString(),
+    lastName: user.lastName,
+    email: user.email,
+    role: user.role || 'tourist',
+    avatar: ((user.firstName[0] || 'U') + (user.lastName[0] || '')).toUpperCase(),
+    loginAt: new Date().toISOString(),
   };
   localStorage.setItem(SESSION_KEY, JSON.stringify(session));
 
@@ -305,7 +305,7 @@ function handleLogin(e) {
   clearErrors('loginEmailErr', 'loginPassErr');
 
   const loginId = document.getElementById('loginEmail').value.trim();
-  const pass    = document.getElementById('loginPass').value;
+  const pass = document.getElementById('loginPass').value;
   let valid = true;
 
   if (!loginId) {
@@ -360,15 +360,15 @@ function handleSignup(e) {
   e.preventDefault();
   clearErrors('signupFirstErr', 'signupEmailErr', 'signupPassErr', 'signupConfirmErr');
 
-  const first   = document.getElementById('signupFirst').value.trim();
-  const last    = (document.getElementById('signupLast')?.value || '').trim();
-  const email   = document.getElementById('signupEmail').value.trim();
-  const pass    = document.getElementById('signupPass').value;
+  const first = document.getElementById('signupFirst').value.trim();
+  const last = (document.getElementById('signupLast')?.value || '').trim();
+  const email = document.getElementById('signupEmail').value.trim();
+  const pass = document.getElementById('signupPass').value;
   const confirmEl = document.getElementById('signupConfirm');
   if (confirmEl) confirmEl.value = pass;
   const confirm = pass;
   const termsEl = document.getElementById('termsCheck');
-  const terms   = termsEl ? termsEl.checked : true;
+  const terms = termsEl ? termsEl.checked : true;
   let valid = true;
 
   if (!first) {
@@ -404,13 +404,13 @@ function handleSignup(e) {
     }
 
     const newUser = {
-      id:        Date.now(),
+      id: Date.now(),
       firstName: first,
-      lastName:  last || '',
-      username:  first.toLowerCase().replace(/\s+/g, '_'),
-      email:     email,
-      password:  btoa(pass),           // base64 — demo only, not real security
-      role:      'tourist',
+      lastName: last || '',
+      username: first.toLowerCase().replace(/\s+/g, '_'),
+      email: email,
+      password: btoa(pass),           // base64 — demo only, not real security
+      role: 'tourist',
       createdAt: new Date().toISOString(),
     };
     users.push(newUser);
@@ -459,12 +459,12 @@ function handleGoogleLogin() {
 
   // For demo: create a mock Google user
   const mockGoogleUser = {
-    id:        Date.now(),
+    id: Date.now(),
     firstName: 'Google',
-    lastName:  'User',
-    email:     'google.user@gmail.com',
-    password:  '',
-    provider:  'google',
+    lastName: 'User',
+    email: 'google.user@gmail.com',
+    password: '',
+    provider: 'google',
     createdAt: new Date().toISOString(),
   };
 
@@ -486,9 +486,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const remembered = localStorage.getItem('myAdventureRemember');
   if (remembered) {
     const emailInput = document.getElementById('loginEmail');
-    const remChk     = document.getElementById('rememberMe');
+    const remChk = document.getElementById('rememberMe');
     if (emailInput) emailInput.value = remembered;
-    if (remChk)     remChk.checked = true;
+    if (remChk) remChk.checked = true;
   }
 
   // If already logged in, go straight to home hub
