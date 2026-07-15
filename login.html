@@ -11,34 +11,209 @@
 <body>
 
   <div class="auth-page">
-    <div class="auth-waves" aria-hidden="true"></div>
-
     <div class="auth-shell">
       <div class="auth-shell-card">
 
-        <!-- LEFT — VISUAL -->
+        <!-- LEFT — FORM -->
+        <div class="auth-form-col">
+          <div class="auth-form-inner">
+            <div class="auth-brand">
+              <a href="home.html" class="auth-brand-link">
+                <i class="fas fa-paper-plane brand-icon"></i>
+                <span class="auth-brand-name">MyAdventure</span>
+              </a>
+            </div>
+
+            <div class="auth-panels" id="authCard">
+
+              <!-- LOGIN -->
+              <div class="auth-panel active" id="loginPanel">
+                <div class="auth-welcome">
+                  <h2>Welcome Back!</h2>
+                  <p>Login to continue</p>
+                </div>
+
+                <div class="demo-login" id="demoLogin">
+                  <div class="demo-login-options">
+                    <button type="button" class="demo-login-btn" data-role="admin" onclick="selectDemoRole('admin')">
+                      <i class="fas fa-user-shield"></i> Admin
+                    </button>
+                    <button type="button" class="demo-login-btn" data-role="tourist" onclick="selectDemoRole('tourist')">
+                      <i class="fas fa-suitcase-rolling"></i> Tourist
+                    </button>
+                  </div>
+                </div>
+
+                <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+                  <div class="auth-field" id="loginEmailField">
+                    <div class="input-wrap">
+                      <i class="fas fa-user input-icon"></i>
+                      <input type="text" id="loginEmail" placeholder="Username or Email" autocomplete="username"/>
+                    </div>
+                    <span class="field-error" id="loginEmailErr"></span>
+                  </div>
+
+                  <div class="auth-field" id="loginPassField">
+                    <div class="input-wrap">
+                      <i class="fas fa-lock input-icon"></i>
+                      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password"/>
+                      <button type="button" class="toggle-pass" onclick="togglePass('loginPass', this)" aria-label="Toggle password">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                    <span class="field-error" id="loginPassErr"></span>
+                  </div>
+
+                  <div class="auth-row">
+                    <label class="remember-me">
+                      <input type="checkbox" id="rememberMe"/> Remember me
+                    </label>
+                    <a href="#" class="forgot-link" onclick="showForgot(); return false;">Forgot Password?</a>
+                  </div>
+
+                  <button type="submit" class="btn-auth" id="loginBtn">
+                    <span class="btn-text">Log In</span>
+                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                  </button>
+                </form>
+
+                <!-- <div class="auth-divider"><span>or continue with</span></div> -->
+
+                <!-- <div class="social-row">
+                  <button type="button" class="btn-social" onclick="handleGoogleLogin()" title="Google">
+                    <i class="fab fa-google"></i>
+                  </button>
+                  <button type="button" class="btn-social" onclick="toast('Facebook Sign-In is demo-only.','')" title="Facebook">
+                    <i class="fab fa-facebook-f"></i>
+                  </button>
+                  <button type="button" class="btn-social" onclick="toast('Apple Sign-In is demo-only.','')" title="Apple">
+                    <i class="fab fa-apple"></i>
+                  </button>
+                </div>
+
+                <p class="auth-switch">
+                  Don't have an account?
+                  <a href="#" onclick="switchAuthMode('signupPanel'); return false;">Sign up</a>
+                </p> -->
+              </div>
+
+              <!-- SIGNUP -->
+              <div class="auth-panel" id="signupPanel">
+                <div class="auth-welcome">
+                  <h2>Create Account</h2>
+                  <p>Start your next adventure</p>
+                </div>
+
+                <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+                  <input type="hidden" id="signupLast" value=""/>
+                  <input type="hidden" id="signupConfirm" value=""/>
+                  <input type="checkbox" id="termsCheck" checked class="hidden" tabindex="-1" aria-hidden="true"/>
+
+                  <div class="auth-field">
+                    <div class="input-wrap">
+                      <i class="fas fa-user input-icon"></i>
+                      <input type="text" id="signupFirst" placeholder="Username" autocomplete="username"/>
+                    </div>
+                    <span class="field-error" id="signupFirstErr"></span>
+                  </div>
+
+                  <div class="auth-field">
+                    <div class="input-wrap">
+                      <i class="fas fa-envelope input-icon"></i>
+                      <input type="email" id="signupEmail" placeholder="Email" autocomplete="email"/>
+                    </div>
+                    <span class="field-error" id="signupEmailErr"></span>
+                  </div>
+
+                  <div class="auth-field">
+                    <div class="input-wrap">
+                      <i class="fas fa-lock input-icon"></i>
+                      <input type="password" id="signupPass" placeholder="Password" oninput="checkStrength(this.value); document.getElementById('signupConfirm').value=this.value;"/>
+                      <button type="button" class="toggle-pass" onclick="togglePass('signupPass', this)" aria-label="Toggle password">
+                        <i class="fas fa-eye"></i>
+                      </button>
+                    </div>
+                    <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
+                    <span class="strength-label" id="strengthLabel"></span>
+                    <span class="field-error" id="signupPassErr"></span>
+                    <span class="field-error" id="signupConfirmErr"></span>
+                  </div>
+
+                  <button type="submit" class="btn-auth" id="signupBtn">
+                    <span class="btn-text">Sign Up</span>
+                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                  </button>
+                </form>
+
+                <p class="auth-switch">
+                  Already have an account?
+                  <a href="#" onclick="switchAuthMode('loginPanel'); return false;">Log In</a>
+                </p>
+              </div>
+
+              <!-- FORGOT -->
+              <div class="auth-panel" id="forgotPanel">
+                <button class="back-btn" type="button" onclick="switchAuthMode('loginPanel')">
+                  <i class="fas fa-arrow-left"></i> Back to Log In
+                </button>
+                <div class="auth-welcome">
+                  <h2>Reset Password</h2>
+                  <p>Enter your email for reset instructions</p>
+                </div>
+                <form class="auth-form" id="forgotForm" onsubmit="handleForgot(event)">
+                  <div class="auth-field">
+                    <div class="input-wrap">
+                      <i class="fas fa-envelope input-icon"></i>
+                      <input type="email" id="forgotEmail" placeholder="Registered email"/>
+                    </div>
+                    <span class="field-error" id="forgotEmailErr"></span>
+                  </div>
+                  <button type="submit" class="btn-auth">
+                    <span class="btn-text">Send Reset Link</span>
+                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
+                  </button>
+                </form>
+                <div class="forgot-success hidden" id="forgotSuccess">
+                  <div class="success-icon"><i class="fas fa-check-circle"></i></div>
+                  <h4>Check your inbox!</h4>
+                  <p id="forgotSuccessMsg">We've sent password reset instructions to your email.</p>
+                  <button type="button" class="btn-auth" onclick="switchAuthMode('loginPanel')" style="margin-top:12px;">
+                    <span class="btn-text">Back to Log In</span>
+                  </button>
+                </div>
+              </div>
+
+              <!-- SUCCESS -->
+              <div class="auth-panel" id="successPanel">
+                <div class="success-panel">
+                  <div class="success-anim"><i class="fas fa-check-circle"></i></div>
+                  <h2 id="successTitle">Welcome back!</h2>
+                  <p id="successMsg">You're signed in. Redirecting...</p>
+                  <div class="redirect-bar"><div class="redirect-fill" id="redirectFill"></div></div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT — CURVED VISUAL -->
         <div class="auth-visual-col">
           <div class="auth-visual-wrap">
             <div class="auth-visual-frame">
               <div class="auth-visual-slides" id="authBg">
-                <div class="auth-slide active" style="background-image:url('https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=1400&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1400&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1400&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1400&q=80')"></div>
+                <div class="auth-slide active" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80')"></div>
+                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80')"></div>
+                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80')"></div>
+                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=1600&q=80')"></div>
               </div>
 
-              <div class="visual-copy">
-                <span class="visual-rule"></span>
-                <h2 class="visual-headline">Collect Moments.<br>Not Things.</h2>
+              <div class="visual-float-card">
+                <h3 class="visual-headline">Collect Moments.<br>Not Things.</h3>
                 <p class="visual-tagline">Plan. Explore. Remember.</p>
-                <span class="visual-rule"></span>
-              </div>
-
-              <div class="visual-location">
-                <i class="fas fa-map-marker-alt"></i>
-                <div>
-                  <small>Top Destination</small>
-                  <strong id="visualLocationName">Cappadocia, Turkey</strong>
+                <div class="visual-location-inline">
+                  <i class="fas fa-map-marker-alt"></i>
+                  <span id="visualLocationName">Swiss Alps, Switzerland</span>
                 </div>
               </div>
 
@@ -50,188 +225,13 @@
               </div>
             </div>
           </div>
-        </div>
 
-        <!-- RIGHT — FORM -->
-        <div class="auth-form-col">
-          <div class="auth-brand">
-            <a href="home.html" class="auth-brand-link">
-              <i class="fas fa-paper-plane brand-icon"></i>
-              <span class="auth-brand-name">My<span>Adventure</span></span>
-            </a>
-            <p class="auth-brand-tag">Explore More. Experience Life.</p>
-          </div>
-
-          <div class="auth-panels" id="authCard">
-
-            <!-- LOGIN -->
-            <div class="auth-panel active" id="loginPanel">
-              <div class="auth-welcome">
-                <h2>Welcome Back!</h2>
-                <p>Login to continue</p>
-              </div>
-
-              <div class="demo-login" id="demoLogin">
-                <div class="demo-login-options">
-                  <button type="button" class="demo-login-btn" data-role="admin" onclick="selectDemoRole('admin')">
-                    <i class="fas fa-user-shield"></i> Admin
-                  </button>
-                  <button type="button" class="demo-login-btn" data-role="tourist" onclick="selectDemoRole('tourist')">
-                    <i class="fas fa-suitcase-rolling"></i> Tourist
-                  </button>
-                </div>
-              </div>
-
-              <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
-                <div class="auth-field" id="loginEmailField">
-                  <div class="input-wrap">
-                    <i class="fas fa-user input-icon"></i>
-                    <input type="text" id="loginEmail" placeholder="Username or Email" autocomplete="username"/>
-                  </div>
-                  <span class="field-error" id="loginEmailErr"></span>
-                </div>
-
-                <div class="auth-field" id="loginPassField">
-                  <div class="input-wrap">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password"/>
-                    <button type="button" class="toggle-pass" onclick="togglePass('loginPass', this)" aria-label="Toggle password">
-                      <i class="fas fa-eye-slash"></i>
-                    </button>
-                  </div>
-                  <span class="field-error" id="loginPassErr"></span>
-                </div>
-
-                <div class="auth-row">
-                  <label class="remember-me">
-                    <input type="checkbox" id="rememberMe"/> Remember me
-                  </label>
-                  <a href="#" class="forgot-link" onclick="showForgot(); return false;">Forgot Password?</a>
-                </div>
-
-                <button type="submit" class="btn-auth" id="loginBtn">
-                  <span class="btn-text">Log In</span>
-                  <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-              </form>
-
-              <div class="auth-divider"><span>or continue with</span></div>
-
-              <div class="social-row">
-                <button type="button" class="btn-social" onclick="handleGoogleLogin()" title="Google">
-                  <i class="fab fa-google"></i>
-                </button>
-                <button type="button" class="btn-social" onclick="toast('Facebook Sign-In is demo-only.','')" title="Facebook">
-                  <i class="fab fa-facebook-f"></i>
-                </button>
-                <button type="button" class="btn-social" onclick="toast('Apple Sign-In is demo-only.','')" title="Apple">
-                  <i class="fab fa-apple"></i>
-                </button>
-              </div>
-
-              <p class="auth-switch">
-                Don't have an account?
-                <a href="#" onclick="switchAuthMode('signupPanel'); return false;">Sign up</a>
-              </p>
-            </div>
-
-            <!-- SIGNUP -->
-            <div class="auth-panel" id="signupPanel">
-              <div class="auth-welcome">
-                <h2>Create Account</h2>
-                <p>Start your next adventure</p>
-              </div>
-
-              <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
-                <input type="hidden" id="signupLast" value=""/>
-                <input type="hidden" id="signupConfirm" value=""/>
-                <input type="checkbox" id="termsCheck" checked class="hidden" tabindex="-1" aria-hidden="true"/>
-
-                <div class="auth-field">
-                  <div class="input-wrap">
-                    <i class="fas fa-user input-icon"></i>
-                    <input type="text" id="signupFirst" placeholder="Username" autocomplete="username"/>
-                  </div>
-                  <span class="field-error" id="signupFirstErr"></span>
-                </div>
-
-                <div class="auth-field">
-                  <div class="input-wrap">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="signupEmail" placeholder="Email" autocomplete="email"/>
-                  </div>
-                  <span class="field-error" id="signupEmailErr"></span>
-                </div>
-
-                <div class="auth-field">
-                  <div class="input-wrap">
-                    <i class="fas fa-lock input-icon"></i>
-                    <input type="password" id="signupPass" placeholder="Password" oninput="checkStrength(this.value); document.getElementById('signupConfirm').value=this.value;"/>
-                    <button type="button" class="toggle-pass" onclick="togglePass('signupPass', this)" aria-label="Toggle password">
-                      <i class="fas fa-eye-slash"></i>
-                    </button>
-                  </div>
-                  <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                  <span class="strength-label" id="strengthLabel"></span>
-                  <span class="field-error" id="signupPassErr"></span>
-                  <span class="field-error" id="signupConfirmErr"></span>
-                </div>
-
-                <button type="submit" class="btn-auth" id="signupBtn">
-                  <span class="btn-text">Sign Up</span>
-                  <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-              </form>
-
-              <p class="auth-switch">
-                Already have an account?
-                <a href="#" onclick="switchAuthMode('loginPanel'); return false;">Log In</a>
-              </p>
-            </div>
-
-            <!-- FORGOT -->
-            <div class="auth-panel" id="forgotPanel">
-              <button class="back-btn" type="button" onclick="switchAuthMode('loginPanel')">
-                <i class="fas fa-arrow-left"></i> Back to Log In
-              </button>
-              <div class="auth-welcome">
-                <h2>Reset Password</h2>
-                <p>Enter your email for reset instructions</p>
-              </div>
-              <form class="auth-form" id="forgotForm" onsubmit="handleForgot(event)">
-                <div class="auth-field">
-                  <div class="input-wrap">
-                    <i class="fas fa-envelope input-icon"></i>
-                    <input type="email" id="forgotEmail" placeholder="Registered email"/>
-                  </div>
-                  <span class="field-error" id="forgotEmailErr"></span>
-                </div>
-                <button type="submit" class="btn-auth">
-                  <span class="btn-text">Send Reset Link</span>
-                  <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                </button>
-              </form>
-              <div class="forgot-success hidden" id="forgotSuccess">
-                <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-                <h4>Check your inbox!</h4>
-                <p id="forgotSuccessMsg">We've sent password reset instructions to your email.</p>
-                <button type="button" class="btn-auth" onclick="switchAuthMode('loginPanel')" style="margin-top:12px;">
-                  <span class="btn-text">Back to Log In</span>
-                </button>
-              </div>
-            </div>
-
-            <!-- SUCCESS -->
-            <div class="auth-panel" id="successPanel">
-              <div class="success-panel">
-                <div class="success-anim"><i class="fas fa-check-circle"></i></div>
-                <h2 id="successTitle">Welcome back!</h2>
-                <p id="successMsg">You're signed in. Redirecting...</p>
-                <div class="redirect-bar"><div class="redirect-fill" id="redirectFill"></div></div>
-              </div>
-            </div>
-
-          </div>
+          <!-- Cyan glow arcs along the curved edge -->
+          <svg class="visual-arc-lines" viewBox="0 0 200 900" preserveAspectRatio="none" aria-hidden="true">
+            <path class="arc-path arc-path-outer" d="M 145,0 C 35,180 20,360 25,450 C 30,540 50,720 145,900"/>
+            <path class="arc-path arc-path-mid" d="M 158,0 C 52,185 38,365 42,450 C 46,535 68,715 158,900"/>
+            <path class="arc-path arc-path-inner" d="M 170,0 C 70,190 56,370 60,450 C 64,530 86,710 170,900"/>
+          </svg>
         </div>
 
       </div>
