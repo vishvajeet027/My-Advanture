@@ -3,244 +3,363 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login - MyAdventure</title>
+  <title>Login - Premium Travel</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/auth.css"/>
+  <link rel="stylesheet" href="css/premium-global.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
+  <style>
+    /* Premium Login Specific Styles */
+    body {
+      background: var(--bg-main);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      min-height: 100vh;
+      margin: 0;
+      overflow: hidden;
+    }
+    
+    .auth-bg-video {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      object-fit: cover; z-index: -2; opacity: 0.4; filter: saturate(0.5);
+    }
+    
+    .auth-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: radial-gradient(circle at bottom right, rgba(224, 169, 109, 0.1), transparent 50%),
+                  radial-gradient(circle at top left, rgba(0, 210, 255, 0.1), transparent 50%);
+      z-index: -1;
+    }
+
+    .auth-container {
+      display: flex;
+      width: 90%;
+      max-width: 1200px;
+      height: 80vh;
+      min-height: 600px;
+      background: var(--glass-bg);
+      backdrop-filter: var(--glass-blur);
+      border: 1px solid var(--glass-border);
+      border-radius: 30px;
+      overflow: hidden;
+      box-shadow: 0 40px 100px rgba(0,0,0,0.8);
+      animation: zoomIn 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    .auth-left {
+      flex: 1;
+      padding: 60px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      position: relative;
+    }
+
+    .auth-brand {
+      position: absolute;
+      top: 40px; left: 60px;
+      font-family: var(--font-heading);
+      font-size: 1.5rem;
+      font-weight: 800;
+      display: flex; align-items: center; gap: 10px;
+      letter-spacing: 1px;
+    }
+    .auth-brand i { color: var(--accent-primary); }
+
+    .auth-panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
+    .auth-panel.active { display: block; opacity: 1; }
+
+    .auth-welcome h2 { font-size: 2.5rem; margin-bottom: 10px; font-family: var(--font-heading); }
+    .auth-welcome p { color: var(--text-secondary); margin-bottom: 40px; font-size: 1.1rem; }
+
+    .auth-form .auth-field { margin-bottom: 20px; position: relative; }
+    .input-wrap { position: relative; }
+    .input-wrap i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
+    .input-wrap input {
+      width: 100%;
+      background: rgba(0,0,0,0.4);
+      border: 1px solid var(--glass-border);
+      color: #fff;
+      padding: 18px 20px 18px 50px;
+      border-radius: 16px;
+      font-family: var(--font-body);
+      font-size: 1rem;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .input-wrap input:focus { border-color: var(--accent-primary); background: rgba(0,0,0,0.6); }
+
+    .auth-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-size: 0.9rem; }
+    .remember-me { color: var(--text-secondary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
+    .forgot-link { color: var(--accent-primary); font-weight: 500; }
+
+    .btn-auth {
+      width: 100%;
+      background: var(--accent-primary);
+      color: var(--bg-main);
+      border: none;
+      padding: 18px;
+      border-radius: 16px;
+      font-weight: 700;
+      font-size: 1.1rem;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+    }
+    .btn-auth:hover { transform: translateY(-3px); box-shadow: 0 10px 20px rgba(224, 169, 109, 0.3); }
+
+    .auth-switch { text-align: center; margin-top: 30px; color: var(--text-secondary); font-size: 0.95rem; }
+    .auth-switch a { color: var(--accent-primary); font-weight: 600; margin-left: 5px; }
+
+    .demo-login { display: flex; gap: 15px; margin-bottom: 30px; }
+    .demo-login-btn {
+      flex: 1;
+      background: transparent;
+      border: 1px solid var(--glass-border);
+      color: var(--text-primary);
+      padding: 12px;
+      border-radius: 12px;
+      cursor: pointer;
+      font-family: var(--font-body);
+      transition: all 0.3s ease;
+      display: flex; justify-content: center; align-items: center; gap: 10px;
+    }
+    .demo-login-btn:hover { background: rgba(255,255,255,0.05); border-color: var(--text-secondary); }
+
+    .auth-right {
+      flex: 1.2;
+      position: relative;
+      background: url('https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=1600&q=80') center/cover;
+    }
+    
+    .auth-right-overlay {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: linear-gradient(to right, var(--bg-main) 0%, transparent 50%, rgba(0,0,0,0.5) 100%);
+    }
+
+    .auth-quote {
+      position: absolute;
+      bottom: 60px; right: 60px; left: 60px;
+      text-align: right;
+    }
+    .auth-quote h3 { font-size: 3rem; margin-bottom: 10px; line-height: 1.1; }
+    .auth-quote p { color: var(--accent-primary); font-size: 1.2rem; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; }
+    
+    .field-error { color: #ff6b6b; font-size: 0.8rem; margin-top: 5px; display: block; }
+    .toggle-pass { position: absolute; right: 20px; top: 50%; transform: translateY(-50%); background: none; border: none; color: var(--text-secondary); cursor: pointer; }
+    .hidden { display: none !important; }
+
+    /* Success Panel */
+    .success-panel { text-align: center; }
+    .success-anim i { font-size: 5rem; color: var(--accent-primary); margin-bottom: 20px; }
+    .redirect-bar { width: 100%; height: 4px; background: var(--glass-border); border-radius: 4px; margin-top: 30px; overflow: hidden; }
+    .redirect-fill { height: 100%; background: var(--accent-primary); width: 0%; transition: width 1s linear; }
+
+  </style>
 </head>
 <body>
 
-  <div class="auth-page">
-    <div class="auth-shell">
-      <div class="auth-shell-card">
+  <video class="auth-bg-video" autoplay muted loop playsinline>
+    <source src="https://cdn.pixabay.com/video/2020/05/26/40237-425442004_large.mp4" type="video/mp4">
+  </video>
+  <div class="auth-overlay"></div>
 
-        <!-- LEFT — FORM -->
-        <div class="auth-form-col">
-          <div class="auth-form-inner">
-            <div class="auth-brand">
-              <a href="home.html" class="auth-brand-link">
-                <i class="fas fa-paper-plane brand-icon"></i>
-                <span class="auth-brand-name">MyAdventure</span>
-              </a>
-            </div>
+  <div class="auth-container">
+    <div class="auth-left">
+      <div class="auth-brand">
+        <a href="home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;">
+          <i class="fas fa-gem"></i>
+          <span>My<strong>Adventure</strong></span>
+        </a>
+      </div>
 
-            <div class="auth-panels" id="authCard">
-
-              <!-- LOGIN -->
-              <div class="auth-panel active" id="loginPanel">
-                <div class="auth-welcome">
-                  <h2>Welcome Back!</h2>
-                  <p>Login to continue</p>
-                </div>
-
-                <div class="demo-login" id="demoLogin">
-                  <div class="demo-login-options">
-                    <button type="button" class="demo-login-btn" data-role="admin" onclick="selectDemoRole('admin')">
-                      <i class="fas fa-user-shield"></i> Admin
-                    </button>
-                    <button type="button" class="demo-login-btn" data-role="tourist" onclick="selectDemoRole('tourist')">
-                      <i class="fas fa-suitcase-rolling"></i> Tourist
-                    </button>
-                  </div>
-                </div>
-
-                <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
-                  <div class="auth-field" id="loginEmailField">
-                    <div class="input-wrap">
-                      <i class="fas fa-user input-icon"></i>
-                      <input type="text" id="loginEmail" placeholder="Username or Email" autocomplete="username"/>
-                    </div>
-                    <span class="field-error" id="loginEmailErr"></span>
-                  </div>
-
-                  <div class="auth-field" id="loginPassField">
-                    <div class="input-wrap">
-                      <i class="fas fa-lock input-icon"></i>
-                      <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password"/>
-                      <button type="button" class="toggle-pass" onclick="togglePass('loginPass', this)" aria-label="Toggle password">
-                        <i class="fas fa-eye"></i>
-                      </button>
-                    </div>
-                    <span class="field-error" id="loginPassErr"></span>
-                  </div>
-
-                  <div class="auth-row">
-                    <label class="remember-me">
-                      <input type="checkbox" id="rememberMe"/> Remember me
-                    </label>
-                    <a href="#" class="forgot-link" onclick="showForgot(); return false;">Forgot Password?</a>
-                  </div>
-
-                  <button type="submit" class="btn-auth" id="loginBtn">
-                    <span class="btn-text">Log In</span>
-                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                  </button>
-                </form>
-
-                <!-- <div class="auth-divider"><span>or continue with</span></div> -->
-
-                <!-- <div class="social-row">
-                  <button type="button" class="btn-social" onclick="handleGoogleLogin()" title="Google">
-                    <i class="fab fa-google"></i>
-                  </button>
-                  <button type="button" class="btn-social" onclick="toast('Facebook Sign-In is demo-only.','')" title="Facebook">
-                    <i class="fab fa-facebook-f"></i>
-                  </button>
-                  <button type="button" class="btn-social" onclick="toast('Apple Sign-In is demo-only.','')" title="Apple">
-                    <i class="fab fa-apple"></i>
-                  </button>
-                </div>
-
-                <p class="auth-switch">
-                  Don't have an account?
-                  <a href="#" onclick="switchAuthMode('signupPanel'); return false;">Sign up</a>
-                </p> -->
-              </div>
-
-              <!-- SIGNUP -->
-              <div class="auth-panel" id="signupPanel">
-                <div class="auth-welcome">
-                  <h2>Create Account</h2>
-                  <p>Start your next adventure</p>
-                </div>
-
-                <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
-                  <input type="hidden" id="signupLast" value=""/>
-                  <input type="hidden" id="signupConfirm" value=""/>
-                  <input type="checkbox" id="termsCheck" checked class="hidden" tabindex="-1" aria-hidden="true"/>
-
-                  <div class="auth-field">
-                    <div class="input-wrap">
-                      <i class="fas fa-user input-icon"></i>
-                      <input type="text" id="signupFirst" placeholder="Username" autocomplete="username"/>
-                    </div>
-                    <span class="field-error" id="signupFirstErr"></span>
-                  </div>
-
-                  <div class="auth-field">
-                    <div class="input-wrap">
-                      <i class="fas fa-envelope input-icon"></i>
-                      <input type="email" id="signupEmail" placeholder="Email" autocomplete="email"/>
-                    </div>
-                    <span class="field-error" id="signupEmailErr"></span>
-                  </div>
-
-                  <div class="auth-field">
-                    <div class="input-wrap">
-                      <i class="fas fa-lock input-icon"></i>
-                      <input type="password" id="signupPass" placeholder="Password" oninput="checkStrength(this.value); document.getElementById('signupConfirm').value=this.value;"/>
-                      <button type="button" class="toggle-pass" onclick="togglePass('signupPass', this)" aria-label="Toggle password">
-                        <i class="fas fa-eye"></i>
-                      </button>
-                    </div>
-                    <div class="strength-bar"><div class="strength-fill" id="strengthFill"></div></div>
-                    <span class="strength-label" id="strengthLabel"></span>
-                    <span class="field-error" id="signupPassErr"></span>
-                    <span class="field-error" id="signupConfirmErr"></span>
-                  </div>
-
-                  <button type="submit" class="btn-auth" id="signupBtn">
-                    <span class="btn-text">Sign Up</span>
-                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                  </button>
-                </form>
-
-                <p class="auth-switch">
-                  Already have an account?
-                  <a href="#" onclick="switchAuthMode('loginPanel'); return false;">Log In</a>
-                </p>
-              </div>
-
-              <!-- FORGOT -->
-              <div class="auth-panel" id="forgotPanel">
-                <button class="back-btn" type="button" onclick="switchAuthMode('loginPanel')">
-                  <i class="fas fa-arrow-left"></i> Back to Log In
-                </button>
-                <div class="auth-welcome">
-                  <h2>Reset Password</h2>
-                  <p>Enter your email for reset instructions</p>
-                </div>
-                <form class="auth-form" id="forgotForm" onsubmit="handleForgot(event)">
-                  <div class="auth-field">
-                    <div class="input-wrap">
-                      <i class="fas fa-envelope input-icon"></i>
-                      <input type="email" id="forgotEmail" placeholder="Registered email"/>
-                    </div>
-                    <span class="field-error" id="forgotEmailErr"></span>
-                  </div>
-                  <button type="submit" class="btn-auth">
-                    <span class="btn-text">Send Reset Link</span>
-                    <span class="btn-loader hidden"><i class="fas fa-circle-notch fa-spin"></i></span>
-                  </button>
-                </form>
-                <div class="forgot-success hidden" id="forgotSuccess">
-                  <div class="success-icon"><i class="fas fa-check-circle"></i></div>
-                  <h4>Check your inbox!</h4>
-                  <p id="forgotSuccessMsg">We've sent password reset instructions to your email.</p>
-                  <button type="button" class="btn-auth" onclick="switchAuthMode('loginPanel')" style="margin-top:12px;">
-                    <span class="btn-text">Back to Log In</span>
-                  </button>
-                </div>
-              </div>
-
-              <!-- SUCCESS -->
-              <div class="auth-panel" id="successPanel">
-                <div class="success-panel">
-                  <div class="success-anim"><i class="fas fa-check-circle"></i></div>
-                  <h2 id="successTitle">Welcome back!</h2>
-                  <p id="successMsg">You're signed in. Redirecting...</p>
-                  <div class="redirect-bar"><div class="redirect-fill" id="redirectFill"></div></div>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-
-        <!-- RIGHT — CURVED VISUAL -->
-        <div class="auth-visual-col">
-          <div class="auth-visual-wrap">
-            <div class="auth-visual-frame">
-              <div class="auth-visual-slides" id="authBg">
-                <div class="auth-slide active" style="background-image:url('https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1600&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?w=1600&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1600&q=80')"></div>
-                <div class="auth-slide" style="background-image:url('https://images.unsplash.com/photo-1507608616759-54f48f0af0ee?w=1600&q=80')"></div>
-              </div>
-
-              <div class="visual-float-card">
-                <h3 class="visual-headline">Collect Moments.<br>Not Things.</h3>
-                <p class="visual-tagline">Plan. Explore. Remember.</p>
-                <div class="visual-location-inline">
-                  <i class="fas fa-map-marker-alt"></i>
-                  <span id="visualLocationName">Swiss Alps, Switzerland</span>
-                </div>
-              </div>
-
-              <div class="auth-dots" id="authDots">
-                <span class="auth-dot active"></span>
-                <span class="auth-dot"></span>
-                <span class="auth-dot"></span>
-                <span class="auth-dot"></span>
-              </div>
-            </div>
+      <div class="auth-panels" id="authCard">
+        <!-- LOGIN -->
+        <div class="auth-panel active" id="loginPanel">
+          <div class="auth-welcome">
+            <h2>Welcome Back</h2>
+            <p>Access your exclusive itineraries</p>
           </div>
 
-          <!-- Cyan glow arcs along the curved edge -->
-          <svg class="visual-arc-lines" viewBox="0 0 200 900" preserveAspectRatio="none" aria-hidden="true">
-            <path class="arc-path arc-path-outer" d="M 145,0 C 35,180 20,360 25,450 C 30,540 50,720 145,900"/>
-            <path class="arc-path arc-path-mid" d="M 158,0 C 52,185 38,365 42,450 C 46,535 68,715 158,900"/>
-            <path class="arc-path arc-path-inner" d="M 170,0 C 70,190 56,370 60,450 C 64,530 86,710 170,900"/>
-          </svg>
+          <div class="demo-login" id="demoLogin">
+            <button type="button" class="demo-login-btn magnetic-btn" data-role="admin" onclick="selectDemoRole('admin')">
+              <i class="fas fa-key"></i> Admin Access
+            </button>
+            <button type="button" class="demo-login-btn magnetic-btn" data-role="tourist" onclick="selectDemoRole('tourist')">
+              <i class="fas fa-plane"></i> Guest Access
+            </button>
+          </div>
+
+          <form class="auth-form" id="loginForm" onsubmit="handleLogin(event)">
+            <div class="auth-field" id="loginEmailField">
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="text" id="loginEmail" placeholder="Email Address" autocomplete="username"/>
+              </div>
+              <span class="field-error" id="loginEmailErr"></span>
+            </div>
+
+            <div class="auth-field" id="loginPassField">
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="loginPass" placeholder="Password" autocomplete="current-password"/>
+                <button type="button" class="toggle-pass" onclick="togglePass('loginPass', this)"><i class="fas fa-eye"></i></button>
+              </div>
+              <span class="field-error" id="loginPassErr"></span>
+            </div>
+
+            <div class="auth-row">
+              <label class="remember-me">
+                <input type="checkbox" id="rememberMe"/> Remember me
+              </label>
+              <a href="#" class="forgot-link" onclick="switchAuthMode('forgotPanel'); return false;">Forgot Password?</a>
+            </div>
+
+            <button type="submit" class="btn-auth magnetic-btn" id="loginBtn">
+              <span class="btn-text">Sign In</span>
+            </button>
+          </form>
+
+          <p class="auth-switch">
+            New to MyAdventure?
+            <a href="#" onclick="switchAuthMode('signupPanel'); return false;">Apply for Access</a>
+          </p>
         </div>
 
+        <!-- SIGNUP -->
+        <div class="auth-panel" id="signupPanel">
+          <div class="auth-welcome">
+            <h2>Request Access</h2>
+            <p>Begin your luxury journey</p>
+          </div>
+
+          <form class="auth-form" id="signupForm" onsubmit="handleSignup(event)">
+            <input type="hidden" id="signupLast" value=""/>
+            <input type="hidden" id="signupConfirm" value=""/>
+            <input type="checkbox" id="termsCheck" checked class="hidden"/>
+
+            <div class="auth-field">
+              <div class="input-wrap">
+                <i class="fas fa-user"></i>
+                <input type="text" id="signupFirst" placeholder="Full Name" autocomplete="username"/>
+              </div>
+              <span class="field-error" id="signupFirstErr"></span>
+            </div>
+
+            <div class="auth-field">
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="signupEmail" placeholder="Email Address" autocomplete="email"/>
+              </div>
+              <span class="field-error" id="signupEmailErr"></span>
+            </div>
+
+            <div class="auth-field">
+              <div class="input-wrap">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="signupPass" placeholder="Password" oninput="document.getElementById('signupConfirm').value=this.value;"/>
+                <button type="button" class="toggle-pass" onclick="togglePass('signupPass', this)"><i class="fas fa-eye"></i></button>
+              </div>
+              <span class="field-error" id="signupPassErr"></span>
+              <span class="field-error" id="signupConfirmErr"></span>
+            </div>
+
+            <button type="submit" class="btn-auth magnetic-btn" id="signupBtn">
+              <span class="btn-text">Submit Request</span>
+            </button>
+          </form>
+
+          <p class="auth-switch">
+            Already a member?
+            <a href="#" onclick="switchAuthMode('loginPanel'); return false;">Sign In</a>
+          </p>
+        </div>
+
+        <!-- FORGOT -->
+        <div class="auth-panel" id="forgotPanel">
+          <div class="auth-welcome">
+            <h2 style="font-size:2rem;">Reset Password</h2>
+            <p>We'll email you instructions</p>
+          </div>
+          <form class="auth-form" id="forgotForm" onsubmit="handleForgot(event)">
+            <div class="auth-field">
+              <div class="input-wrap">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="forgotEmail" placeholder="Registered email"/>
+              </div>
+              <span class="field-error" id="forgotEmailErr"></span>
+            </div>
+            <button type="submit" class="btn-auth magnetic-btn">
+              <span class="btn-text">Send Reset Link</span>
+            </button>
+          </form>
+          <div class="forgot-success hidden" id="forgotSuccess" style="margin-top:20px;text-align:center;">
+            <i class="fas fa-check-circle" style="color:var(--accent-primary);font-size:2rem;margin-bottom:10px;"></i>
+            <p id="forgotSuccessMsg">Instructions sent!</p>
+          </div>
+          <p class="auth-switch">
+            <a href="#" onclick="switchAuthMode('loginPanel'); return false;"><i class="fas fa-arrow-left"></i> Back to Sign In</a>
+          </p>
+        </div>
+
+        <!-- SUCCESS -->
+        <div class="auth-panel" id="successPanel">
+          <div class="success-panel">
+            <div class="success-anim"><i class="fas fa-gem"></i></div>
+            <h2 id="successTitle">Authentication Successful</h2>
+            <p id="successMsg">Preparing your dashboard...</p>
+            <div class="redirect-bar"><div class="redirect-fill" id="redirectFill"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="auth-right">
+      <div class="auth-right-overlay"></div>
+      <div class="auth-quote">
+        <h3>Collect Moments.<br>Not Things.</h3>
+        <p>Plan. Explore. Remember.</p>
       </div>
     </div>
   </div>
 
-  <div class="auth-toast" id="authToast"></div>
+  <div class="auth-toast" id="authToast" style="position:fixed;bottom:20px;right:20px;background:var(--accent-primary);color:#000;padding:15px 30px;border-radius:12px;font-weight:600;z-index:10000;display:none;"></div>
 
   <script src="js/storage.js"></script>
   <script src="js/auth.js"></script>
+  <script src="js/animations.js"></script>
+  <script>
+    // Overriding auth.js functions slightly to match the new UI classes if needed
+    // The existing auth.js uses switchAuthMode to change display of panels, which matches our IDs.
+    // The success animation needs the redirect fill width.
+    const originalSuccess = window.showSuccess;
+    window.showSuccess = function(title, msg) {
+        document.getElementById('loginPanel').classList.remove('active');
+        document.getElementById('signupPanel').classList.remove('active');
+        document.getElementById('forgotPanel').classList.remove('active');
+        document.getElementById('successPanel').classList.add('active');
+        document.getElementById('successTitle').textContent = title;
+        document.getElementById('successMsg').textContent = msg;
+        
+        setTimeout(() => {
+            document.getElementById('redirectFill').style.width = '100%';
+        }, 100);
+    };
+    
+    // Auth toast override
+    window.toast = function(msg, type) {
+        const t = document.getElementById('authToast');
+        if(!t) return;
+        t.textContent = msg;
+        t.style.display = 'block';
+        t.style.animation = 'slideInRight 0.5s forwards';
+        setTimeout(() => {
+            t.style.display = 'none';
+        }, 3000);
+    };
+  </script>
 </body>
 </html>

@@ -1,10 +1,9 @@
 /* ================================================================
-   destinations.js — 20 Travel Packages + 20 Hotels
+   destinations.js — Premium Version
    ================================================================ */
 
-// Check URL params to determine view mode
 const urlParams = new URLSearchParams(window.location.search);
-const viewMode = urlParams.get('view') || 'packages'; // 'packages' or 'hotels'
+const viewMode = urlParams.get('view') || 'packages';
 
 const destinations = [
   { id: 1, name: 'Bali Bliss', country: 'Indonesia', category: 'beach', days: 7, price: 1299, rating: 4.9, badge: 'Best Seller', image: 'https://images.unsplash.com/photo-1506665531195-3566af2b4dfa?w=600&q=80', desc: 'Tropical paradise with rice terraces, temples, and pristine beaches. Includes yoga retreat and cooking class.', includes: ['Return Flights', '5-Star Resort', 'Daily Breakfast', 'Island Tours', 'Spa Session'] },
@@ -16,17 +15,7 @@ const destinations = [
   { id: 7, name: 'Dubai Glamour', country: 'UAE', category: 'luxury', days: 5, price: 1799, rating: 4.7, badge: 'Luxury', image: 'https://images.unsplash.com/photo-1518684079-3c830dcef090?w=600&q=80', desc: 'Burj Khalifa, desert dunes, gold souk, and Michelin-star dining in the city of the future.', includes: ['Flights', '5-Star Hotel', 'Breakfast', 'Burj Khalifa', 'Desert Safari'] },
   { id: 8, name: 'Himalayan Trek', country: 'Nepal', category: 'adventure', days: 12, price: 1599, rating: 4.9, badge: 'Adventure', image: 'https://images.unsplash.com/photo-1469521669194-babb45599def?w=600&q=80', desc: 'Trek through the roof of the world, visit monasteries, and experience true mountain hospitality.', includes: ['Flights', 'Teahouse Stays', 'All Meals', 'Trekking Guide', 'Permits'] },
   { id: 9, name: 'Rome & Amalfi Coast', country: 'Italy', category: 'cultural', days: 8, price: 2299, rating: 4.8, badge: 'Top Rated', image: 'https://images.unsplash.com/photo-1552832230-c0197dd291d3?w=600&q=80', desc: 'Colosseum, Vatican, and the breathtaking cliffside villages of the Amalfi Coast.', includes: ['Flights', 'Boutique Hotels', 'Breakfast', 'Colosseum Tour', 'Boat Ride'] },
-  { id: 10, name: 'Thailand Budget Tour', country: 'Thailand', category: 'budget', days: 10, price: 899, rating: 4.6, badge: 'Budget', image: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80', desc: 'Street food, floating markets, golden temples, and full moon beach parties on a shoestring.', includes: ['Flights', 'Guesthouses', 'Breakfast', 'Temple Tours', 'Ferry Passes'] },
-  { id: 11, name: 'New York City Buzz', country: 'USA', category: 'cultural', days: 6, price: 1999, rating: 4.7, badge: 'City Break', image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?w=600&q=80', desc: 'Times Square, Central Park, Broadway show, and the best pizza slice of your life.', includes: ['Flights', 'Manhattan Hotel', 'Breakfast', 'Broadway Ticket', 'NY Pass'] },
-  { id: 12, name: 'Patagonia Wild Trek', country: 'Argentina', category: 'adventure', days: 11, price: 2699, rating: 4.9, badge: 'Wild', image: 'https://images.unsplash.com/photo-1501854140801-50d01698950b?w=600&q=80', desc: 'End-of-the-world glaciers, turquoise lakes, condors, and jaw-dropping Torres del Paine.', includes: ['Flights', 'Eco-Lodges', 'Full Board', 'Park Fees', 'Trekking Guide'] },
-  { id: 13, name: 'Phuket Beach Getaway', country: 'Thailand', category: 'beach', days: 7, price: 1099, rating: 4.7, badge: 'Beach', image: 'https://images.unsplash.com/photo-1589394815804-964ed0be2eb5?w=600&q=80', desc: 'Turquoise water, longtail boats, night markets, and world-famous Phi Phi islands.', includes: ['Flights', 'Beachfront Resort', 'Breakfast', 'Island Hopping', 'Kayaking'] },
-  { id: 14, name: 'Moroccan Desert Trail', country: 'Morocco', category: 'adventure', days: 8, price: 1399, rating: 4.8, badge: 'Adventure', image: 'https://images.unsplash.com/photo-1597212618440-806262de4f2b?w=600&q=80', desc: 'Sahara camel ride, riads of Marrakech, blue city of Chefchaouen, and mint tea rituals.', includes: ['Flights', 'Riads & Camp', 'Breakfast', 'Sahara Night', 'Guided Medina Tour'] },
-  { id: 15, name: 'Sydney & Great Barrier', country: 'Australia', category: 'luxury', days: 10, price: 3199, rating: 4.8, badge: 'Premium', image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?w=600&q=80', desc: 'Opera House, Bondi Beach, and the world\'s biggest coral reef right at your fins.', includes: ['Business Class', '5-Star Hotels', 'Breakfast', 'Reef Dive', 'Bridge Climb'] },
-  { id: 16, name: 'Rajasthan Royal Tour', country: 'India', category: 'cultural', days: 9, price: 999, rating: 4.7, badge: 'Heritage', image: 'https://images.unsplash.com/photo-1524492412937-b28074a5d7da?w=600&q=80', desc: 'Jaipur palaces, Jaisalmer forts, camel safaris, and vibrant bazaars of the Pink City.', includes: ['Flights', 'Heritage Hotels', 'Breakfast', 'Palace Tours', 'Camel Safari'] },
-  { id: 17, name: 'Iceland Aurora Hunt', country: 'Iceland', category: 'adventure', days: 7, price: 2799, rating: 4.9, badge: 'Bucket List', image: 'https://images.unsplash.com/photo-1531366936337-7c912a4589a7?w=600&q=80', desc: 'Northern Lights, geysers, waterfalls, the Blue Lagoon, and puffin spotting on black beaches.', includes: ['Flights', 'Guesthouses', 'Breakfast', 'Northern Lights Tour', 'Golden Circle'] },
-  { id: 18, name: 'Barcelona & Ibiza', country: 'Spain', category: 'beach', days: 8, price: 1699, rating: 4.8, badge: 'Party & Culture', image: 'https://images.unsplash.com/photo-1539037116277-4db20889f2d4?w=600&q=80', desc: 'Gaudí masterpieces by day, Ibiza sunset clubs by night, and tapas all day long.', includes: ['Flights', 'City Hotel + Beach Club', 'Breakfast', 'Sagrada Familia', 'Ferry to Ibiza'] },
-  { id: 19, name: 'Peru & Machu Picchu', country: 'Peru', category: 'adventure', days: 10, price: 2499, rating: 4.9, badge: 'Wonder', image: 'https://images.unsplash.com/photo-1526392060635-9d6019884377?w=600&q=80', desc: 'Inca Trail, ancient citadel at dawn, Amazon jungle, and the floating islands of Titicaca.', includes: ['Flights', 'Hotels & Lodge', 'Breakfast', 'Inca Trail Permit', 'Guided Tours'] },
-  { id: 20, name: 'Budget Europe Blitz', country: 'Multi-Country', category: 'budget', days: 14, price: 1299, rating: 4.6, badge: 'Budget', image: 'https://images.unsplash.com/photo-1467269204594-9661b134dd2b?w=600&q=80', desc: 'Hit 6 countries in 2 weeks — Paris, Amsterdam, Berlin, Prague, Vienna, and Budapest by rail.', includes: ['Flights', 'Hostels', 'Breakfast', 'Eurail Pass', 'City Walking Tours'] },
+  { id: 10, name: 'Thailand Budget Tour', country: 'Thailand', category: 'budget', days: 10, price: 899, rating: 4.6, badge: 'Budget', image: 'https://images.unsplash.com/photo-1528360983277-13d401cdc186?w=600&q=80', desc: 'Street food, floating markets, golden temples, and full moon beach parties on a shoestring.', includes: ['Flights', 'Guesthouses', 'Breakfast', 'Temple Tours', 'Ferry Passes'] }
 ];
 
 let activeTag = 'all';
@@ -38,7 +27,7 @@ const TAG_COLORS = {
   beach: '#0abde3', cultural: '#fdcb6e'
 };
 
-/* ── RENDER CARDS ── */
+/* ── RENDER PACKAGES (PREMIUM CARDS) ── */
 function renderCards(data) {
   const grid = document.getElementById('destinationsGrid');
   const noRes = document.getElementById('noResults');
@@ -48,33 +37,34 @@ function renderCards(data) {
   if (data.length === 0) {
     grid.innerHTML = '';
     noRes.classList.remove('hidden');
-    if (countEl) countEl.innerHTML = 'Showing <strong>0</strong> packages';
+    if (countEl) countEl.innerHTML = 'Showing <strong>0</strong> experiences';
     return;
   }
 
   noRes.classList.add('hidden');
-  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> packages`;
+  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> experiences`;
 
   grid.innerHTML = data.map(d => `
-    <div class="dest-grid-card" onclick="openPkgModal(${d.id})">
-      <div class="card-img-wrap">
-        <img src="${d.image}" alt="${d.name}" loading="lazy"/>
-        <span class="card-category" style="background:${TAG_COLORS[d.category] || '#0abde3'};color:#fff;">${d.badge}</span>
-        <span class="card-rating"><i class="fas fa-star"></i> ${d.rating}</span>
+    <a href="#" class="premium-card hover-lift reveal-on-scroll is-visible" onclick="event.preventDefault(); openPkgModal(${d.id})">
+      <div class="premium-card-img" style="background-image:url('${d.image}')"></div>
+      <div class="premium-card-gradient"></div>
+      <div class="premium-card-glow"></div>
+      <span class="premium-card-badge">${d.badge}</span>
+      <div class="premium-card-icon" style="top:20px;left:auto;right:20px;font-size:0.9rem;width:auto;border-radius:20px;padding:5px 10px;">
+        <i class="fas fa-star" style="color:var(--accent-primary)"></i> ${d.rating}
       </div>
-      <div class="card-body">
-        <h3>${d.name}</h3>
-        <p class="card-country"><i class="fas fa-map-marker-alt"></i> ${d.country}</p>
-        <p style="font-size:0.82rem;color:#777;line-height:1.5;">${d.desc.substring(0, 85)}...</p>
-        <div class="card-footer-row">
-          <span class="card-days"><i class="fas fa-calendar-days"></i> ${d.days} Days / ${Math.max(d.days - 1, 0)} Nights</span>
-          <span class="card-price">₹${d.price.toLocaleString('en-IN')} <span>/ person</span></span>
+      <div class="premium-card-content">
+        <div class="premium-card-title">${d.name}</div>
+        <div class="premium-card-desc" style="display:flex; justify-content:space-between; margin-bottom:5px;">
+           <span><i class="fas fa-map-marker-alt"></i> ${d.country}</span>
+           <span><i class="fas fa-clock"></i> ${d.days} Days</span>
         </div>
-        <button class="btn-card" onclick="event.stopPropagation(); openPkgModal(${d.id})">
-          <i class="fas fa-eye"></i> View Package
-        </button>
+        <div class="premium-card-desc" style="opacity:1; transform:none; font-size:1.1rem; font-weight:700; color:#fff;">
+          ₹${d.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:400; color:var(--text-secondary)">/ person</span>
+        </div>
+        <div class="premium-card-cta">View Itinerary <i class="fas fa-arrow-right"></i></div>
       </div>
-    </div>`).join('');
+    </a>`).join('');
 }
 
 /* ── FILTER BY TAG ── */
@@ -105,44 +95,19 @@ function filterDestinations() {
   renderCards(data);
 }
 
-/* ── MODAL ── */
+/* ── MODALS (PREMIUM STYLING INJECTED) ── */
 function renderPackageItinerary(pkg) {
   const plan = getPackageItinerary(pkg);
-  const nights = Math.max(pkg.days - 1, 0);
-
   return plan.map((day, i) => {
-    const dayNum = i + 1;
-    const isLast = dayNum === pkg.days;
-    const nightLabel = isLast ? 'Checkout' : `Night ${dayNum}`;
-
-    const activitiesHtml = day.activities.map(a =>
-      `<li><i class="fas fa-check"></i><span>${a}</span></li>`
-    ).join('');
-
-    const placesHtml = day.places.map(p =>
-      `<span class="pkg-place-chip"><i class="fas fa-map-marker-alt"></i>${p}</span>`
-    ).join('');
-
     return `
-      <div class="pkg-day-card${isLast ? ' pkg-day-card--departure' : ''}">
-        <div class="pkg-day-header">
-          <div class="pkg-day-label">
-            <span class="pkg-day-num">Day ${dayNum}</span>
-            <span class="pkg-day-night"><i class="fas fa-moon"></i> ${nightLabel}</span>
-          </div>
+      <div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:20px; border-radius:16px; margin-bottom:15px;">
+        <h4 style="color:var(--accent-primary); margin-bottom:10px;">Day ${i+1}: ${day.stay || 'Exploration'}</h4>
+        <div style="margin-bottom:10px;">
+          ${day.places.map(p => `<span style="background:rgba(255,255,255,0.1); padding:4px 10px; border-radius:12px; font-size:0.85rem; margin-right:5px; display:inline-block; margin-bottom:5px;"><i class="fas fa-map-pin"></i> ${p}</span>`).join('')}
         </div>
-        <div class="pkg-day-stay">
-          <i class="fas fa-hotel"></i>
-          <span><strong>Stay:</strong> ${day.stay}</span>
-        </div>
-        <div class="pkg-day-places">
-          <span class="pkg-day-places-label"><i class="fas fa-map-pin"></i> Places to visit</span>
-          <div class="pkg-day-places-list">${placesHtml}</div>
-        </div>
-        <div class="pkg-day-activities">
-          <span class="pkg-day-activities-label"><i class="fas fa-list-check"></i> What you'll do</span>
-          <ul>${activitiesHtml}</ul>
-        </div>
+        <ul style="list-style:none; padding:0; color:var(--text-secondary); font-size:0.95rem;">
+          ${day.activities.map(a => `<li style="margin-bottom:5px;"><i class="fas fa-check" style="color:var(--accent-secondary); margin-right:8px;"></i>${a}</li>`).join('')}
+        </ul>
       </div>`;
   }).join('');
 }
@@ -151,50 +116,39 @@ function openPkgModal(id) {
   selectedPkg = destinations.find(d => d.id === id);
   if (!selectedPkg) return;
   const p = selectedPkg;
-  const color = TAG_COLORS[p.category] || '#0abde3';
-  const nights = Math.max(p.days - 1, 0);
 
   document.getElementById('pkgModalTitle').textContent = p.name;
   document.getElementById('pkgModalBody').innerHTML = `
-    <div class="pkg-modal-hero">
-      <img src="${p.image}" alt="${p.name}"/>
-      <span class="pkg-modal-badge" style="background:${color}">${p.badge}</span>
+    <div style="position:relative; height:300px; border-radius:0 0 24px 24px; overflow:hidden;">
+      <img src="${p.image}" alt="${p.name}" style="width:100%; height:100%; object-fit:cover; filter:brightness(0.7);"/>
+      <div style="position:absolute; bottom:30px; left:30px;">
+        <span style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:8px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.2); color:#fff; margin-right:10px;">
+          <i class="fas fa-map-marker-alt"></i> ${p.country}
+        </span>
+        <span style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:8px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.2); color:#fff;">
+          <i class="fas fa-clock"></i> ${p.days} Days
+        </span>
+      </div>
     </div>
-
-    <div class="pkg-modal-content">
-      <p class="pkg-modal-desc">${p.desc}</p>
-
-      <div class="pkg-modal-meta">
-        <span class="pkg-meta-chip"><i class="fas fa-map-marker-alt"></i> ${p.country}</span>
-        <span class="pkg-meta-chip pkg-meta-duration"><i class="fas fa-calendar-days"></i> ${p.days} Days / ${nights} Night${nights !== 1 ? 's' : ''}</span>
-        <span class="pkg-meta-chip"><i class="fas fa-star" style="color:#fdcb6e"></i> ${p.rating} Rating</span>
-        <span class="pkg-meta-chip"><i class="fas fa-tag"></i> ${p.category.charAt(0).toUpperCase() + p.category.slice(1)}</span>
+    <div style="padding:40px;">
+      <p style="font-size:1.1rem; color:var(--text-secondary); margin-bottom:30px; line-height:1.8;">${p.desc}</p>
+      
+      <h3 style="margin-bottom:20px; font-family:var(--font-heading);">What's Included</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:40px;">
+        ${p.includes.map(i => `<div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:10px 20px; border-radius:12px; font-weight:500;"><i class="fas fa-check" style="color:var(--accent-primary); margin-right:8px;"></i>${i}</div>`).join('')}
       </div>
 
-      <div class="pkg-modal-section-title">
-        <i class="fas fa-route"></i> Day-by-Day Itinerary
-      </div>
-      <div class="pkg-itinerary-list">
-        ${renderPackageItinerary(p)}
-      </div>
-
-      <div class="pkg-modal-section-title">
-        <i class="fas fa-check-circle"></i> What's Included
-      </div>
-      <div class="pkg-includes-grid">
-        ${p.includes.map(i => `<div class="pkg-include-item"><i class="fas fa-check"></i>${i}</div>`).join('')}
-      </div>
-
-      <div class="pkg-modal-footer">
-        <div class="pkg-modal-price">
-          <div class="pkg-price-label">From</div>
-          <div class="pkg-price-value">₹${p.price.toLocaleString('en-IN')}<span>/ person</span></div>
+      <h3 style="margin-bottom:20px; font-family:var(--font-heading);">Itinerary</h3>
+      <div>${renderPackageItinerary(p)}</div>
+      
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:30px; border-top:1px solid var(--glass-border);">
+        <div>
+          <div style="color:var(--text-secondary); font-size:0.9rem;">Price per person</div>
+          <div style="font-size:2rem; font-weight:700; color:#fff;">₹${p.price.toLocaleString('en-IN')}</div>
         </div>
-        ${isAdminUser()
-          ? adminBookNotice('Package booking')
-          : `<button class="btn-primary pkg-book-btn" onclick="bookPackage()">
-              <i class="fas fa-check-circle"></i> Book ${p.days}-Day Package
-            </button>`}
+        <button class="magnetic-btn" onclick="bookPackage()" style="background:var(--accent-primary); color:var(--bg-main); border:none; padding:15px 40px; border-radius:30px; font-weight:700; font-size:1.1rem; cursor:pointer; font-family:var(--font-body);">
+          Book Experience
+        </button>
       </div>
     </div>`;
 
@@ -209,14 +163,164 @@ function closePkgModal() {
 
 function handleModalClick(e) {
   if (e.target.id === 'pkgModal') closePkgModal();
+  if (e.target.id === 'hotelModal') closeHotelModal();
 }
 
 function bookPackage() {
   if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book packages')) return;
   closePkgModal();
   if (selectedPkg) {
-    const nights = Math.max(selectedPkg.days - 1, 0);
-    showToast(`🎉 ${selectedPkg.name} booked! ${selectedPkg.days} days / ${nights} nights — Check My Trips.`, 'success');
+    showToast(`🎉 ${selectedPkg.name} booked successfully! Check My Bookings.`, 'success');
+  }
+}
+
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.animation = 'slideInRight 0.5s forwards';
+  setTimeout(() => {
+    t.style.display = 'none';
+  }, 3000);
+}
+
+/* ── HOTELS VIEW ── */
+function initHotelsView() {
+  document.title = 'Stays - Premium Travel';
+  const title = document.getElementById('pageTitle');
+  const desc = document.getElementById('pageDesc');
+  if(title) title.textContent = 'Luxury Stays';
+  if(desc) desc.textContent = 'Exclusive accommodations for your ultimate comfort.';
+  
+  // Swap filter
+  const filterSection = document.querySelector('.filter-section');
+  if (filterSection) {
+    filterSection.innerHTML = `
+      <div class="search-input-wrap">
+        <i class="fas fa-search"></i>
+        <input type="text" id="hotelSearchInput" placeholder="Search hotels, cities..." oninput="filterHotels()"/>
+      </div>
+      <div class="filter-tags" id="hotelFacilityFilter">
+        <button class="tag active" onclick="filterHotelsByFacility(this,'all')">All</button>
+        <button class="tag" onclick="filterHotelsByFacility(this,'Pool')"><i class="fas fa-swimming-pool"></i> Pool</button>
+        <button class="tag" onclick="filterHotelsByFacility(this,'Spa')"><i class="fas fa-spa"></i> Spa</button>
+        <button class="tag" onclick="filterHotelsByFacility(this,'Gym')"><i class="fas fa-dumbbell"></i> Gym</button>
+      </div>
+      <select id="hotelSortSelect" onchange="filterHotels()" class="sort-select">
+        <option value="default">Sort By</option>
+        <option value="price-low">Price: Low to High</option>
+        <option value="price-high">Price: High to Low</option>
+      </select>`;
+  }
+
+  const hotels = MockData ? MockData.getAllHotels() : [];
+  renderHotelCards(hotels);
+}
+
+let activeHotelFacility = 'all';
+let selectedHotel = null;
+
+function renderHotelCards(data) {
+  const grid = document.getElementById('destinationsGrid');
+  const countEl = document.getElementById('resultsCount');
+  if (!grid) return;
+
+  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> stays`;
+
+  grid.innerHTML = data.map(h => `
+    <a href="#" class="premium-card hover-lift reveal-on-scroll is-visible" onclick="event.preventDefault(); openHotelModal(${h.id})">
+      <div class="premium-card-img" style="background-image:url('${h.image}')"></div>
+      <div class="premium-card-gradient"></div>
+      <div class="premium-card-glow"></div>
+      <div class="premium-card-icon" style="top:20px;left:auto;right:20px;font-size:0.9rem;width:auto;border-radius:20px;padding:5px 10px;">
+        <i class="fas fa-star" style="color:var(--accent-primary)"></i> ${h.rating}
+      </div>
+      <div class="premium-card-content">
+        <div class="premium-card-title">${h.name}</div>
+        <div class="premium-card-desc" style="display:flex; justify-content:space-between; margin-bottom:5px;">
+           <span><i class="fas fa-map-marker-alt"></i> ${h.city}, ${h.country}</span>
+        </div>
+        <div class="premium-card-desc" style="opacity:1; transform:none; font-size:1.1rem; font-weight:700; color:#fff;">
+          ₹${h.price.toLocaleString('en-IN')} <span style="font-size:0.8rem; font-weight:400; color:var(--text-secondary)">/ night</span>
+        </div>
+        <div class="premium-card-cta">View Stay <i class="fas fa-arrow-right"></i></div>
+      </div>
+    </a>`).join('');
+}
+
+function filterHotelsByFacility(btn, facility) {
+  document.querySelectorAll('#hotelFacilityFilter .tag').forEach(t => t.classList.remove('active'));
+  btn.classList.add('active');
+  activeHotelFacility = facility;
+  filterHotels();
+}
+
+function filterHotels() {
+  const query = (document.getElementById('hotelSearchInput')?.value || '').toLowerCase();
+  const sort = document.getElementById('hotelSortSelect')?.value || 'default';
+  
+  if(!MockData) return;
+  let data = MockData.getAllHotels().filter(h => {
+    const matchFacility = activeHotelFacility === 'all' || h.facilities.includes(activeHotelFacility);
+    const matchSearch = h.name.toLowerCase().includes(query) || h.city.toLowerCase().includes(query);
+    return matchFacility && matchSearch;
+  });
+
+  if (sort === 'price-low') data.sort((a, b) => a.price - b.price);
+  else if (sort === 'price-high') data.sort((a, b) => b.price - a.price);
+
+  renderHotelCards(data);
+}
+
+function openHotelModal(id) {
+  selectedHotel = MockData.getAllHotels().find(h => String(h.id) === String(id));
+  if (!selectedHotel) return;
+  const h = selectedHotel;
+
+  document.getElementById('hotelModalTitle').textContent = h.name;
+  document.getElementById('hotelModalBody').innerHTML = `
+    <div style="position:relative; height:300px; border-radius:0 0 24px 24px; overflow:hidden;">
+      <img src="${h.image}" alt="${h.name}" style="width:100%; height:100%; object-fit:cover; filter:brightness(0.7);"/>
+      <div style="position:absolute; bottom:30px; left:30px;">
+        <span style="background:rgba(0,0,0,0.6); backdrop-filter:blur(10px); padding:8px 16px; border-radius:20px; border:1px solid rgba(255,255,255,0.2); color:#fff; margin-right:10px;">
+          <i class="fas fa-map-marker-alt"></i> ${h.city}, ${h.country}
+        </span>
+      </div>
+    </div>
+    <div style="padding:40px;">
+      <p style="font-size:1.1rem; color:var(--text-secondary); margin-bottom:30px; line-height:1.8;">${h.desc}</p>
+      
+      <h3 style="margin-bottom:20px; font-family:var(--font-heading);">Facilities</h3>
+      <div style="display:flex; flex-wrap:wrap; gap:15px; margin-bottom:40px;">
+        ${h.facilities.map(f => `<div style="background:var(--glass-bg); border:1px solid var(--glass-border); padding:10px 20px; border-radius:12px; font-weight:500;"><i class="fas fa-check" style="color:var(--accent-secondary); margin-right:8px;"></i>${f}</div>`).join('')}
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; margin-top:40px; padding-top:30px; border-top:1px solid var(--glass-border);">
+        <div>
+          <div style="color:var(--text-secondary); font-size:0.9rem;">Price per night</div>
+          <div style="font-size:2rem; font-weight:700; color:#fff;">₹${h.price.toLocaleString('en-IN')}</div>
+        </div>
+        <button class="magnetic-btn" onclick="bookHotel()" style="background:var(--accent-primary); color:var(--bg-main); border:none; padding:15px 40px; border-radius:30px; font-weight:700; font-size:1.1rem; cursor:pointer; font-family:var(--font-body);">
+          Reserve Stay
+        </button>
+      </div>
+    </div>`;
+
+  document.getElementById('hotelModal').classList.remove('hidden');
+  document.body.style.overflow = 'hidden';
+}
+
+function closeHotelModal() {
+  document.getElementById('hotelModal').classList.add('hidden');
+  document.body.style.overflow = '';
+}
+
+function bookHotel() {
+  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book hotels')) return;
+  closeHotelModal();
+  if (selectedHotel) {
+    showToast(`🏨 ${selectedHotel.name} reserved successfully!`, 'success');
   }
 }
 
@@ -231,436 +335,3 @@ document.addEventListener('DOMContentLoaded', () => {
     if (e.key === 'Escape') { closePkgModal(); closeHotelModal(); }
   });
 });
-
-/* ================================================================
-   HOTELS VIEW
-   ================================================================ */
-
-const FACILITY_ICONS = {
-  'Pool': { icon: 'fas fa-swimming-pool', color: '#0abde3' },
-  'Beach Access': { icon: 'fas fa-umbrella-beach', color: '#e17055' },
-  'Spa': { icon: 'fas fa-spa', color: '#a29bfe' },
-  'Gym': { icon: 'fas fa-dumbbell', color: '#00b894' },
-  'Restaurant': { icon: 'fas fa-utensils', color: '#fdcb6e' },
-  'Bar': { icon: 'fas fa-glass-martini-alt', color: '#fd79a8' },
-  'WiFi': { icon: 'fas fa-wifi', color: '#74b9ff' },
-  'Parking': { icon: 'fas fa-parking', color: '#636e72' },
-  'Garden': { icon: 'fas fa-leaf', color: '#55efc4' },
-  'Concierge': { icon: 'fas fa-concierge-bell', color: '#fdcb6e' },
-  'Conference Room': { icon: 'fas fa-chalkboard', color: '#b2bec3' },
-  'Airport Shuttle': { icon: 'fas fa-shuttle-van', color: '#0984e3' },
-  'Sauna': { icon: 'fas fa-hot-tub', color: '#e17055' },
-  'Jacuzzi': { icon: 'fas fa-hot-tub', color: '#a29bfe' },
-  'Room Service': { icon: 'fas fa-bell', color: '#fdcb6e' },
-  'Breakfast Included': { icon: 'fas fa-coffee', color: '#e17055' },
-  'Business Center': { icon: 'fas fa-briefcase', color: '#636e72' },
-  'Water Sports': { icon: 'fas fa-water', color: '#0abde3' },
-  'Snorkeling': { icon: 'fas fa-fish', color: '#00cec9' },
-  'Casino': { icon: 'fas fa-dice', color: '#6c5ce7' },
-  'Shopping': { icon: 'fas fa-shopping-bag', color: '#fd79a8' },
-  'Safari Tours': { icon: 'fas fa-binoculars', color: '#e17055' },
-  'Nature Tours': { icon: 'fas fa-tree', color: '#55efc4' },
-  'Aurora Tours': { icon: 'fas fa-star', color: '#a29bfe' },
-  'Campfire': { icon: 'fas fa-fire', color: '#e17055' },
-  'Library': { icon: 'fas fa-book', color: '#74b9ff' },
-  'Ski Storage': { icon: 'fas fa-skiing', color: '#74b9ff' },
-  'Fireplace': { icon: 'fas fa-fire-alt', color: '#e17055' },
-  'Onsen Bath': { icon: 'fas fa-hot-tub', color: '#fd79a8' },
-  'Tea Ceremony': { icon: 'fas fa-mug-hot', color: '#fdcb6e' },
-  'Hammam': { icon: 'fas fa-spa', color: '#a29bfe' },
-  'Terrace': { icon: 'fas fa-building', color: '#74b9ff' },
-  'Hiking': { icon: 'fas fa-hiking', color: '#55efc4' },
-};
-
-function getFacilityIcon(name) {
-  return FACILITY_ICONS[name] || { icon: 'fas fa-check-circle', color: '#0abde3' };
-}
-
-function initHotelsView() {
-  // Update page hero & title
-  document.title = 'Hotels - MyAdventure';
-  const hero = document.querySelector('.page-hero');
-  if (hero) {
-    hero.style.backgroundImage = "url('https://images.unsplash.com/photo-1566073771259-6a8506099945?w=1600&q=80')";
-    const h1 = hero.querySelector('h1');
-    const p = hero.querySelector('p');
-    const breadcrumb = hero.querySelector('.breadcrumb span');
-    if (h1) h1.textContent = 'Browse Hotels';
-    if (p) p.textContent = 'Find and book top-rated hotels worldwide at the best prices';
-    if (breadcrumb) breadcrumb.textContent = 'Hotels';
-  }
-
-  // Update active nav link
-  document.querySelectorAll('.nav-links a').forEach(a => a.classList.remove('active'));
-  const hotelsLink = document.querySelector('.nav-links a[href="destinations.html?view=hotels"]');
-  if (hotelsLink) hotelsLink.classList.add('active');
-  const packagesLink = document.querySelector('.nav-links a[href="destinations.html"]');
-  if (packagesLink) packagesLink.classList.remove('active');
-
-  // Swap filter section for hotel search
-  const filterSection = document.querySelector('.filter-section');
-  if (filterSection) {
-    filterSection.innerHTML = `
-      <div class="container">
-        <div class="filter-bar">
-          <div class="search-input-wrap">
-            <i class="fas fa-search"></i>
-            <input type="text" id="hotelSearchInput" placeholder="Search hotels, cities, countries..." oninput="filterHotels()"/>
-          </div>
-          <div class="filter-tags" id="hotelFacilityFilter">
-            <button class="tag active" onclick="filterHotelsByFacility(this,'all')">All</button>
-            <button class="tag" onclick="filterHotelsByFacility(this,'Pool')"><i class="fas fa-swimming-pool"></i> Pool</button>
-            <button class="tag" onclick="filterHotelsByFacility(this,'Garden')"><i class="fas fa-leaf"></i> Garden</button>
-            <button class="tag" onclick="filterHotelsByFacility(this,'Spa')"><i class="fas fa-spa"></i> Spa</button>
-            <button class="tag" onclick="filterHotelsByFacility(this,'Gym')"><i class="fas fa-dumbbell"></i> Gym</button>
-            <button class="tag" onclick="filterHotelsByFacility(this,'Beach Access')"><i class="fas fa-umbrella-beach"></i> Beach</button>
-          </div>
-          <select id="hotelSortSelect" onchange="filterHotels()" class="sort-select">
-            <option value="default">Sort By</option>
-            <option value="price-low">Price: Low to High</option>
-            <option value="price-high">Price: High to Low</option>
-            <option value="rating">Top Rated</option>
-            <option value="name">Name A–Z</option>
-          </select>
-        </div>
-      </div>`;
-  }
-
-  // Update results container
-  const resultsCount = document.getElementById('resultsCount');
-  const hotels = MockData.getAllHotels();
-  if (resultsCount) resultsCount.innerHTML = `Showing <strong>${hotels.length}</strong> hotels`;
-
-  renderHotelCards(hotels);
-}
-
-let activeHotelFacility = 'all';
-let selectedHotel = null;
-
-function toInputDate(date) {
-  const y = date.getFullYear();
-  const m = String(date.getMonth() + 1).padStart(2, '0');
-  const d = String(date.getDate()).padStart(2, '0');
-  return `${y}-${m}-${d}`;
-}
-
-function parseInputDate(str) {
-  const [y, m, d] = str.split('-').map(Number);
-  return new Date(y, m - 1, d);
-}
-
-function formatDisplayDate(str) {
-  if (!str) return '—';
-  const date = parseInputDate(str);
-  return date.toLocaleDateString('en-IN', { weekday: 'short', day: 'numeric', month: 'short', year: 'numeric' });
-}
-
-function calcHotelNights(checkIn, checkOut) {
-  if (!checkIn || !checkOut) return 0;
-  const ms = parseInputDate(checkOut) - parseInputDate(checkIn);
-  return Math.max(0, Math.round(ms / (1000 * 60 * 60 * 24)));
-}
-
-function openHotelDatePicker(field) {
-  const input = document.getElementById(field === 'in' ? 'hotelCheckIn' : 'hotelCheckOut');
-  if (!input) return;
-  if (typeof input.showPicker === 'function') {
-    try { input.showPicker(); } catch (e) { input.focus(); }
-  } else {
-    input.focus();
-  }
-}
-
-function onHotelCheckInChange() {
-  const checkInEl = document.getElementById('hotelCheckIn');
-  const checkOutEl = document.getElementById('hotelCheckOut');
-  if (!checkInEl || !checkOutEl || !checkInEl.value) return;
-
-  const minCheckOut = parseInputDate(checkInEl.value);
-  minCheckOut.setDate(minCheckOut.getDate() + 1);
-  checkOutEl.min = toInputDate(minCheckOut);
-
-  if (!checkOutEl.value || parseInputDate(checkOutEl.value) <= parseInputDate(checkInEl.value)) {
-    checkOutEl.value = toInputDate(minCheckOut);
-  }
-
-  updateHotelStaySummary();
-}
-
-function onHotelCheckOutChange() {
-  updateHotelStaySummary();
-}
-
-function updateHotelStaySummary() {
-  if (!selectedHotel) return;
-
-  const checkInEl = document.getElementById('hotelCheckIn');
-  const checkOutEl = document.getElementById('hotelCheckOut');
-  const nightsEl = document.getElementById('hotelNightsCount');
-  const stayTextEl = document.getElementById('hotelStayText');
-  const totalEl = document.getElementById('hotelTotalPrice');
-  const bookBtn = document.getElementById('hotelBookBtn');
-  if (!checkInEl || !checkOutEl) return;
-
-  const nights = calcHotelNights(checkInEl.value, checkOutEl.value);
-  const validStay = nights >= 1;
-  const total = validStay ? selectedHotel.price * nights : selectedHotel.price;
-
-  if (nightsEl) nightsEl.textContent = validStay ? nights : '—';
-  if (stayTextEl) {
-    stayTextEl.textContent = validStay
-      ? `${nights} night${nights !== 1 ? 's' : ''} (${formatDisplayDate(checkInEl.value)} → ${formatDisplayDate(checkOutEl.value)})`
-      : 'Select valid check-in & check-out dates';
-  }
-  if (totalEl) totalEl.textContent = '₹' + total.toLocaleString('en-IN');
-  if (bookBtn) {
-    bookBtn.innerHTML = validStay
-      ? `<i class="fas fa-calendar-check"></i> Book ${nights} Night${nights !== 1 ? 's' : ''} — ₹${total.toLocaleString('en-IN')}`
-      : `<i class="fas fa-calendar-check"></i> Select Dates to Book`;
-    bookBtn.disabled = !validStay;
-  }
-}
-
-function initHotelStayDates() {
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
-
-  const checkIn = new Date(today);
-  checkIn.setDate(checkIn.getDate() + 1);
-
-  const checkOut = new Date(checkIn);
-  checkOut.setDate(checkOut.getDate() + 1);
-
-  const checkInEl = document.getElementById('hotelCheckIn');
-  const checkOutEl = document.getElementById('hotelCheckOut');
-  if (!checkInEl || !checkOutEl) return;
-
-  checkInEl.min = toInputDate(today);
-  checkInEl.value = toInputDate(checkIn);
-  checkOutEl.min = toInputDate(checkOut);
-  checkOutEl.value = toInputDate(new Date(checkOut.getTime()));
-
-  updateHotelStaySummary();
-}
-
-function renderHotelCards(data) {
-  const grid = document.getElementById('destinationsGrid');
-  const noRes = document.getElementById('noResults');
-  const countEl = document.getElementById('resultsCount');
-  if (!grid) return;
-
-  if (data.length === 0) {
-    grid.innerHTML = '';
-    if (noRes) noRes.classList.remove('hidden');
-    if (countEl) countEl.innerHTML = 'Showing <strong>0</strong> hotels';
-    return;
-  }
-
-  if (noRes) noRes.classList.add('hidden');
-  if (countEl) countEl.innerHTML = `Showing <strong>${data.length}</strong> hotel${data.length !== 1 ? 's' : ''}`;
-
-  grid.innerHTML = data.map(h => {
-    const stars = '★'.repeat(Math.floor(h.rating)) + (h.rating % 1 >= 0.5 ? '½' : '');
-    const topFacilities = h.facilities.slice(0, 4);
-    return `
-    <div class="hotel-card" onclick="openHotelModal(${h.id})">
-      <div class="hotel-card-img" role="button" aria-label="View ${h.name} details">
-        <img src="${h.image}" alt="${h.name}" loading="lazy"/>
-        <span class="hotel-rating-badge"><i class="fas fa-star"></i> ${h.rating}</span>
-        <div class="hotel-img-overlay">
-          <span class="hotel-view-btn"><i class="fas fa-eye"></i> View Details</span>
-        </div>
-      </div>
-      <div class="hotel-card-body">
-        <div class="hotel-card-location">
-          <i class="fas fa-map-marker-alt"></i>
-          <span>${h.city}, ${h.country}</span>
-        </div>
-        <h3 class="hotel-card-name">${h.name}</h3>
-        <p class="hotel-card-desc">${h.desc.substring(0, 80)}...</p>
-        <div class="hotel-facilities-row">
-          ${topFacilities.map(f => {
-      const fi = getFacilityIcon(f);
-      return `<span class="hotel-facility-chip" title="${f}">
-              <i class="${fi.icon}" style="color:${fi.color}"></i>
-              <span>${f}</span>
-            </span>`;
-    }).join('')}
-          ${h.facilities.length > 4 ? `<span class="hotel-facility-more">+${h.facilities.length - 4} more</span>` : ''}
-        </div>
-        <div class="hotel-card-footer">
-          <div class="hotel-price">
-            <span class="hotel-price-from">from</span>
-            <span class="hotel-price-amount">₹${h.price.toLocaleString('en-IN')}</span>
-            <span class="hotel-price-night">/ night</span>
-          </div>
-          <button class="btn-card" onclick="event.stopPropagation(); openHotelModal(${h.id})">
-            <i class="fas fa-eye"></i> View Hotel
-          </button>
-        </div>
-      </div>
-    </div>`;
-  }).join('');
-}
-
-function filterHotelsByFacility(btn, facility) {
-  document.querySelectorAll('#hotelFacilityFilter .tag').forEach(t => t.classList.remove('active'));
-  btn.classList.add('active');
-  activeHotelFacility = facility;
-  filterHotels();
-}
-
-function filterHotels() {
-  const query = (document.getElementById('hotelSearchInput')?.value || '').toLowerCase();
-  const sort = document.getElementById('hotelSortSelect')?.value || 'default';
-
-  let data = MockData.getAllHotels().filter(h => {
-    const matchFacility = activeHotelFacility === 'all' || h.facilities.includes(activeHotelFacility);
-    const matchSearch = h.name.toLowerCase().includes(query) ||
-      h.city.toLowerCase().includes(query) ||
-      h.country.toLowerCase().includes(query);
-    return matchFacility && matchSearch;
-  });
-
-  if (sort === 'price-low') data.sort((a, b) => a.price - b.price);
-  else if (sort === 'price-high') data.sort((a, b) => b.price - a.price);
-  else if (sort === 'rating') data.sort((a, b) => b.rating - a.rating);
-  else if (sort === 'name') data.sort((a, b) => a.name.localeCompare(b.name));
-
-  renderHotelCards(data);
-}
-
-function openHotelModal(id) {
-  selectedHotel = MockData.getAllHotels().find(h => String(h.id) === String(id));
-  if (!selectedHotel) return;
-  const h = selectedHotel;
-
-  const starsHtml = Array.from({ length: 5 }, (_, i) => {
-    if (i < Math.floor(h.rating)) return '<i class="fas fa-star" style="color:#ffd700"></i>';
-    if (i < h.rating) return '<i class="fas fa-star-half-alt" style="color:#ffd700"></i>';
-    return '<i class="far fa-star" style="color:#ddd"></i>';
-  }).join('');
-
-  const facilitiesHtml = h.facilities.map(f => {
-    const fi = getFacilityIcon(f);
-    return `<div class="hotel-modal-facility">
-      <div class="hotel-modal-facility-icon" style="background:${fi.color}22; color:${fi.color}">
-        <i class="${fi.icon}"></i>
-      </div>
-      <span>${f}</span>
-    </div>`;
-  }).join('');
-
-  document.getElementById('hotelModalTitle').textContent = h.name;
-  document.getElementById('hotelModalBody').innerHTML = `
-    <div class="hotel-modal-img-wrap">
-      <img src="${h.image}" alt="${h.name}"/>
-      <div class="hotel-modal-img-overlay">
-        <div class="hotel-modal-location">
-          <i class="fas fa-map-marker-alt"></i> ${h.city}, ${h.country}
-        </div>
-        <span class="hotel-img-scroll-hint"><i class="fas fa-arrows-alt-v"></i> Scroll for full image</span>
-      </div>
-    </div>
-
-    <div class="hotel-modal-content">
-      <div class="hotel-modal-top">
-        <div>
-          <h3 class="hotel-modal-name">${h.name}</h3>
-          <div class="hotel-modal-stars">${starsHtml} <span>${h.rating} / 5.0</span></div>
-        </div>
-        <div class="hotel-modal-price-block">
-          <div class="hotel-modal-price-label">Per Night</div>
-          <div class="hotel-modal-price-value">₹${h.price.toLocaleString('en-IN')}</div>
-        </div>
-      </div>
-
-      <p class="hotel-modal-desc">${h.desc}</p>
-
-      <div class="hotel-modal-section-title">
-        <i class="fas fa-calendar-alt"></i> Your Stay
-      </div>
-      <div class="hotel-stay-form">
-        <div class="hotel-date-field">
-          <label for="hotelCheckIn">Check-in</label>
-          <div class="hotel-date-input-wrap" onclick="openHotelDatePicker('in')">
-            <i class="fas fa-calendar-day"></i>
-            <input type="date" id="hotelCheckIn" aria-label="Check-in date"
-              onclick="event.stopPropagation(); openHotelDatePicker('in')"
-              onchange="onHotelCheckInChange()"/>
-          </div>
-        </div>
-        <div class="hotel-stay-nights">
-          <span id="hotelNightsCount">1</span>
-          <small>Night(s)</small>
-        </div>
-        <div class="hotel-date-field">
-          <label for="hotelCheckOut">Check-out</label>
-          <div class="hotel-date-input-wrap" onclick="openHotelDatePicker('out')">
-            <i class="fas fa-calendar-day"></i>
-            <input type="date" id="hotelCheckOut" aria-label="Check-out date"
-              onclick="event.stopPropagation(); openHotelDatePicker('out')"
-              onchange="onHotelCheckOutChange()"/>
-          </div>
-        </div>
-      </div>
-      <div class="hotel-stay-summary">
-        <span class="hotel-stay-text"><i class="fas fa-moon"></i> <span id="hotelStayText">1 night</span></span>
-        <span class="hotel-stay-total">Total: <strong id="hotelTotalPrice">₹${h.price.toLocaleString('en-IN')}</strong></span>
-      </div>
-
-      <div class="hotel-modal-section-title">
-        <i class="fas fa-concierge-bell"></i> Available Facilities
-      </div>
-      <div class="hotel-modal-facilities">
-        ${facilitiesHtml}
-      </div>
-
-      <div class="hotel-modal-footer">
-        <div class="hotel-modal-info-chips">
-          <span class="info-chip"><i class="fas fa-map-marker-alt"></i> ${h.city}</span>
-          <span class="info-chip"><i class="fas fa-globe"></i> ${h.country}</span>
-          <span class="info-chip"><i class="fas fa-door-open"></i> ${h.facilities.length} Facilities</span>
-        </div>
-        ${isAdminUser()
-          ? adminBookNotice('Hotel booking')
-          : `<button class="btn-primary" id="hotelBookBtn" onclick="bookHotel()">
-              <i class="fas fa-calendar-check"></i> Book Now — ₹${h.price.toLocaleString('en-IN')}/night
-            </button>`}
-      </div>
-    </div>`;
-
-  initHotelStayDates();
-  document.getElementById('hotelModal').classList.remove('hidden');
-  document.body.style.overflow = 'hidden';
-}
-
-function closeHotelModal() {
-  document.getElementById('hotelModal').classList.add('hidden');
-  document.body.style.overflow = '';
-}
-
-function handleHotelModalClick(e) {
-  if (e.target.id === 'hotelModal') closeHotelModal();
-}
-
-function bookHotel() {
-  if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book hotels')) return;
-  if (!selectedHotel) return;
-
-  const checkIn = document.getElementById('hotelCheckIn')?.value;
-  const checkOut = document.getElementById('hotelCheckOut')?.value;
-  const nights = calcHotelNights(checkIn, checkOut);
-
-  if (nights < 1) {
-    showToast('Please select a valid check-out date after check-in.', 'error');
-    return;
-  }
-
-  const total = selectedHotel.price * nights;
-  closeHotelModal();
-  showToast(
-    `🏨 ${selectedHotel.name} booked for ${nights} night${nights !== 1 ? 's' : ''} (${formatDisplayDate(checkIn)} → ${formatDisplayDate(checkOut)}) — ₹${total.toLocaleString('en-IN')}`,
-    'success'
-  );
-}
