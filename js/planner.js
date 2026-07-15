@@ -1,5 +1,5 @@
 /* ================================================================
-   planner.js — Flights Browse, Cards & Modal  (INR ₹)
+   planner.js — Flights Browse, Cards & Modal  (Premium Edition)
    ================================================================ */
 
 let activeFlightClass = 'all';
@@ -70,76 +70,38 @@ function renderFlightCards(data) {
     const style = getAirlineStyle(f.airline);
     const isBiz = f.flightClass === 'Business';
     return `
-    <div class="flight-card" onclick="openFlightModal(${f.id})">
-      <div class="flight-card-img">
-        <img src="${f.image}" alt="${f.to}" loading="lazy"/>
-        <div class="flight-card-img-overlay"></div>
-        <span class="flight-weather-badge"><i class="fas fa-cloud-sun"></i> ${f.weather}</span>
-        <span class="flight-class-badge ${isBiz ? 'biz' : 'eco'}">
-          <i class="fas fa-${isBiz ? 'star' : 'chair'}"></i> ${f.flightClass}
-        </span>
-        <div class="flight-dest-label">
-          <span class="flight-dest-city">${f.to}</span>
-          <span class="flight-dest-country">${f.toCountry}</span>
-        </div>
+    <a href="#" class="premium-card hover-lift reveal-on-scroll is-visible" onclick="event.preventDefault(); openFlightModal(${f.id})" style="height:350px;">
+      <div class="premium-card-img" style="background-image:url('${f.image}')"></div>
+      <div class="premium-card-gradient"></div>
+      <div class="premium-card-glow"></div>
+      <span class="premium-card-badge" style="background:${style.bg};color:${style.text};border:none;"><i class="fas fa-plane"></i> ${f.airline}</span>
+      <div class="premium-card-icon" style="top:20px;left:auto;right:20px;font-size:0.8rem;width:auto;border-radius:20px;padding:5px 10px;border-color:var(--glass-border);color:var(--accent-primary);">
+        <i class="fas fa-${isBiz ? 'star' : 'chair'}"></i> ${f.flightClass}
       </div>
-
-      <div class="flight-airline-strip" style="background:${style.bg};color:${style.text};">
-        <i class="fas fa-plane"></i>
-        <span>${f.airline}</span>
-        <span class="flight-number">FL-${String(f.id).padStart(3,'0')}</span>
-      </div>
-
-      <div class="flight-card-body">
-        <div class="flight-route-row">
-          <div class="flight-endpoint">
-            <div class="flight-time">${f.departure}</div>
-            <div class="flight-code">${f.fromCode}</div>
-            <div class="flight-city">${f.from}</div>
-          </div>
-          <div class="flight-arc">
-            <div class="flight-arc-duration">${f.duration}</div>
-            <div class="flight-arc-line">
-              <span class="arc-dot left"></span>
-              <svg class="arc-svg" viewBox="0 0 120 30" preserveAspectRatio="none">
-                <path d="M4,28 Q60,-8 116,28" fill="none" stroke="#0abde3" stroke-width="1.5" stroke-dasharray="4 3"/>
-              </svg>
-              <i class="fas fa-plane arc-plane"></i>
-              <span class="arc-dot right"></span>
+      <div class="premium-card-content">
+        <div style="display:flex;justify-content:space-between;align-items:flex-end;margin-bottom:10px;">
+            <div style="text-align:left;">
+                <div style="font-size:1.8rem;font-weight:700;font-family:var(--font-heading);">${f.fromCode}</div>
+                <div style="color:var(--text-secondary);font-size:0.85rem;">${f.departure}</div>
             </div>
-            <div class="flight-arc-label">${f.sameDay ? 'Same Day' : 'Next Day'}</div>
-          </div>
-          <div class="flight-endpoint right">
-            <div class="flight-time">${f.arrival}</div>
-            <div class="flight-code">${f.toCode}</div>
-            <div class="flight-city">${f.to}</div>
-          </div>
+            <div style="flex:1;text-align:center;padding:0 15px;position:relative;margin-bottom:15px;">
+                <div style="font-size:0.7rem;color:var(--text-secondary);margin-bottom:5px;">${f.duration}</div>
+                <div style="height:1px;background:var(--glass-border);position:relative;">
+                    <i class="fas fa-plane" style="position:absolute;top:-7px;left:50%;transform:translateX(-50%);color:var(--accent-primary);font-size:0.8rem;"></i>
+                </div>
+            </div>
+            <div style="text-align:right;">
+                <div style="font-size:1.8rem;font-weight:700;font-family:var(--font-heading);">${f.toCode}</div>
+                <div style="color:var(--text-secondary);font-size:0.85rem;">${f.arrival}</div>
+            </div>
         </div>
-
-        <div class="flight-card-footer">
-          <div class="flight-meta">
-            <span class="flight-pax"><i class="fas fa-user"></i> ${f.passengers} Pax</span>
-            <span class="flight-stops"><i class="fas fa-circle" style="font-size:0.4rem"></i> Direct</span>
-          </div>
-          <div class="flight-price-wrap">
-            <span class="flight-price-amount">${INR(f.price)}</span>
-            <span class="flight-price-label">/ person</span>
-          </div>
+        <div class="premium-card-desc" style="opacity:1; transform:none; font-size:1.1rem; font-weight:700; color:#fff; border-top:1px solid var(--glass-border); padding-top:15px; display:flex; justify-content:space-between;">
+          <span>${INR(f.price)} <span style="font-size:0.8rem; font-weight:400; color:var(--text-secondary)">/ person</span></span>
+          <span style="font-size:0.85rem;font-weight:400;color:var(--text-secondary)"><i class="fas fa-cloud-sun"></i> ${f.weather}</span>
         </div>
-        <button class="btn-card flight-book-btn"
-                onclick="event.stopPropagation(); openFlightModal(${f.id})">
-          <i class="fas fa-ticket-alt"></i> ${isAdminUser() ? 'View Details' : 'View &amp; Book'}
-        </button>
       </div>
-    </div>`;
+    </a>`;
   }).join('');
-
-  document.querySelectorAll('.flight-card').forEach(el => {
-    el.style.opacity = '0';
-    el.style.transform = 'translateY(20px)';
-    el.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
-    setTimeout(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; }, 60);
-  });
 }
 
 /* ================================================================
@@ -156,6 +118,7 @@ function filterFlights() {
   const query = (document.getElementById('flightSearchInput')?.value || '').toLowerCase();
   const sort  = document.getElementById('flightSortSelect')?.value || 'default';
 
+  if(!MockData) return;
   let data = MockData.getAllFlights().filter(f => {
     const matchClass  = activeFlightClass === 'all' || f.flightClass === activeFlightClass;
     const matchSearch = f.from.toLowerCase().includes(query) ||
@@ -192,108 +155,80 @@ function openFlightModal(id) {
     <span>${f.fromCode}</span>
     <i class="fas fa-long-arrow-alt-right" style="margin:0 10px;opacity:0.7;"></i>
     <span>${f.toCode}</span>
-    <span style="margin-left:14px;font-size:0.75rem;opacity:0.75;font-weight:400;">${f.airline}</span>`;
+    <span style="margin-left:14px;font-size:0.75rem;opacity:0.75;font-weight:400;color:var(--text-secondary)">${f.airline}</span>`;
 
   document.getElementById('flightModalBody').innerHTML = `
-    <div class="fmd-hero">
-      <img src="${f.image}" alt="${f.to}"/>
-      <div class="fmd-hero-overlay">
-        <div class="fmd-hero-text">
-          <div class="fmd-hero-city">${f.to.toUpperCase()}</div>
-          <div class="fmd-hero-country">${f.toCountry}</div>
+    <div style="position:relative; height:200px; border-radius:0 0 24px 24px; overflow:hidden;">
+      <img src="${f.image}" alt="${f.to}" style="width:100%; height:100%; object-fit:cover; filter:brightness(0.6);"/>
+      <div style="position:absolute; bottom:20px; left:20px; right:20px; display:flex; justify-content:space-between; align-items:flex-end;">
+        <div>
+            <div style="font-size:2rem;font-weight:700;color:#fff;line-height:1;">${f.to.toUpperCase()}</div>
+            <div style="color:var(--text-secondary);">${f.toCountry}</div>
         </div>
-        <div class="fmd-hero-weather"><i class="fas fa-cloud-sun"></i> ${f.weather}</div>
-      </div>
-    </div>
-
-    <div class="fmd-route-strip" style="background:${style.bg};">
-      <div class="fmd-route-from">
-        <div class="fmd-route-city">${f.from.toUpperCase()}</div>
-        <div class="fmd-route-country">${f.fromCountry}</div>
-      </div>
-      <div class="fmd-route-center">
-        <i class="fas fa-circle fmd-dot" style="color:${style.text};opacity:0.5;font-size:0.55rem;"></i>
-        <div class="fmd-route-line">
-          <svg viewBox="0 0 180 24" preserveAspectRatio="none">
-            <path d="M4,20 Q90,-10 176,20" fill="none" stroke="rgba(255,255,255,0.55)"
-                  stroke-width="1.5" stroke-dasharray="5 4"/>
-          </svg>
-          <i class="fas fa-plane fmd-plane-icon"></i>
-        </div>
-        <i class="fas fa-circle fmd-dot" style="color:${style.text};opacity:0.5;font-size:0.55rem;"></i>
-      </div>
-      <div class="fmd-route-to">
-        <div class="fmd-route-city">${f.to.toUpperCase()}</div>
-        <div class="fmd-route-country">${f.toCountry}</div>
-      </div>
-    </div>
-
-    <div class="fmd-times-row">
-      <div class="fmd-time-block">
-        <div class="fmd-time-label"><i class="fas fa-plane-departure"></i> Departure</div>
-        <div class="fmd-time-value">${f.departure}</div>
-        <div class="fmd-time-sub">${f.from} · ${f.fromCode}</div>
-      </div>
-      <div class="fmd-time-divider">
-        <div class="fmd-duration-pill"><i class="fas fa-clock"></i> ${f.duration}</div>
-        <div class="fmd-direct-badge">Direct</div>
-      </div>
-      <div class="fmd-time-block right">
-        <div class="fmd-time-label"><i class="fas fa-plane-arrival"></i> Arrival</div>
-        <div class="fmd-time-value">${f.arrival}${!f.sameDay ? '<sup class="fmd-next-day">+1</sup>' : ''}</div>
-        <div class="fmd-time-sub">${f.to} · ${f.toCode}</div>
-      </div>
-    </div>
-
-    <div class="fmd-time-note">
-      <i class="fas fa-info-circle"></i>
-      Flight time: ${f.duration}, ${f.sameDay ? 'same day arrival' : 'next day arrival'}
-    </div>
-
-    <div class="fmd-details-grid">
-      <div class="fmd-detail-item">
-        <div class="fmd-detail-label">Class</div>
-        <div class="fmd-detail-value ${isBiz ? 'biz-text' : ''}">
-          <i class="fas fa-${isBiz ? 'star' : 'chair'}"></i> ${f.flightClass}
+        <div style="background:rgba(0,0,0,0.6);backdrop-filter:blur(10px);padding:5px 15px;border-radius:20px;font-size:0.85rem;">
+            <i class="fas fa-cloud-sun"></i> ${f.weather}
         </div>
       </div>
-      <div class="fmd-detail-item">
-        <div class="fmd-detail-label">Airline</div>
-        <div class="fmd-detail-value">
-          <span class="fmd-airline-chip" style="background:${style.bg};color:${style.text};">${f.airline}</span>
-        </div>
-      </div>
-      <div class="fmd-detail-item">
-        <div class="fmd-detail-label">Flight No.</div>
-        <div class="fmd-detail-value">FL-${String(f.id).padStart(3,'0')}</div>
-      </div>
-      <div class="fmd-detail-item">
-        <div class="fmd-detail-label">Destination Weather</div>
-        <div class="fmd-detail-value"><i class="fas fa-thermometer-half" style="color:#0abde3;"></i> ${f.weather}</div>
-      </div>
     </div>
 
-    <div class="fmd-booking-row">
-      <div class="fmd-passenger-block">
-        <div class="fmd-passenger-label">Passengers</div>
-        <div class="fmd-passenger-ctrl">
-          <button class="fmd-pax-btn" onclick="changePax(-1)"><i class="fas fa-minus"></i></button>
-          <span class="fmd-pax-count" id="fmdPaxCount">${flightPassengers}</span>
-          <button class="fmd-pax-btn" onclick="changePax(1)"><i class="fas fa-plus"></i></button>
+    <div style="padding:40px;">
+      <div style="display:flex; justify-content:space-between; align-items:center; background:var(--glass-bg); border:1px solid var(--glass-border); padding:30px; border-radius:24px; margin-bottom:30px;">
+          <div style="text-align:center;">
+              <div style="font-size:2.5rem;font-family:var(--font-heading);font-weight:700;color:var(--accent-primary);">${f.fromCode}</div>
+              <div style="font-size:1.1rem;margin-bottom:5px;">${f.departure}</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">${f.from}</div>
+          </div>
+          <div style="flex:1;text-align:center;padding:0 30px;">
+              <div style="background:rgba(255,255,255,0.05);border-radius:20px;padding:5px 10px;font-size:0.8rem;display:inline-block;margin-bottom:10px;">
+                  <i class="fas fa-clock" style="color:var(--accent-primary);"></i> ${f.duration}
+              </div>
+              <div style="height:2px;background:linear-gradient(90deg,transparent,var(--accent-primary),transparent);position:relative;">
+                  <i class="fas fa-plane" style="position:absolute;top:-8px;left:50%;transform:translateX(-50%);color:var(--accent-primary);"></i>
+              </div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);margin-top:10px;">Direct Flight</div>
+          </div>
+          <div style="text-align:center;">
+              <div style="font-size:2.5rem;font-family:var(--font-heading);font-weight:700;color:var(--accent-primary);">${f.toCode}</div>
+              <div style="font-size:1.1rem;margin-bottom:5px;">${f.arrival} ${!f.sameDay ? '<sup style="color:var(--accent-secondary)">+1</sup>' : ''}</div>
+              <div style="font-size:0.8rem;color:var(--text-secondary);">${f.to}</div>
+          </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:40px;">
+          <div style="background:var(--glass-bg);border:1px solid var(--glass-border);padding:20px;border-radius:16px;">
+              <div style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:5px;">Class</div>
+              <div style="font-weight:600;"><i class="fas fa-${isBiz ? 'star' : 'chair'}" style="color:${isBiz ? 'var(--accent-secondary)' : 'var(--text-secondary)'};margin-right:5px;"></i> ${f.flightClass}</div>
+          </div>
+          <div style="background:var(--glass-bg);border:1px solid var(--glass-border);padding:20px;border-radius:16px;">
+              <div style="color:var(--text-secondary);font-size:0.85rem;margin-bottom:5px;">Airline &amp; Flight No.</div>
+              <div style="font-weight:600;">
+                <span style="background:${style.bg};color:${style.text};padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-right:8px;">${f.airline}</span>
+                FL-${String(f.id).padStart(3,'0')}
+              </div>
+          </div>
+      </div>
+
+      <div style="display:flex; justify-content:space-between; align-items:center; border-top:1px solid var(--glass-border); padding-top:30px;">
+        <div>
+          <div style="color:var(--text-secondary); font-size:0.9rem; margin-bottom:5px;">Passengers</div>
+          <div style="display:flex;align-items:center;gap:15px;background:var(--glass-bg);border:1px solid var(--glass-border);padding:5px 15px;border-radius:20px;">
+              <button onclick="changePax(-1)" style="background:none;border:none;color:var(--text-secondary);cursor:pointer;"><i class="fas fa-minus"></i></button>
+              <span id="fmdPaxCount" style="font-weight:700;width:20px;text-align:center;">${flightPassengers}</span>
+              <button onclick="changePax(1)" style="background:none;border:none;color:var(--text-secondary);cursor:pointer;"><i class="fas fa-plus"></i></button>
+          </div>
+        </div>
+        <div style="text-align:right;">
+          <div style="color:var(--text-secondary); font-size:0.9rem;">Total Price</div>
+          <div style="font-size:2rem; font-weight:700; color:#fff;" id="fmdTotalPrice">${INR(f.price * flightPassengers)}</div>
         </div>
       </div>
-      <div class="fmd-price-block">
-        <div class="fmd-price-label">Total Price</div>
-        <div class="fmd-price-value" id="fmdTotalPrice">${INR(f.price * flightPassengers)}</div>
-        <div class="fmd-price-per">${INR(f.price)} / person</div>
-      </div>
-    </div>
 
-    ${isAdminUser()
-      ? adminBookNotice('Flight booking')
-      : `<button class="fmd-book-btn" onclick="bookFlight()">
-          <i class="fas fa-check-circle"></i> BOOK THIS FLIGHT
-        </button>`}`;
+      <div style="margin-top:30px;text-align:right;">
+          <button class="magnetic-btn" onclick="bookFlight()" style="background:var(--accent-primary); color:var(--bg-main); border:none; padding:15px 40px; border-radius:30px; font-weight:700; font-size:1.1rem; cursor:pointer; font-family:var(--font-body); width:100%;">
+            Confirm Reservation
+          </button>
+      </div>
+    </div>`;
 
   document.getElementById('flightModal').classList.remove('hidden');
   document.body.style.overflow = 'hidden';
@@ -316,18 +251,26 @@ function handleFlightModalClick(e) {
   if (e.target.id === 'flightModal') closeFlightModal();
 }
 
+function showToast(msg, type) {
+  const t = document.getElementById('toast');
+  if(!t) return;
+  t.textContent = msg;
+  t.style.display = 'block';
+  t.style.animation = 'slideInRight 0.5s forwards';
+  setTimeout(() => {
+    t.style.display = 'none';
+  }, 3000);
+}
+
 function bookFlight() {
   if (typeof AuthSession !== 'undefined' && !AuthSession.guardBooking('book flights')) return;
   closeFlightModal();
   if (selectedFlight) {
-    showToast(
-      `✈️ ${selectedFlight.from} → ${selectedFlight.to} booked for ${flightPassengers} pax · ${INR(selectedFlight.price * flightPassengers)}`,
-      'success'
-    );
+    showToast(`✈️ First Class Reservation confirmed to ${selectedFlight.to}!`, 'success');
   }
 }
 
 document.addEventListener('DOMContentLoaded', () => {
-  renderFlightCards(MockData.getAllFlights());
+  if(MockData) renderFlightCards(MockData.getAllFlights());
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeFlightModal(); });
 });

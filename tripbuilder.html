@@ -4,202 +4,196 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="js/theme-init.js"></script>
-  <title>Create Your Trip - MyAdventure</title>
-  <link rel="stylesheet" href="css/style.css"/>
+  <title>Create Your Trip - Premium Travel</title>
+  <link rel="stylesheet" href="css/premium-global.css"/>
   <link rel="stylesheet" href="css/tripbuilder.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    /* specific styles to override old tripbuilder.css layout if needed */
+    .trip-builder-section { padding: 50px 5%; background: var(--bg-main); min-height:100vh; }
+    .trip-builder-layout { display: flex; gap: 40px; margin-top: 100px; }
+    
+    .trip-sidebar { 
+        width: 350px; flex-shrink: 0; background: var(--glass-bg); backdrop-filter: var(--glass-blur);
+        border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; 
+    }
+    .trip-content { flex: 1; }
+    
+    /* Re-styling the sidebar components for luxury */
+    .sidebar-city-picker label, .sidebar-days-picker label { font-family: var(--font-heading); font-size: 1.2rem; color: var(--accent-primary); margin-bottom: 15px; display: block; }
+    #citySelect { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; padding: 15px; border-radius: 12px; font-family: var(--font-body); outline: none; margin-bottom:20px; }
+    .city-preview { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); }
+    #cityPreviewImg { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
+    
+    .sidebar-nav { display: flex; flex-direction: column; gap: 10px; margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 30px; }
+    .sidebar-item { background: transparent; border: 1px solid var(--glass-border); color: var(--text-primary); padding: 15px 20px; border-radius: 12px; cursor: pointer; text-align: left; display: flex; align-items: center; gap: 15px; transition: all 0.3s ease; }
+    .sidebar-item i { font-size: 1.2rem; color: var(--text-secondary); }
+    .sidebar-item span { font-weight: 600; flex: 1; }
+    .sidebar-item small { font-size: 0.8rem; color: var(--text-secondary); }
+    .sidebar-item.active, .sidebar-item:hover { background: var(--accent-primary); border-color: var(--accent-primary); color: var(--bg-main); }
+    .sidebar-item.active i, .sidebar-item:hover i { color: var(--bg-main); }
+    .sidebar-item.active small, .sidebar-item:hover small { color: rgba(0,0,0,0.7); }
+    
+    .sidebar-selections { margin-top: 30px; border-top: 1px solid var(--glass-border); padding-top: 30px; }
+    .sidebar-selections h4 { font-family: var(--font-heading); color: var(--accent-primary); margin-bottom: 15px; }
+    .btn-save-trip { width: 100%; background: var(--accent-primary); color: var(--bg-main); border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 20px; font-family: var(--font-body); }
+    
+    .content-header { border-bottom: 1px solid var(--glass-border); padding-bottom: 20px; margin-bottom: 30px; }
+    .content-header h2 { font-size: 2.5rem; color: var(--accent-primary); }
+    .content-header p { color: var(--text-secondary); font-size: 1.1rem; }
+    
+    .content-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+    
+    .day-strip { display: flex; gap: 10px; overflow-x: auto; padding-bottom: 15px; margin-bottom: 20px; }
+    .day-tab { background: var(--glass-bg); border: 1px solid var(--glass-border); padding: 15px 25px; border-radius: 12px; cursor: pointer; text-align: center; color: var(--text-secondary); min-width: 100px; }
+    .day-tab.active { background: var(--accent-primary); color: var(--bg-main); font-weight: 700; border-color: var(--accent-primary); }
+    
+    .content-empty { text-align: center; padding: 100px 20px; color: var(--text-secondary); background: var(--glass-bg); border-radius: 24px; border: 1px solid var(--glass-border); }
+    .content-empty i { font-size: 4rem; color: var(--glass-border); margin-bottom: 20px; }
+    
+    .hidden { display: none !important; }
+  </style>
 </head>
 <body>
 
-  <nav class="navbar scrolled" id="navbar">
-    <div class="nav-container">
-      <a href="home.html" class="logo">
-        <i class="fas fa-paper-plane logo-icon"></i>
-        <span>My<strong>Adventure</strong></span>
-      </a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="dashboard.html">Dashboard</a></li>
-        <li><a href="destinations.html">Packages</a></li>
-        <li><a href="destinations.html?view=hotels">Hotels</a></li>
-        <li><a href="planner.html">Flights</a></li>
-        <li><a href="mytrips.html">Bookings</a></li>
-        <li><a href="tripbuilder.html" class="active">Create Trip</a></li>
-      </ul>
-      <div class="nav-end">
-        <div class="nav-actions">
-          <button class="btn-theme" id="themeToggle" title="Toggle theme">
-            <i class="fas fa-moon" id="themeIcon"></i>
-          </button>
-          <a href="login.html" class="btn-login">Login</a>
-          <a href="login.html" class="btn-signup">Sign up</a>
-        </div>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
+  <div class="ambient-bg"></div>
+
+  <nav class="glass-nav">
+    <a href="home.html" class="nav-logo">
+      <i class="fas fa-gem"></i>
+      <span>My<strong>Adventure</strong></span>
+    </a>
+    <div class="nav-right">
+      <a href="destinations.html" style="margin-right:20px;">Packages</a>
+      <a href="destinations.html?view=hotels" style="margin-right:20px;">Stays</a>
+      <a href="planner.html" style="margin-right:20px;">Flights</a>
+      <a href="dashboard.html" style="margin-right:20px;">Dashboard</a>
+      <a href="tripbuilder.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Create Trip</a>
+      <a href="login.html" class="nav-role-badge magnetic-btn" style="text-decoration:none;border:1px solid var(--glass-border)">Login</a>
     </div>
   </nav>
 
-  <section class="page-hero trip-hero" style="background-image:url('https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=1600&q=80')">
-    <div class="page-hero-overlay"></div>
-    <div class="page-hero-content">
-      <h1>Create Your Dream Trip</h1>
-      <p>Pick a city &amp; dates, then plan each day — hotels, places &amp; rentals</p>
-      <div class="breadcrumb">
-        <a href="home.html">Home</a> <i class="fas fa-chevron-right"></i> <span>Create Trip</span>
-      </div>
-    </div>
-  </section>
+  <section class="trip-builder-section">
+    <div class="trip-builder-layout">
 
-  <section class="section trip-builder-section">
-    <div class="container trip-builder-container">
-
-      <div class="trip-builder-layout">
-
-        <!-- LEFT SIDEBAR -->
-        <aside class="trip-sidebar">
-          <div class="sidebar-city-picker">
-            <label for="citySelect"><i class="fas fa-map-marker-alt"></i> Choose City</label>
-            <select id="citySelect" onchange="onCityChange()">
-              <option value="">Select destination...</option>
-            </select>
-            <div id="cityPreview" class="city-preview hidden">
-              <img id="cityPreviewImg" src="" alt=""/>
-              <div>
-                <strong id="cityPreviewName"></strong>
-                <span id="cityPreviewCountry"></span>
-              </div>
-            </div>
-          </div>
-
-          <div id="tripDaysPicker" class="sidebar-days-picker hidden">
-            <label><i class="fas fa-calendar-alt"></i> Trip Days</label>
-            <p class="cal-instruction" id="calInstruction">Select start &amp; end dates</p>
-            <div class="trip-calendar" id="tripCalendar">
-              <div class="cal-header">
-                <button type="button" class="cal-nav" id="calPrev" onclick="shiftCalendar(-1)" aria-label="Previous month">
-                  <i class="fas fa-chevron-left"></i>
-                </button>
-                <strong id="calMonthLabel">Month</strong>
-                <button type="button" class="cal-nav" id="calNext" onclick="shiftCalendar(1)" aria-label="Next month">
-                  <i class="fas fa-chevron-right"></i>
-                </button>
-              </div>
-              <div class="cal-weekdays">
-                <span>Su</span><span>Mo</span><span>Tu</span><span>We</span><span>Th</span><span>Fr</span><span>Sa</span>
-              </div>
-              <div class="cal-grid" id="calGrid"></div>
-            </div>
-            <div class="cal-summary" id="calSummary">
-              <span class="days-hint" id="tripDaysHint">Pick a date range</span>
-              <button type="button" class="cal-clear hidden" id="calClearBtn" onclick="clearTripDates()">Clear</button>
-            </div>
-          </div>
-
-          <nav class="sidebar-nav">
-            <button class="sidebar-item active" data-tab="transport" onclick="switchTab('transport', this)">
-              <i class="fas fa-plane"></i>
-              <span>Transport</span>
-              <small>Flights</small>
-            </button>
-            <button class="sidebar-item" data-tab="hotels" onclick="switchTab('hotels', this)">
-              <i class="fas fa-hotel"></i>
-              <span>Hotels</span>
-              <small>Stay options</small>
-            </button>
-            <button class="sidebar-item" data-tab="places" onclick="switchTab('places', this)">
-              <i class="fas fa-landmark"></i>
-              <span>Places</span>
-              <small>Famous spots</small>
-            </button>
-            <button class="sidebar-item" data-tab="rentals" onclick="switchTab('rentals', this)">
-              <i class="fas fa-motorcycle"></i>
-              <span>Rent Bike or Car</span>
-              <small>Local transport</small>
-            </button>
-          </nav>
-
-          <div class="sidebar-selections">
-            <h4>Your Itinerary</h4>
-            <div id="selectionList" class="itinerary-summary">
-              <p class="empty-selection">Nothing selected yet</p>
-            </div>
-            <button class="btn-save-trip" onclick="saveTrip()" id="saveTripBtn">
-              <i class="fas fa-check-circle"></i> Save Trip
-            </button>
-          </div>
-        </aside>
-
-        <!-- RIGHT CONTENT -->
-        <main class="trip-content">
-          <div id="dayStripWrap" class="day-strip-wrap hidden">
-            <div class="day-strip-label">
-              <i class="fas fa-route"></i> Day-by-day itinerary
-            </div>
-            <div class="day-strip" id="dayStrip" role="tablist" aria-label="Trip days"></div>
-            <div id="applyAllWrap" class="day-apply-all hidden">
-              <label class="apply-all-toggle">
-                <input type="checkbox" id="applyToAllDays" onchange="onApplyToAllChange()"/>
-                <span>Same option for all trip days</span>
-              </label>
-              <div class="day-apply-actions">
-                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('hotels')" title="Copy this day's hotel to every day">
-                  <i class="fas fa-hotel"></i> Same hotel for all
-                </button>
-                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('places')" title="Copy this day's places to every day">
-                  <i class="fas fa-landmark"></i> Same places for all
-                </button>
-                <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('rentals')" title="Copy this day's rental to every day">
-                  <i class="fas fa-motorcycle"></i> Same rental for all
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <div class="content-header">
+      <!-- LEFT SIDEBAR -->
+      <aside class="trip-sidebar reveal-on-scroll is-visible">
+        <div class="sidebar-city-picker">
+          <label for="citySelect"><i class="fas fa-map-marker-alt"></i> Destination</label>
+          <select id="citySelect" onchange="onCityChange()">
+            <option value="">Select your destination...</option>
+          </select>
+          <div id="cityPreview" class="city-preview hidden">
+            <img id="cityPreviewImg" src="" alt=""/>
             <div>
-              <h2 id="contentTitle">Flights</h2>
-              <p id="contentSubtitle">Select a flight to your destination</p>
+              <strong id="cityPreviewName"></strong><br>
+              <span id="cityPreviewCountry" style="font-size:0.85rem;color:var(--text-secondary)"></span>
             </div>
-            <span class="content-count" id="contentCount"></span>
           </div>
+        </div>
 
-          <div id="daySelectionBanner" class="day-selection-banner hidden"></div>
-
-          <div id="contentEmpty" class="content-empty">
-            <i class="fas fa-map-marked-alt"></i>
-            <h3 id="emptyTitle">Select a city first</h3>
-            <p id="emptyMessage">Choose your destination from the sidebar to see available options.</p>
+        <div id="tripDaysPicker" class="sidebar-days-picker hidden">
+          <label><i class="fas fa-calendar-alt"></i> Trip Dates</label>
+          <p class="cal-instruction" id="calInstruction" style="color:var(--text-secondary);font-size:0.9rem;margin-bottom:10px;">Select start &amp; end dates</p>
+          <div class="trip-calendar" id="tripCalendar">
+            <!-- Calendar injected by JS -->
           </div>
+          <div class="cal-summary" id="calSummary" style="margin-top:15px;display:flex;justify-content:space-between;align-items:center;">
+            <span class="days-hint" id="tripDaysHint" style="font-size:0.85rem;color:var(--accent-primary);font-weight:600;">Pick a date range</span>
+            <button type="button" class="cal-clear hidden" id="calClearBtn" onclick="clearTripDates()" style="background:none;border:1px solid var(--glass-border);color:var(--text-secondary);padding:5px 10px;border-radius:8px;cursor:pointer;">Clear</button>
+          </div>
+        </div>
 
-          <div id="contentGrid" class="content-grid hidden"></div>
-        </main>
+        <nav class="sidebar-nav">
+          <button class="sidebar-item active" data-tab="transport" onclick="switchTab('transport', this)">
+            <i class="fas fa-plane"></i>
+            <span>Transport</span>
+          </button>
+          <button class="sidebar-item" data-tab="hotels" onclick="switchTab('hotels', this)">
+            <i class="fas fa-hotel"></i>
+            <span>Stays</span>
+          </button>
+          <button class="sidebar-item" data-tab="places" onclick="switchTab('places', this)">
+            <i class="fas fa-landmark"></i>
+            <span>Experiences</span>
+          </button>
+          <button class="sidebar-item" data-tab="rentals" onclick="switchTab('rentals', this)">
+            <i class="fas fa-car"></i>
+            <span>Chauffeur</span>
+          </button>
+        </nav>
 
-      </div>
+        <div class="sidebar-selections">
+          <h4>Itinerary Summary</h4>
+          <div id="selectionList" class="itinerary-summary" style="font-size:0.9rem;color:var(--text-secondary);line-height:1.6;margin-bottom:20px;">
+            <p class="empty-selection">No selections yet</p>
+          </div>
+          <button class="btn-save-trip magnetic-btn" onclick="saveTrip()" id="saveTripBtn">
+            Confirm & Save Trip
+          </button>
+        </div>
+      </aside>
+
+      <!-- RIGHT CONTENT -->
+      <main class="trip-content reveal-on-scroll is-visible delay-1">
+        
+        <div id="dayStripWrap" class="day-strip-wrap hidden" style="margin-bottom:30px;">
+          <div class="day-strip-label" style="font-family:var(--font-heading);color:var(--accent-primary);font-size:1.2rem;margin-bottom:15px;">
+            <i class="fas fa-route"></i> Day-by-day Itinerary
+          </div>
+          <div class="day-strip" id="dayStrip" role="tablist" aria-label="Trip days"></div>
+          
+          <div id="applyAllWrap" class="day-apply-all hidden" style="background:var(--glass-bg);border:1px solid var(--glass-border);padding:15px;border-radius:12px;margin-top:10px;">
+            <label class="apply-all-toggle" style="display:flex;align-items:center;gap:10px;cursor:pointer;margin-bottom:10px;">
+              <input type="checkbox" id="applyToAllDays" onchange="onApplyToAllChange()"/>
+              <span>Same option for all trip days</span>
+            </label>
+            <div class="day-apply-actions" style="display:flex;gap:10px;">
+              <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('hotels')" style="background:rgba(255,255,255,0.1);border:none;color:#fff;padding:8px 15px;border-radius:8px;cursor:pointer;font-size:0.8rem;">
+                <i class="fas fa-hotel"></i> Copy Stay
+              </button>
+              <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('places')" style="background:rgba(255,255,255,0.1);border:none;color:#fff;padding:8px 15px;border-radius:8px;cursor:pointer;font-size:0.8rem;">
+                <i class="fas fa-landmark"></i> Copy Experiences
+              </button>
+              <button type="button" class="btn-apply-all" onclick="applyCurrentDayToAll('rentals')" style="background:rgba(255,255,255,0.1);border:none;color:#fff;padding:8px 15px;border-radius:8px;cursor:pointer;font-size:0.8rem;">
+                <i class="fas fa-car"></i> Copy Chauffeur
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div class="content-header">
+          <div style="display:flex;justify-content:space-between;align-items:flex-end;">
+              <div>
+                <h2 id="contentTitle">Transport</h2>
+                <p id="contentSubtitle">Select a flight to your destination</p>
+              </div>
+              <span class="content-count" id="contentCount" style="color:var(--text-secondary);font-weight:600;"></span>
+          </div>
+        </div>
+
+        <div id="daySelectionBanner" class="day-selection-banner hidden" style="background:var(--accent-primary);color:var(--bg-main);padding:15px 20px;border-radius:12px;margin-bottom:20px;font-weight:600;display:flex;justify-content:space-between;"></div>
+
+        <div id="contentEmpty" class="content-empty">
+          <i class="fas fa-globe"></i>
+          <h3 id="emptyTitle">Select a destination first</h3>
+          <p id="emptyMessage">Choose your destination from the sidebar to curate available luxury options.</p>
+        </div>
+
+        <!-- JS injects the cards here -->
+        <div id="contentGrid" class="content-grid hidden"></div>
+      </main>
+
     </div>
   </section>
 
-  <div class="toast" id="toast"></div>
-
-  <footer class="footer">
-    <div class="footer-container">
-      <div class="footer-col">
-        <div class="logo footer-logo">
-          <i class="fas fa-paper-plane logo-icon"></i>
-          <span>My<strong>Adventure</strong></span>
-        </div>
-        <p>Your trusted travel partner for discovering the world's most beautiful destinations.</p>
-      </div>
-    </div>
-    <div class="footer-bottom">
-      <p>&copy; 2026 MyAdventure. All rights reserved.</p>
-    </div>
-  </footer>
+  <div class="toast" id="toast" style="position:fixed;bottom:20px;right:20px;background:var(--accent-primary);color:#000;padding:15px 30px;border-radius:12px;font-weight:600;z-index:10000;display:none;"></div>
 
   <script src="js/storage.js"></script>
   <script src="js/session.js"></script>
   <script src="js/mockdata.js"></script>
+  <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
   <script src="js/tripbuilder.js"></script>
 </body>
