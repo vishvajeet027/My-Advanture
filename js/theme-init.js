@@ -8,6 +8,11 @@
     if (stored) theme = JSON.parse(stored);
   } catch (e) {}
 
+  var meta = document.createElement('meta');
+  meta.name = 'referrer';
+  meta.content = 'no-referrer';
+  (document.head || document.documentElement).appendChild(meta);
+
   if (theme !== 'dark') return;
 
   document.documentElement.setAttribute('data-theme', 'dark');

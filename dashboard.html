@@ -4,48 +4,105 @@
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <script src="js/theme-init.js"></script>
-  <title>Dashboard - MyAdventure</title>
-  <link rel="stylesheet" href="css/style.css"/>
-  <link rel="stylesheet" href="css/dashboard.css"/>
+  <title>Dashboard - Premium Travel</title>
+  <link rel="stylesheet" href="css/premium-global.css"/>
+  <link rel="stylesheet" href="css/animations.css"/>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
+  <style>
+    body { background: var(--bg-main); overflow-x: hidden; }
+    
+    .dashboard-wrapper { display: flex; min-height: 100vh; padding-top: 80px; }
+    
+    .dash-sidebar { 
+        width: 280px; background: rgba(18,18,18,0.8); backdrop-filter: blur(20px);
+        border-right: 1px solid var(--glass-border); padding: 30px 20px;
+        display: flex; flex-direction: column; position: fixed; top: 80px; bottom: 0; left: 0;
+    }
+    
+    .sidebar-user { display: flex; align-items: center; gap: 15px; margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
+    .sidebar-avatar { width: 50px; height: 50px; border-radius: 50%; background: var(--accent-primary); display: flex; align-items: center; justify-content: center; font-weight: 700; color: var(--bg-main); font-size: 1.2rem; }
+    .sidebar-user-info strong { display: block; font-family: var(--font-heading); font-size: 1.1rem; }
+    .sidebar-user-info span { color: var(--text-secondary); font-size: 0.85rem; }
+    
+    .sidebar-nav { flex: 1; display: flex; flex-direction: column; gap: 5px; }
+    .sidebar-link { padding: 15px 20px; border-radius: 12px; color: var(--text-secondary); display: flex; align-items: center; gap: 15px; transition: all 0.3s ease; font-weight: 500; }
+    .sidebar-link i { font-size: 1.1rem; width: 20px; text-align: center; }
+    .sidebar-link:hover, .sidebar-link.active { background: rgba(224, 169, 109, 0.1); color: var(--accent-primary); }
+    
+    .sidebar-bottom { margin-top: auto; }
+    .sidebar-bottom .btn-primary { width: 100%; display: block; text-align: center; background: var(--accent-primary); color: var(--bg-main); padding: 15px; border-radius: 12px; font-weight: 700; }
+    
+    .dash-main { margin-left: 280px; flex: 1; padding: 40px; position: relative; }
+    .dash-section { display: none; animation: slideInRight 0.5s ease forwards; }
+    .dash-section.active { display: block; }
+    
+    .dash-section-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 1px solid var(--glass-border); }
+    .dash-section-header h3 { font-size: 2rem; color: var(--accent-primary); }
+    
+    .welcome-card { background: linear-gradient(135deg, rgba(224,169,109,0.1), transparent); border: 1px solid var(--accent-primary); border-radius: 24px; padding: 40px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
+    .welcome-text h2 { font-size: 2.5rem; margin: 10px 0; }
+    .welcome-text p { color: var(--text-secondary); font-size: 1.1rem; }
+    .welcome-actions { display: flex; gap: 15px; margin-top: 20px; }
+    .welcome-actions a { padding: 12px 25px; border-radius: 30px; font-weight: 600; text-align: center; }
+    .welcome-actions a.btn-primary { background: var(--accent-primary); color: var(--bg-main); }
+    .welcome-actions a.btn-outline { border: 1px solid var(--accent-primary); color: var(--accent-primary); }
+    
+    .kpi-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 40px; }
+    .kpi-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 20px; padding: 25px; display: flex; align-items: center; gap: 20px; transition: transform 0.3s ease; }
+    .kpi-card:hover { transform: translateY(-5px); border-color: var(--accent-primary); }
+    .kpi-icon { width: 50px; height: 50px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; color: #fff; }
+    .kpi-info span { display: block; color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 5px; }
+    .kpi-info strong { font-size: 1.5rem; font-family: var(--font-heading); }
+    
+    .charts-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 30px; margin-bottom: 40px; }
+    .chart-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; }
+    .chart-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .chart-card-header h4 { font-family: var(--font-heading); color: var(--text-primary); }
+    .chart-badge { background: rgba(224,169,109,0.1); color: var(--accent-primary); padding: 5px 10px; border-radius: 10px; font-size: 0.8rem; font-weight: 600; }
+    
+    .dash-card { background: var(--glass-bg); border: 1px solid var(--glass-border); border-radius: 24px; padding: 30px; margin-bottom: 30px; }
+    .dash-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .view-all-link { color: var(--accent-primary); font-size: 0.9rem; font-weight: 600; }
+    
+    .qa-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 15px; }
+    .qa-btn { background: rgba(255,255,255,0.03); border: 1px solid var(--glass-border); padding: 20px; border-radius: 16px; text-align: center; color: var(--text-primary); transition: all 0.3s ease; }
+    .qa-btn:hover { background: var(--accent-primary); color: var(--bg-main); }
+    .qa-btn i { font-size: 1.5rem; display: block; margin-bottom: 10px; }
+    
+    /* Settings Form */
+    .settings-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 30px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; color: var(--text-secondary); margin-bottom: 8px; font-size: 0.9rem; }
+    .form-group input, .form-group select { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; padding: 12px 15px; border-radius: 12px; outline: none; }
+    .settings-card button { width: 100%; background: var(--accent-primary); color: var(--bg-main); border: none; padding: 15px; border-radius: 12px; font-weight: 700; cursor: pointer; margin-top: 10px; }
+    .danger-card button { background: rgba(255, 50, 50, 0.1); color: #ff6b6b; border: 1px solid rgba(255,50,50,0.3); }
+    .danger-card button:hover { background: #ff6b6b; color: #fff; }
+    
+    .expense-table { width: 100%; border-collapse: collapse; }
+    .expense-table th, .expense-table td { padding: 15px; text-align: left; border-bottom: 1px solid var(--glass-border); }
+    .expense-table th { color: var(--text-secondary); font-weight: 500; }
+  </style>
 </head>
 <body>
 
-  <!-- NAVBAR -->
-  <nav class="navbar scrolled" id="navbar">
-    <div class="nav-container">
-      <a href="home.html" class="logo">
-        <i class="fas fa-paper-plane logo-icon"></i>
-        <span>My<strong>Adventure</strong></span>
-      </a>
-      <ul class="nav-links" id="navLinks">
-        <li><a href="dashboard.html" class="active">Dashboard</a></li>
-        <li><a href="destinations.html">Packages</a></li>
-        <li><a href="destinations.html?view=hotels">Hotels</a></li>
-        <li><a href="planner.html">Flights</a></li>
-        <li><a href="mytrips.html">Bookings</a></li>
-        <li><a href="tripbuilder.html" class="nav-highlight"><i class="fas fa-pencil-alt"></i> Create Trip</a></li>
-      </ul>
-      <div class="nav-end">
-        <div class="nav-actions">
-          <button class="btn-theme" id="themeToggle" title="Toggle theme">
-            <i class="fas fa-moon" id="themeIcon"></i>
-          </button>
-          <a href="login.html" class="btn-login" id="navLoginBtn">Login</a>
-          <a href="login.html" class="btn-signup" id="navSignupBtn">Sign up</a>
-        </div>
-        <button class="hamburger" id="hamburger" aria-label="Toggle menu" aria-expanded="false">
-          <span></span><span></span><span></span>
-        </button>
-      </div>
-    </div>
-  </nav>   
- 
-  <!-- DASHBOARD BODY -->
-  <div class="dashboard-wrapper">
+  <div class="ambient-bg"></div>
 
-    <!-- SIDEBAR -->
+  <nav class="glass-nav" style="border-bottom:1px solid rgba(255,255,255,0.05); background:rgba(5,5,5,0.8);">
+    <a href="home.html" class="nav-logo">
+      <i class="fas fa-gem"></i>
+      <span>My<strong>Adventure</strong></span>
+    </a>
+    <div class="nav-right">
+      <a href="dashboard.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Dashboard</a>
+      <a href="destinations.html" style="margin-right:20px;">Packages</a>
+      <a href="destinations.html?view=hotels" style="margin-right:20px;">Stays</a>
+      <a href="planner.html" style="margin-right:20px;">Flights</a>
+      <a href="tripbuilder.html" style="margin-right:20px;">Create Trip</a>
+      <button class="btn-logout magnetic-btn" onclick="logoutUser()" style="border-color:var(--glass-border);"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+  </nav>
+
+  <div class="dashboard-wrapper">
     <aside class="dash-sidebar" id="dashSidebar">
       <div class="sidebar-user">
         <div class="sidebar-avatar" id="sidebarAvatar">T</div>
@@ -55,50 +112,44 @@
         </div>
       </div>
       <nav class="sidebar-nav">
-        <a href="#overview"   class="sidebar-link active" data-section="overview">  <i class="fas fa-th-large"></i>    Overview</a>
-        <a href="#trips"      class="sidebar-link"        data-section="trips">     <i class="fas fa-suitcase-rolling"></i> My Trips</a>
-        <a href="#expenses"   class="sidebar-link"        data-section="expenses">  <i class="fas fa-wallet"></i>       Expenses</a>
-        <a href="#favorites"  class="sidebar-link"        data-section="favorites"> <i class="fas fa-heart"></i>        Favorites</a>
-        <a href="#weather"    class="sidebar-link"        data-section="weather">   <i class="fas fa-cloud-sun"></i>    Weather</a>
-        <a href="#settings"   class="sidebar-link"        data-section="settings">  <i class="fas fa-cog"></i>          Settings</a>
+        <a href="#overview" class="sidebar-link active" data-section="overview"><i class="fas fa-th-large"></i> Overview</a>
+        <a href="#trips" class="sidebar-link" data-section="trips"><i class="fas fa-suitcase"></i> My Bookings</a>
+        <a href="#expenses" class="sidebar-link" data-section="expenses"><i class="fas fa-wallet"></i> Expenses</a>
+        <a href="#favorites" class="sidebar-link" data-section="favorites"><i class="fas fa-heart"></i> Favorites</a>
+        <a href="#weather" class="sidebar-link" data-section="weather"><i class="fas fa-cloud-sun"></i> Weather</a>
+        <a href="#settings" class="sidebar-link" data-section="settings"><i class="fas fa-cog"></i> Settings</a>
       </nav>
       <div class="sidebar-bottom">
-        <a href="planner.html" class="btn-primary full-width">
-          <i class="fas fa-plus"></i> New Trip
-        </a>
+        <a href="tripbuilder.html" class="btn-primary magnetic-btn"><i class="fas fa-plus"></i> Curate New Trip</a>
       </div>
     </aside>
 
-    <!-- MAIN CONTENT -->
     <main class="dash-main" id="dashMain">
-
-      <!-- ── OVERVIEW SECTION ── -->
+      
+      <!-- OVERVIEW -->
       <section class="dash-section active" id="section-overview">
-
-        <!-- Welcome Card -->
         <div class="welcome-card" id="welcomeCard">
           <div class="welcome-text">
-            <p class="welcome-greeting" id="welcomeGreeting">Good morning,</p>
+            <p class="welcome-greeting" id="welcomeGreeting" style="color:var(--accent-primary);">Good morning,</p>
             <h2 id="welcomeName">Traveler! 👋</h2>
-            <p id="welcomeSubtext">You have <strong id="upcomingCount">0</strong> upcoming trips. Ready for your next adventure?</p>
+            <p id="welcomeSubtext">You have <strong id="upcomingCount" style="color:#fff;">0</strong> upcoming trips. Ready for your next luxury escape?</p>
+            <div class="welcome-actions">
+              <a href="tripbuilder.html" class="btn-primary magnetic-btn">Plan Escape</a>
+              <a href="destinations.html" class="btn-outline magnetic-btn">Explore Destinations</a>
+            </div>
           </div>
-          <div class="welcome-actions">
-            <a href="planner.html" class="btn-primary"><i class="fas fa-plus"></i> Plan Trip</a>
-            <a href="destinations.html" class="btn-outline"><i class="fas fa-compass"></i> Explore</a>
-          </div>
-          <div class="welcome-illustration">
-            <i class="fas fa-paper-plane"></i>
+          <div class="welcome-illustration" style="font-size:8rem;color:rgba(255,255,255,0.05);">
+            <i class="fas fa-gem"></i>
           </div>
         </div>
 
-        <!-- KPI Stats Row -->
         <div class="kpi-row" id="kpiRow">
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:linear-gradient(135deg,#0abde3,#00d2d3)"><i class="fas fa-suitcase-rolling"></i></div>
+            <div class="kpi-icon" style="background:linear-gradient(135deg,#e0a96d,#ffcca0)"><i class="fas fa-suitcase"></i></div>
             <div class="kpi-info"><span>Total Trips</span><strong id="kpiTrips">0</strong></div>
           </div>
           <div class="kpi-card">
-            <div class="kpi-icon" style="background:linear-gradient(135deg,#6c5ce7,#a29bfe)"><i class="fas fa-globe-americas"></i></div>
+            <div class="kpi-icon" style="background:linear-gradient(135deg,#00d2ff,#3a7bd5)"><i class="fas fa-globe"></i></div>
             <div class="kpi-info"><span>Packages</span><strong id="kpiDests">0</strong></div>
           </div>
           <div class="kpi-card">
@@ -109,222 +160,125 @@
             <div class="kpi-icon" style="background:linear-gradient(135deg,#fdcb6e,#e67e22)"><i class="fas fa-dollar-sign"></i></div>
             <div class="kpi-info"><span>Total Budget</span><strong id="kpiBudget">$0</strong></div>
           </div>
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:linear-gradient(135deg,#fd79a8,#e84393)"><i class="fas fa-heart"></i></div>
-            <div class="kpi-info"><span>Favorites</span><strong id="kpiFavs">0</strong></div>
-          </div>
-          <div class="kpi-card">
-            <div class="kpi-icon" style="background:linear-gradient(135deg,#e17055,#d63031)"><i class="fas fa-receipt"></i></div>
-            <div class="kpi-info"><span>Total Expenses</span><strong id="kpiExpenses">$0</strong></div>
-          </div>
         </div>
 
-        <!-- Charts Row -->
-        <div class="charts-row">
-
-          <!-- Budget Chart (bar) -->
-          <div class="chart-card">
-            <div class="chart-card-header">
-              <h4><i class="fas fa-chart-bar"></i> Budget per Trip</h4>
-              <span class="chart-badge">Top 6</span>
-            </div>
-            <div class="bar-chart" id="budgetChart"></div>
-          </div>
-
-          <!-- Expense Donut Chart -->
-          <div class="chart-card">
-            <div class="chart-card-header">
-              <h4><i class="fas fa-chart-pie"></i> Expenses by Category</h4>
-              <span class="chart-badge">All trips</span>
-            </div>
-            <div class="donut-wrap">
-              <svg class="donut-svg" id="donutSvg" viewBox="0 0 200 200"></svg>
-              <div class="donut-legend" id="donutLegend"></div>
-            </div>
-          </div>
-
-          <!-- Trip Type Distribution -->
-          <div class="chart-card">
-            <div class="chart-card-header">
-              <h4><i class="fas fa-chart-line"></i> Trip Types</h4>
-              <span class="chart-badge">Distribution</span>
-            </div>
-            <div class="type-chart" id="typeChart"></div>
-          </div>
-
-        </div>
-
-        <!-- Recent Trips -->
         <div class="dash-card">
           <div class="dash-card-header">
-            <h4><i class="fas fa-clock"></i> Recent Trips</h4>
+            <h4><i class="fas fa-clock" style="color:var(--accent-primary);margin-right:10px;"></i> Recent Reservations</h4>
             <a href="#trips" class="view-all-link" onclick="switchSection('trips')">View All <i class="fas fa-arrow-right"></i></a>
           </div>
-          <div class="recent-trips-list" id="recentTripsList"></div>
+          <div class="recent-trips-list" id="recentTripsList" style="color:var(--text-secondary);"></div>
         </div>
 
-        <!-- Quick Actions -->
         <div class="quick-actions" id="quickActions">
-          <h4 class="qa-title"><i class="fas fa-bolt"></i> Quick Actions</h4>
+          <h4 style="margin-bottom:20px;color:var(--accent-primary);font-family:var(--font-heading);"><i class="fas fa-bolt"></i> Quick Actions</h4>
           <div class="qa-grid">
-            <a href="planner.html" class="qa-btn">
-              <i class="fas fa-plus-circle"></i>
-              <span>New Trip</span>
-            </a>
-            <a href="destinations.html" class="qa-btn">
-              <i class="fas fa-compass"></i>
-              <span>Explore</span>
-            </a>
-            <a href="mytrips.html" class="qa-btn">
-              <i class="fas fa-list"></i>
-              <span>All Trips</span>
-            </a>
-            <a href="#favorites" class="qa-btn" onclick="switchSection('favorites')">
-              <i class="fas fa-heart"></i>
-              <span>Favorites</span>
-            </a>
-            <a href="#weather" class="qa-btn" onclick="switchSection('weather')">
-              <i class="fas fa-cloud-sun"></i>
-              <span>Weather</span>
-            </a>
-            <a href="#expenses" class="qa-btn" onclick="switchSection('expenses')">
-              <i class="fas fa-wallet"></i>
-              <span>Expenses</span>
-            </a>
+            <a href="tripbuilder.html" class="qa-btn magnetic-btn"><i class="fas fa-plus-circle"></i><span>New Trip</span></a>
+            <a href="destinations.html" class="qa-btn magnetic-btn"><i class="fas fa-compass"></i><span>Explore</span></a>
+            <a href="#trips" class="qa-btn magnetic-btn" onclick="switchSection('trips')"><i class="fas fa-list"></i><span>All Trips</span></a>
+            <a href="#favorites" class="qa-btn magnetic-btn" onclick="switchSection('favorites')"><i class="fas fa-heart"></i><span>Favorites</span></a>
           </div>
         </div>
-
       </section>
 
-      <!-- ── TRIPS SECTION ── -->
+      <!-- TRIPS -->
       <section class="dash-section" id="section-trips">
         <div class="dash-section-header">
-          <h3>My Trips</h3>
-          <a href="planner.html" class="btn-primary"><i class="fas fa-plus"></i> New Trip</a>
+          <h3>My Bookings</h3>
+          <a href="tripbuilder.html" class="btn-primary magnetic-btn" style="padding:10px 20px;border-radius:12px;background:var(--accent-primary);color:var(--bg-main);font-weight:700;"><i class="fas fa-plus"></i> New Itinerary</a>
         </div>
         <div class="trips-grid" id="dashTripsGrid"></div>
       </section>
 
-      <!-- ── EXPENSES SECTION ── -->
+      <!-- EXPENSES -->
       <section class="dash-section" id="section-expenses">
         <div class="dash-section-header">
           <h3>Expense Tracker</h3>
           <div class="expense-summary-badges" id="expenseSummaryBadges"></div>
         </div>
         <div class="dash-card">
-          <div class="expense-filter-row">
-            <select id="expenseTripFilter" onchange="renderExpensesTable()" class="sort-select">
+          <div style="display:flex;gap:20px;margin-bottom:20px;">
+            <select id="expenseTripFilter" onchange="renderExpensesTable()" style="background:rgba(0,0,0,0.5);border:1px solid var(--glass-border);color:#fff;padding:12px;border-radius:12px;outline:none;">
               <option value="all">All Trips</option>
             </select>
-            <select id="expenseCatFilter" onchange="renderExpensesTable()" class="sort-select">
+            <select id="expenseCatFilter" onchange="renderExpensesTable()" style="background:rgba(0,0,0,0.5);border:1px solid var(--glass-border);color:#fff;padding:12px;border-radius:12px;outline:none;">
               <option value="all">All Categories</option>
-              <option>Flights</option>
-              <option>Accommodation</option>
-              <option>Food</option>
-              <option>Activities</option>
-              <option>Transport</option>
-              <option>Shopping</option>
+              <option>Flights</option><option>Accommodation</option><option>Food</option>
+              <option>Activities</option><option>Transport</option><option>Shopping</option>
             </select>
           </div>
-          <div class="expense-table-wrap">
-            <table class="expense-table" id="expenseTable">
-              <thead>
-                <tr>
-                  <th>Trip</th><th>Category</th><th>Description</th><th>Date</th><th>Amount</th>
-                </tr>
-              </thead>
-              <tbody id="expenseTableBody"></tbody>
-            </table>
-          </div>
-          <div class="expense-total-row">
+          <table class="expense-table" id="expenseTable">
+            <thead><tr><th>Trip</th><th>Category</th><th>Description</th><th>Date</th><th>Amount</th></tr></thead>
+            <tbody id="expenseTableBody"></tbody>
+          </table>
+          <div style="margin-top:20px;display:flex;justify-content:space-between;border-top:1px solid var(--glass-border);padding-top:20px;">
             <span>Showing <strong id="expenseCount">0</strong> expenses</span>
-            <span>Total: <strong id="expenseTotal" style="color:var(--primary)">$0</strong></span>
+            <span style="font-size:1.2rem;">Total: <strong id="expenseTotal" style="color:var(--accent-primary)">$0</strong></span>
           </div>
         </div>
       </section>
 
-      <!-- ── FAVORITES SECTION ── -->
+      <!-- FAVORITES -->
       <section class="dash-section" id="section-favorites">
         <div class="dash-section-header">
           <h3>Favorite Packages</h3>
-          <a href="destinations.html" class="btn-outline"><i class="fas fa-compass"></i> Explore More</a>
+          <a href="destinations.html" class="btn-outline magnetic-btn" style="padding:10px 20px;border:1px solid var(--accent-primary);color:var(--accent-primary);border-radius:12px;"><i class="fas fa-compass"></i> Explore</a>
         </div>
-        <div class="destinations-grid" id="dashFavGrid"></div>
+        <div class="destinations-grid premium-grid" id="dashFavGrid"></div>
       </section>
 
-      <!-- ── WEATHER SECTION ── -->
+      <!-- WEATHER -->
       <section class="dash-section" id="section-weather">
         <div class="dash-section-header">
-          <h3>Weather at Packages</h3>
-          <span class="chart-badge">Live mock data</span>
+          <h3>Weather Radar</h3>
         </div>
-        <div class="weather-grid" id="weatherGrid"></div>
+        <div class="weather-grid" id="weatherGrid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;"></div>
       </section>
 
-      <!-- ── SETTINGS SECTION ── -->
+      <!-- SETTINGS -->
       <section class="dash-section" id="section-settings">
         <div class="dash-section-header"><h3>Settings</h3></div>
         <div class="settings-grid">
-
           <div class="dash-card settings-card">
-            <h4><i class="fas fa-user-circle"></i> Profile</h4>
+            <h4 style="margin-bottom:20px;color:var(--accent-primary);"><i class="fas fa-user-circle"></i> Profile</h4>
             <div class="form-group"><label>Display Name</label><input type="text" id="settingName" placeholder="Your name"/></div>
             <div class="form-group"><label>Email</label><input type="email" id="settingEmail" placeholder="you@example.com"/></div>
-            <button class="btn-primary" onclick="saveProfile()"><i class="fas fa-save"></i> Save Profile</button>
+            <button class="magnetic-btn" onclick="saveProfile()"><i class="fas fa-save"></i> Save Profile</button>
           </div>
 
           <div class="dash-card settings-card">
-            <h4><i class="fas fa-sliders-h"></i> Preferences</h4>
+            <h4 style="margin-bottom:20px;color:var(--accent-primary);"><i class="fas fa-sliders-h"></i> Preferences</h4>
             <div class="form-group">
               <label>Currency</label>
               <select id="settingCurrency">
                 <option value="USD">USD ($)</option>
                 <option value="EUR">EUR (€)</option>
                 <option value="GBP">GBP (£)</option>
-                <option value="JPY">JPY (¥)</option>
                 <option value="INR">INR (₹)</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Default Travelers</label>
-              <input type="number" id="settingTravelers" min="1" max="20" value="2"/>
-            </div>
-            <div class="form-group">
-              <label>Theme</label>
-              <div class="theme-toggle-row">
-                <span>Light</span>
-                <label class="toggle-switch">
-                  <input type="checkbox" id="themeCheckbox" onchange="toggleThemeFromSettings()"/>
-                  <span class="toggle-slider"></span>
-                </label>
-                <span>Dark</span>
-              </div>
-            </div>
-            <button class="btn-primary" onclick="savePreferences()"><i class="fas fa-save"></i> Save Preferences</button>
+            <div class="form-group"><label>Default Travelers</label><input type="number" id="settingTravelers" min="1" max="20" value="2"/></div>
+            <button class="magnetic-btn" onclick="savePreferences()"><i class="fas fa-save"></i> Save Preferences</button>
           </div>
 
           <div class="dash-card settings-card danger-card" data-role="admin">
-            <h4><i class="fas fa-database"></i> Data Management</h4>
-            <p style="font-size:0.85rem;color:var(--text);margin-bottom:16px;">Admin only — seeding reloads sample trips and catalog data.</p>
-            <div style="display:flex;flex-direction:column;gap:10px;">
-              <button class="btn-primary" onclick="reseedData()"><i class="fas fa-seedling"></i> Re-seed Mock Data</button>
-              <button class="btn-outline-danger" onclick="clearAppData()"><i class="fas fa-trash"></i> Clear All App Data</button>
-            </div>
-            <div class="storage-info" id="storageInfo"></div>
+            <h4 style="margin-bottom:20px;color:#ff6b6b;"><i class="fas fa-database"></i> System Admin</h4>
+            <button class="magnetic-btn" onclick="reseedData()"><i class="fas fa-seedling"></i> Re-seed Database</button>
+            <button class="magnetic-btn" onclick="clearAppData()"><i class="fas fa-trash"></i> Wipe All Data</button>
+            <div class="storage-info" id="storageInfo" style="margin-top:20px;color:var(--text-secondary);font-size:0.85rem;"></div>
           </div>
-
         </div>
       </section>
 
     </main>
   </div>
 
-  <!-- TOAST -->
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast" style="position:fixed;bottom:20px;right:20px;background:var(--accent-primary);color:#000;padding:15px 30px;border-radius:12px;font-weight:600;z-index:10000;display:none;"></div>
 
   <script src="js/storage.js"></script>
   <script src="js/session.js"></script>
   <script src="js/mockdata.js"></script>
+  <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
   <script src="js/dashboard.js"></script>
 </body>

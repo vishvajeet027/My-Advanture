@@ -1,51 +1,234 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <script src="js/theme-init.js"></script>
-  <title>Home - MyAdventure</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="css/home.css"/>
+  <title>Home - MyAdventure Premium</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
+  <link rel="stylesheet" href="css/premium-global.css" />
+  <link rel="stylesheet" href="css/animations.css" />
+  <style>
+    /* Home Specific Styles */
+    .hero-section {
+      position: relative;
+      height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      overflow: hidden;
+      padding: var(--section-pad);
+    }
+
+
+    .hero-video-bg {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      z-index: -2;
+      filter: brightness(0.4) saturate(1.2);
+    }
+
+    .hero-overlay-mesh {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: radial-gradient(circle at center, transparent 0%, var(--bg-main) 100%);
+      z-index: -1;
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 10;
+      max-width: 900px;
+    }
+
+    .hero-greeting {
+      font-size: 1.2rem;
+      text-transform: uppercase;
+      letter-spacing: 4px;
+      color: var(--accent-primary);
+      margin-bottom: 20px;
+    }
+
+    .hero-title {
+      font-size: 5rem;
+      margin-bottom: 30px;
+      line-height: 1.1;
+      background: linear-gradient(to right, #ffffff, #d3d3d3);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero-sub {
+      font-size: 1.2rem;
+      color: var(--text-secondary);
+      margin-bottom: 50px;
+      max-width: 600px;
+      margin-inline: auto;
+    }
+
+    /* Cards Grid */
+    .destinations-wrapper {
+      padding: 100px 5%;
+      position: relative;
+      z-index: 10;
+      background: var(--bg-main);
+    }
+
+    .section-header {
+      text-align: center;
+      margin-bottom: 60px;
+    }
+
+    .section-header h2 {
+      font-size: 3rem;
+      margin-bottom: 15px;
+    }
+
+    .section-header p {
+      color: var(--text-secondary);
+      font-size: 1.1rem;
+    }
+
+    .premium-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 30px;
+      max-width: var(--container-max);
+      margin: 0 auto;
+    }
+
+
+
+    /* Stats Section */
+    .stats-section {
+      padding: 80px 5%;
+      background: #080808;
+      border-top: 1px solid var(--glass-border);
+      border-bottom: 1px solid var(--glass-border);
+    }
+
+    .stats-row {
+      display: flex;
+      justify-content: space-around;
+      flex-wrap: wrap;
+      max-width: var(--container-max);
+      margin: 0 auto;
+      gap: 40px;
+    }
+
+    .stat-item {
+      text-align: center;
+      position: relative;
+    }
+
+    .stat-item strong {
+      display: block;
+      font-size: 3.5rem;
+      font-family: var(--font-heading);
+      background: linear-gradient(135deg, var(--accent-primary), #ffd29d);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      font-weight: 800;
+    }
+
+    .stat-item span {
+      font-size: 1.1rem;
+      color: var(--text-secondary);
+      letter-spacing: 2px;
+      text-transform: uppercase;
+    }
+
+    .scroll-indicator {
+      position: absolute;
+      bottom: 40px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+      color: rgba(255, 255, 255, 0.5);
+      animation: float 4s ease-in-out infinite;
+    }
+
+    .scroll-indicator .line {
+      width: 1px;
+      height: 40px;
+      background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), transparent);
+    }
+  </style>
 </head>
+
 <body>
 
-  <div class="home-bg"></div>
+  <div class="ambient-bg"></div>
 
-  <nav class="home-nav">
+  <nav class="glass-nav reveal-on-scroll">
     <a href="home.html" class="nav-logo">
-      <i class="fas fa-paper-plane"></i>
+      <i class="fas fa-gem"></i>
       <span>My<strong>Adventure</strong></span>
     </a>
     <div class="nav-right">
-      <span class="nav-role-badge" id="navRoleBadge">Tourist</span>
-      <div class="nav-avatar" id="navAvatar">T</div>
+      <span class="nav-role-badge magnetic-btn" id="navRoleBadge">Tourist</span>
+      <div class="nav-avatar magnetic-btn" id="navAvatar">T</div>
       <span class="nav-user-name" id="navUserName">Traveler</span>
-      <button class="btn-logout" onclick="logoutUser()">
+      <button class="btn-logout magnetic-btn" onclick="logoutUser()">
         <i class="fas fa-sign-out-alt"></i> Logout
       </button>
     </div>
   </nav>
 
-  <div class="home-hero">
-    <p class="greeting" id="heroGreeting">Welcome back</p>
-    <h1 id="heroTitle">Where do you want<br>to go today?</h1>
-    <p id="heroSub">Pick an option below to start planning your next adventure.</p>
+  <div class="hero-section">
+    <!-- Using a luxury travel video for the hero -->
+    <video class="hero-video-bg" autoplay muted loop playsinline>
+      <source src="https://cdn.pixabay.com/video/2019/08/07/25828-352295662_large.mp4" type="video/mp4">
+    </video>
+    <div class="hero-overlay-mesh"></div>
+
+    <div class="hero-content">
+      <p class="hero-greeting anim-reveal delay-1" id="heroGreeting">Welcome back</p>
+      <h1 class="hero-title anim-reveal delay-2" id="heroTitle">Discover the<br>Extraordinary</h1>
+      <p class="hero-sub anim-reveal delay-3" id="heroSub">Embark on a journey curated just for you. Select an
+        experience below.</p>
+    </div>
+
+    <div class="scroll-indicator">
+      <span>Scroll</span>
+      <div class="line"></div>
+    </div>
   </div>
 
-  <div class="cards-section">
-    <div class="cards-grid" id="hubCards"></div>
+  <div class="destinations-wrapper">
+    <div class="section-header reveal-on-scroll">
+      <h2>Curated Experiences</h2>
+      <p>Select your path to luxury</p>
+    </div>
+    <!-- The JavaScript will inject the new premium cards here -->
+    <div class="premium-grid" id="hubCards"></div>
   </div>
 
-  <div class="stats-row" id="statsRow">
-    <div class="stat-item"><strong>200+</strong><span>Packages</span></div>
-    <div class="stat-item"><strong>50K+</strong><span>Happy Travelers</span></div>
-    <div class="stat-item"><strong>1000+</strong><span>Hotels</span></div>
-    <div class="stat-item"><strong>500+</strong><span>Flight Routes</span></div>
+  <div class="stats-section">
+    <div class="stats-row reveal-on-scroll" id="statsRow">
+      <div class="stat-item magnetic-btn"><strong>200+</strong><span>Exclusive Packages</span></div>
+      <div class="stat-item magnetic-btn"><strong>50K+</strong><span>Elite Travelers</span></div>
+      <div class="stat-item magnetic-btn"><strong>1000+</strong><span>Luxury Stays</span></div>
+      <div class="stat-item magnetic-btn"><strong>500+</strong><span>First Class Routes</span></div>
+    </div>
   </div>
 
   <script src="js/session.js"></script>
+  <script src="js/animations.js"></script>
   <script>
     (function () {
       var s = AuthSession.requireAuth();
@@ -65,118 +248,117 @@
       badge.classList.toggle('admin', isAdmin);
 
       document.getElementById('heroTitle').innerHTML = isAdmin
-        ? 'Manage the travel<br>catalog'
-        : 'Where do you want<br>to go today?';
+        ? 'Manage The<br>Experience'
+        : 'Discover The<br>Extraordinary';
       document.getElementById('heroSub').textContent = isAdmin
-        ? 'Add hotels, places, vehicles, and flights — or review traveler activity.'
-        : 'Pick an option below to start planning your next adventure.';
+        ? 'Curate the finest hotels, vehicles, and flights for our elite clientele.'
+        : 'Embark on a journey curated just for you. Select an experience below.';
 
       var touristCards = [
         {
-          href: 'destinations.html', cls: 'packages', badge: 'Popular', icon: 'fa-box-open',
-          title: 'Packages', desc: 'Curated all-inclusive travel packages for every budget and style.',
+          href: 'destinations.html', badge: 'Signature', icon: 'fa-gem',
+          title: 'Packages', desc: 'Curated all-inclusive luxury travel packages.',
           cta: 'Explore Packages'
         },
         {
-          href: 'destinations.html?view=hotels', cls: 'hotels', badge: 'Top Rated', icon: 'fa-hotel',
-          title: 'Hotels', desc: 'Browse and book top-rated hotels worldwide at the best prices.',
-          cta: 'Browse Hotels'
+          href: 'destinations.html?view=hotels', badge: '5-Star', icon: 'fa-hotel',
+          title: 'Stays', desc: 'Book world-class suites and private villas.',
+          cta: 'Browse Stays'
         },
         {
-          href: 'planner.html', cls: 'flights', badge: 'Best Deals', icon: 'fa-plane-departure',
-          title: 'Flights', desc: 'Find the cheapest flights to your dream destinations worldwide.',
+          href: 'planner.html', badge: 'First Class', icon: 'fa-plane',
+          title: 'Flights', desc: 'Secure premium seating worldwide.',
           cta: 'Search Flights'
         },
         {
-          href: 'tripbuilder.html', cls: 'create', badge: 'Custom', icon: 'fa-map-marked-alt',
-          title: 'Create Your Trip', desc: 'Build a personalised day-by-day itinerary from scratch, your way.',
+          href: 'tripbuilder.html', badge: 'Bespoke', icon: 'fa-compass',
+          title: 'Create Journey', desc: 'Design your personalized itinerary.',
           cta: 'Start Planning'
         },
         {
-          href: 'mytrips.html', cls: 'bookings', badge: 'Yours', icon: 'fa-suitcase-rolling',
-          title: 'My Bookings', desc: 'View, manage, and revisit the trips you have saved.',
+          href: 'mytrips.html', badge: 'Yours', icon: 'fa-suitcase',
+          title: 'My Bookings', desc: 'Review your upcoming private escapes.',
           cta: 'Open Bookings'
         },
         {
-          href: 'dashboard.html', cls: 'dash', badge: 'Overview', icon: 'fa-chart-pie',
-          title: 'Dashboard', desc: 'Track budgets, favorites, weather, and trip stats in one place.',
+          href: 'dashboard.html', badge: 'Overview', icon: 'fa-chart-pie',
+          title: 'Dashboard', desc: 'Manage your profile and travel statistics.',
           cta: 'Open Dashboard'
         }
       ];
 
       var adminCards = [
         {
-          href: 'admin.html', cls: 'create', badge: 'Admin', icon: 'fa-database',
-          title: 'Manage Catalog', desc: 'Add and edit hotels, places, vehicles, and flights for the whole app.',
+          href: 'admin.html', badge: 'Command', icon: 'fa-database',
+          title: 'Catalog', desc: 'Manage luxury listings across the platform.',
           cta: 'Open Catalog'
         },
         {
-          href: 'destinations.html?view=hotels', cls: 'hotels', badge: 'Hotels', icon: 'fa-hotel',
-          title: 'Hotels Preview', desc: 'See how travelers browse the hotel catalog you manage.',
-          cta: 'View Hotels'
+          href: 'destinations.html?view=hotels', badge: 'Preview', icon: 'fa-hotel',
+          title: 'Stays Preview', desc: 'Review active 5-star hotel listings.',
+          cta: 'View Stays'
         },
         {
-          href: 'planner.html', cls: 'flights', badge: 'Flights', icon: 'fa-plane-departure',
-          title: 'Flights Preview', desc: 'Review the flight options available to tourists.',
+          href: 'planner.html', badge: 'Preview', icon: 'fa-plane',
+          title: 'Flights Preview', desc: 'Review flight routes available.',
           cta: 'View Flights'
         },
         {
-          href: 'destinations.html', cls: 'packages', badge: 'Packages', icon: 'fa-box-open',
-          title: 'Packages', desc: 'Browse destination packages shown on the tourist side.',
+          href: 'destinations.html', badge: 'Preview', icon: 'fa-gem',
+          title: 'Packages', desc: 'Review active luxury destination packages.',
           cta: 'View Packages'
         },
         {
-          href: 'mytrips.html', cls: 'bookings', badge: 'All', icon: 'fa-suitcase-rolling',
-          title: 'All Trips', desc: 'Review every traveler trip saved in the system.',
+          href: 'mytrips.html', badge: 'Monitoring', icon: 'fa-suitcase',
+          title: 'All Trips', desc: 'Review traveler itineraries system-wide.',
           cta: 'View Trips'
         },
         {
-          href: 'dashboard.html', cls: 'dash', badge: 'Analytics', icon: 'fa-chart-pie',
-          title: 'Dashboard', desc: 'System overview plus mock data reseed and clear tools.',
+          href: 'dashboard.html', badge: 'Analytics', icon: 'fa-chart-pie',
+          title: 'Dashboard', desc: 'Platform analytics and system tools.',
           cta: 'Open Dashboard'
         }
       ];
 
       var cards = isAdmin ? adminCards : touristCards;
-      document.getElementById('hubCards').innerHTML = cards.map(function (c) {
+
+      var bgs = isAdmin
+        ? [
+          'https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=800&q=80',
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+          'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
+          'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
+          'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+          'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+        ]
+        : [
+          'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
+          'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
+          'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
+          'https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=800&q=80',
+          'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
+          'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
+        ];
+
+      document.getElementById('hubCards').innerHTML = cards.map(function (c, i) {
         return (
-          '<a href="' + c.href + '" class="hub-card ' + c.cls + '">' +
-            '<div class="card-bg" style="background-image:url(\'\')"></div>' +
-            '<div class="card-gradient"></div>' +
-            '<div class="card-overlay"></div>' +
-            '<span class="card-badge">' + c.badge + '</span>' +
-            '<div class="card-content">' +
-              '<div class="card-icon"><i class="fas ' + c.icon + '"></i></div>' +
-              '<div class="card-title">' + c.title + '</div>' +
-              '<div class="card-desc">' + c.desc + '</div>' +
-              '<div class="card-arrow">' + c.cta + ' <i class="fas fa-arrow-right"></i></div>' +
-            '</div>' +
+          '<a href="' + c.href + '" class="premium-card hover-lift reveal-on-scroll">' +
+          '<div class="premium-card-img" style="background-image:url(\'' + bgs[i] + '\')"></div>' +
+          '<div class="premium-card-gradient"></div>' +
+          '<div class="premium-card-glow"></div>' +
+          '<span class="premium-card-badge">' + c.badge + '</span>' +
+          '<div class="premium-card-icon"><i class="fas ' + c.icon + '"></i></div>' +
+          '<div class="premium-card-content">' +
+          '<div class="premium-card-title">' + c.title + '</div>' +
+          '<div class="premium-card-desc">' + c.desc + '</div>' +
+          '<div class="premium-card-cta">' + c.cta + ' <i class="fas fa-arrow-right"></i></div>' +
+          '</div>' +
           '</a>'
         );
       }).join('');
 
-      // restore photo backgrounds
-      var bgs = isAdmin
-        ? [
-            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
-            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
-            'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
-            'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
-          ]
-        : [
-            'https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=800&q=80',
-            'https://images.unsplash.com/photo-1566073771259-6a8506099945?w=800&q=80',
-            'https://images.unsplash.com/photo-1436491865332-7a61a109cc05?w=800&q=80',
-            'https://images.unsplash.com/photo-1488646953014-85cb44e25828?w=800&q=80',
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800&q=80',
-            'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=800&q=80'
-          ];
-      document.querySelectorAll('#hubCards .card-bg').forEach(function (el, i) {
-        el.style.backgroundImage = "url('" + bgs[i] + "')";
-      });
     })();
   </script>
 </body>
+
 </html>
