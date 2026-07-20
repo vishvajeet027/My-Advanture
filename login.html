@@ -53,21 +53,24 @@
       padding: 60px;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       position: relative;
     }
 
     .auth-brand {
-      position: absolute;
-      top: 40px; left: 60px;
       font-family: var(--font-heading);
       font-size: 1.5rem;
       font-weight: 800;
       display: flex; align-items: center; gap: 10px;
       letter-spacing: 1px;
+      margin-bottom: 40px;
     }
     .auth-brand i { color: var(--accent-primary); }
 
+    .auth-panels {
+      margin-top: auto;
+      margin-bottom: auto;
+    }
+    
     .auth-panel { display: none; opacity: 0; transition: opacity 0.4s ease; }
     .auth-panel.active { display: block; opacity: 1; }
 
@@ -79,9 +82,9 @@
     .input-wrap i { position: absolute; left: 20px; top: 50%; transform: translateY(-50%); color: var(--text-secondary); }
     .input-wrap input {
       width: 100%;
-      background: rgba(0,0,0,0.4);
+      background: var(--bg-main);
       border: 1px solid var(--glass-border);
-      color: #fff;
+      color: var(--text-primary);
       padding: 18px 20px 18px 50px;
       border-radius: 16px;
       font-family: var(--font-body);
@@ -89,7 +92,7 @@
       outline: none;
       transition: all 0.3s ease;
     }
-    .input-wrap input:focus { border-color: var(--accent-primary); background: rgba(0,0,0,0.6); }
+    .input-wrap input:focus { border-color: var(--accent-primary); background: var(--bg-secondary); }
 
     .auth-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; font-size: 0.9rem; }
     .remember-me { color: var(--text-secondary); display: flex; align-items: center; gap: 8px; cursor: pointer; }
@@ -98,7 +101,7 @@
     .btn-auth {
       width: 100%;
       background: var(--accent-primary);
-      color: var(--bg-main);
+      color: #ffffff;
       border: none;
       padding: 18px;
       border-radius: 16px;
@@ -132,6 +135,7 @@
       flex: 1.2;
       position: relative;
       background: url('https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=1600&q=80') center/cover;
+      transition: background-image 1s ease-in-out;
     }
     
     .auth-right-overlay {
@@ -170,7 +174,7 @@
   <div class="auth-container">
     <div class="auth-left">
       <div class="auth-brand">
-        <a href="home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:#fff;">
+        <a href="home.html" style="display:flex;align-items:center;gap:10px;text-decoration:none;color:var(--text-primary);">
           <i class="fas fa-gem"></i>
           <span>My<strong>Adventure</strong></span>
         </a>
@@ -360,6 +364,24 @@
             t.style.display = 'none';
         }, 3000);
     };
+
+    // Background Slideshow
+    document.addEventListener("DOMContentLoaded", () => {
+      const authRight = document.querySelector('.auth-right');
+      const backgrounds = [
+        "url('https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=1600&q=80')", // Beach
+        "url('https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1600&q=80')", // Dubai/City
+        "url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1600&q=80')", // Paris
+        "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80')", // Mountains
+        "url('https://images.unsplash.com/photo-1519046904884-53103b34b206?w=1600&q=80')"  // Tropical
+      ];
+      let currentBg = 0;
+      
+      setInterval(() => {
+        currentBg = (currentBg + 1) % backgrounds.length;
+        authRight.style.backgroundImage = backgrounds[currentBg];
+      }, 5000); // Change image every 5 seconds
+    });
   </script>
 </body>
 </html>

@@ -23,16 +23,25 @@
       padding: var(--section-pad);
     }
 
-
-    .hero-video-bg {
+    .hero-image-bg {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      object-fit: cover;
       z-index: -2;
       filter: brightness(0.4) saturate(1.2);
+    }
+    .hero-slide {
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-size: cover;
+      background-position: center;
+      opacity: 0;
+      transition: opacity 1.5s ease-in-out;
+    }
+    .hero-slide.active {
+      opacity: 1;
     }
 
     .hero-overlay-mesh {
@@ -190,10 +199,8 @@
   </nav>
 
   <div class="hero-section">
-    <!-- Using a luxury travel video for the hero -->
-    <video class="hero-video-bg" autoplay muted loop playsinline>
-      <source src="https://cdn.pixabay.com/video/2019/08/07/25828-352295662_large.mp4" type="video/mp4">
-    </video>
+    <!-- Using a luxury travel image slideshow for the hero -->
+    <div class="hero-image-bg" id="homeHeroBg"></div>
     <div class="hero-overlay-mesh"></div>
 
     <div class="hero-content">
@@ -256,27 +263,27 @@
 
       var touristCards = [
         {
-          href: 'destinations.html', badge: 'Signature', icon: 'fa-gem',
+          href: 'explore.html', badge: 'Signature', icon: 'fa-gem',
           title: 'Packages', desc: 'Curated all-inclusive luxury travel packages.',
           cta: 'Explore Packages'
         },
         {
-          href: 'destinations.html?view=hotels', badge: '5-Star', icon: 'fa-hotel',
+          href: 'explore.html?view=hotels', badge: '5-Star', icon: 'fa-hotel',
           title: 'Stays', desc: 'Book world-class suites and private villas.',
           cta: 'Browse Stays'
         },
         {
-          href: 'planner.html', badge: 'First Class', icon: 'fa-plane',
+          href: 'flights.html', badge: 'First Class', icon: 'fa-plane',
           title: 'Flights', desc: 'Secure premium seating worldwide.',
           cta: 'Search Flights'
         },
         {
-          href: 'tripbuilder.html', badge: 'Bespoke', icon: 'fa-compass',
+          href: 'trip-planner.html', badge: 'Bespoke', icon: 'fa-compass',
           title: 'Create Journey', desc: 'Design your personalized itinerary.',
           cta: 'Start Planning'
         },
         {
-          href: 'mytrips.html', badge: 'Yours', icon: 'fa-suitcase',
+          href: 'my-bookings.html', badge: 'Yours', icon: 'fa-suitcase',
           title: 'My Bookings', desc: 'Review your upcoming private escapes.',
           cta: 'Open Bookings'
         },
@@ -294,22 +301,22 @@
           cta: 'Open Catalog'
         },
         {
-          href: 'destinations.html?view=hotels', badge: 'Preview', icon: 'fa-hotel',
+          href: 'explore.html?view=hotels', badge: 'Preview', icon: 'fa-hotel',
           title: 'Stays Preview', desc: 'Review active 5-star hotel listings.',
           cta: 'View Stays'
         },
         {
-          href: 'planner.html', badge: 'Preview', icon: 'fa-plane',
+          href: 'flights.html', badge: 'Preview', icon: 'fa-plane',
           title: 'Flights Preview', desc: 'Review flight routes available.',
           cta: 'View Flights'
         },
         {
-          href: 'destinations.html', badge: 'Preview', icon: 'fa-gem',
+          href: 'explore.html', badge: 'Preview', icon: 'fa-gem',
           title: 'Packages', desc: 'Review active luxury destination packages.',
           cta: 'View Packages'
         },
         {
-          href: 'mytrips.html', badge: 'Monitoring', icon: 'fa-suitcase',
+          href: 'my-bookings.html', badge: 'Monitoring', icon: 'fa-suitcase',
           title: 'All Trips', desc: 'Review traveler itineraries system-wide.',
           cta: 'View Trips'
         },
@@ -358,6 +365,43 @@
       }).join('');
 
     })();
+
+    // Home Hero Slideshow (every 3 seconds without blinking)
+    document.addEventListener("DOMContentLoaded", () => {
+      const heroBg = document.getElementById('homeHeroBg');
+      if (heroBg) {
+        const places = [
+          "url('https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=1600&q=80')", // Mountains
+          "url('https://images.unsplash.com/photo-1542314831-c6a4d14faaf2?w=1600&q=80')", // Beach
+          "url('https://images.unsplash.com/photo-1499856871958-5b9627545d1a?w=1600&q=80')", // Paris
+          "url('https://images.unsplash.com/photo-1518684079-3c830dcef090?w=1600&q=80')", // Dubai
+          "url('https://images.unsplash.com/photo-1470071131384-001b85755b36?w=1600&q=80')", // European City
+          "url('https://images.unsplash.com/photo-1506929562872-bb421503ef21?w=1600&q=80')", // Tropical Beach
+          "url('https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=1600&q=80')", // Adventure Road
+          "url('https://images.unsplash.com/photo-1533105079780-92b9be482077?w=1600&q=80')", // Greece Santorini
+          "url('https://images.unsplash.com/photo-1523906834658-6e24ef2386f9?w=1600&q=80')", // Venice Italy
+          "url('https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1600&q=80')"  // Skyline City
+        ];
+        
+        // Create slide divs
+        const slides = [];
+        places.forEach((url, idx) => {
+          const slide = document.createElement('div');
+          slide.className = 'hero-slide';
+          if (idx === 0) slide.classList.add('active');
+          slide.style.backgroundImage = url;
+          heroBg.appendChild(slide);
+          slides.push(slide);
+        });
+
+        let currentIdx = 0;
+        setInterval(() => {
+          slides[currentIdx].classList.remove('active');
+          currentIdx = (currentIdx + 1) % slides.length;
+          slides[currentIdx].classList.add('active');
+        }, 3000);
+      }
+    });
   </script>
 </body>
 
