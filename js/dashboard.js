@@ -328,11 +328,11 @@ function renderFavorites() {
   if (!el) return;
   const favs = getFavs();
   if (!favs.length) {
-    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-heart"></i></div><h3>No favorites yet</h3><p>Explore packages and save your favorites.</p><a href="explore.html" class="btn-primary"><i class="fas fa-compass"></i> Explore</a></div>';
+    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-heart"></i></div><h3>No favorites yet</h3><p>Explore packages and save your favorites.</p><a href="package.html" class="btn-primary"><i class="fas fa-compass"></i> Explore</a></div>';
     return;
   }
   el.innerHTML = favs.map(f => `
-    <div class="dest-grid-card" onclick="window.location.href='explore.html'">
+    <div class="dest-grid-card" onclick="window.location.href='package.html'">
       <div class="card-img-wrap">
         <img src="${f.image}" alt="${f.name}" loading="lazy"/>
         <span class="card-category"><i class="fas fa-heart"></i> Saved</span>

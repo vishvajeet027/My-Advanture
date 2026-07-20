@@ -93,15 +93,15 @@ function applyRoleBasedNav() {
     ? [
         { href: 'dashboard.html', label: 'Dashboard' },
         { href: 'admin.html', label: 'Manage Catalog' },
-        { href: 'explore.html', label: 'Packages' },
-        { href: 'explore.html?view=hotels', label: 'Hotels' },
+        { href: 'package.html', label: 'Packages' },
+        { href: 'package.html?view=hotels', label: 'Hotels' },
         { href: 'flights.html', label: 'Flights' },
         { href: 'my-bookings.html', label: 'All Trips' },
       ]
     : [
         { href: 'dashboard.html', label: 'Dashboard' },
-        { href: 'explore.html', label: 'Packages' },
-        { href: 'explore.html?view=hotels', label: 'Hotels' },
+        { href: 'package.html', label: 'Packages' },
+        { href: 'package.html?view=hotels', label: 'Hotels' },
         { href: 'flights.html', label: 'Flights' },
         { href: 'my-bookings.html', label: 'Bookings' },
         { href: 'trip-planner.html', label: 'Create Trip', highlight: true, icon: 'fas fa-pencil-alt' },
@@ -113,8 +113,8 @@ function applyRoleBasedNav() {
     const currentView = new URLSearchParams(window.location.search).get('view');
     const linkView = l.href.includes('view=') ? new URLSearchParams(l.href.split('?')[1] || '').get('view') : null;
     let active = currentFile === linkFile;
-    if (linkFile === 'explore.html') {
-      active = currentFile === 'explore.html' && currentView === linkView;
+    if (linkFile === 'package.html') {
+      active = currentFile === 'package.html' && currentView === linkView;
     }
     const cls = [
       active ? 'active' : '',
