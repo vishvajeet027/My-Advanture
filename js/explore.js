@@ -1,5 +1,5 @@
 /* ================================================================
-   destinations.js — Premium Version
+   explore.js — Premium Version
    ================================================================ */
 
 const urlParams = new URLSearchParams(window.location.search);
@@ -50,9 +50,6 @@ function renderCards(data) {
       <div class="premium-card-gradient"></div>
       <div class="premium-card-glow"></div>
       <span class="premium-card-badge">${d.badge}</span>
-      <div class="premium-card-icon" style="top:20px;left:auto;right:20px;font-size:0.9rem;width:auto;border-radius:20px;padding:5px 10px;">
-        <i class="fas fa-star" style="color:var(--accent-primary)"></i> ${d.rating}
-      </div>
       <div class="premium-card-content">
         <div class="premium-card-title">${d.name}</div>
         <div class="premium-card-desc" style="display:flex; justify-content:space-between; margin-bottom:5px;">
@@ -233,9 +230,7 @@ function renderHotelCards(data) {
       <div class="premium-card-img" style="background-image:url('${h.image}')"></div>
       <div class="premium-card-gradient"></div>
       <div class="premium-card-glow"></div>
-      <div class="premium-card-icon" style="top:20px;left:auto;right:20px;font-size:0.9rem;width:auto;border-radius:20px;padding:5px 10px;">
-        <i class="fas fa-star" style="color:var(--accent-primary)"></i> ${h.rating}
-      </div>
+      <span class="premium-card-badge" style="background:var(--accent-primary);color:#080808;font-weight:700;">$${h.price} / night</span>
       <div class="premium-card-content">
         <div class="premium-card-title">${h.name}</div>
         <div class="premium-card-desc" style="display:flex; justify-content:space-between; margin-bottom:5px;">

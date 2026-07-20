@@ -22,7 +22,29 @@
     
     /* Re-styling the sidebar components for luxury */
     .sidebar-city-picker label, .sidebar-days-picker label { font-family: var(--font-heading); font-size: 1.2rem; color: var(--accent-primary); margin-bottom: 15px; display: block; }
-    #citySelect { width: 100%; background: rgba(0,0,0,0.5); border: 1px solid var(--glass-border); color: #fff; padding: 15px; border-radius: 12px; font-family: var(--font-body); outline: none; margin-bottom:20px; }
+    /* Custom Dropdown Styles */
+    .custom-dropdown { position: relative; width: 100%; margin-bottom: 20px; font-family: var(--font-body); }
+    .dropdown-selected {
+      background: var(--bg-main); border: 1px solid var(--glass-border); color: var(--text-primary);
+      padding: 15px; border-radius: 12px; cursor: pointer; display: flex; justify-content: space-between;
+      align-items: center; transition: border-color 0.3s ease;
+    }
+    .dropdown-selected:hover { border-color: var(--accent-primary); }
+    .dropdown-options {
+      position: absolute; top: 100%; left: 0; width: 100%; background: var(--bg-main);
+      border: 1px solid var(--glass-border); border-radius: 12px; margin-top: 5px;
+      max-height: 250px; overflow-y: auto; z-index: 100; box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+    }
+    .dropdown-options.hidden { display: none; }
+    .dropdown-option {
+      padding: 15px; cursor: pointer; color: var(--text-primary); transition: background 0.2s ease, color 0.2s ease;
+    }
+    .dropdown-option:hover { background: var(--accent-primary); color: #ffffff; }
+    /* Custom Scrollbar for Options */
+    .dropdown-options::-webkit-scrollbar { width: 8px; }
+    .dropdown-options::-webkit-scrollbar-track { background: transparent; }
+    .dropdown-options::-webkit-scrollbar-thumb { background: var(--glass-border); border-radius: 4px; }
+    .dropdown-options::-webkit-scrollbar-thumb:hover { background: #b0b0b0; }
     .city-preview { display: flex; align-items: center; gap: 15px; margin-bottom: 30px; background: rgba(255,255,255,0.05); padding: 15px; border-radius: 12px; border: 1px solid var(--glass-border); }
     #cityPreviewImg { width: 60px; height: 60px; border-radius: 50%; object-fit: cover; }
     
@@ -65,11 +87,11 @@
       <span>My<strong>Adventure</strong></span>
     </a>
     <div class="nav-right">
-      <a href="destinations.html" style="margin-right:20px;">Packages</a>
-      <a href="destinations.html?view=hotels" style="margin-right:20px;">Stays</a>
-      <a href="planner.html" style="margin-right:20px;">Flights</a>
+      <a href="explore.html" style="margin-right:20px;">Packages</a>
+      <a href="explore.html?view=hotels" style="margin-right:20px;">Stays</a>
+      <a href="flights.html" style="margin-right:20px;">Flights</a>
       <a href="dashboard.html" style="margin-right:20px;">Dashboard</a>
-      <a href="tripbuilder.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Create Trip</a>
+      <a href="trip-planner.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Create Trip</a>
       <a href="login.html" class="nav-role-badge magnetic-btn" style="text-decoration:none;border:1px solid var(--glass-border)">Login</a>
     </div>
   </nav>
@@ -81,9 +103,15 @@
       <aside class="trip-sidebar reveal-on-scroll is-visible">
         <div class="sidebar-city-picker">
           <label for="citySelect"><i class="fas fa-map-marker-alt"></i> Destination</label>
-          <select id="citySelect" onchange="onCityChange()">
-            <option value="">Select your destination...</option>
-          </select>
+          <div class="custom-dropdown" id="customCityDropdown">
+            <div class="dropdown-selected" onclick="toggleDropdown()">
+              <span id="dropdownSelectedText">Select your destination...</span>
+              <i class="fas fa-chevron-down"></i>
+            </div>
+            <div class="dropdown-options hidden" id="dropdownOptionsList">
+              <!-- Options injected by JS -->
+            </div>
+          </div>
           <div id="cityPreview" class="city-preview hidden">
             <img id="cityPreviewImg" src="" alt=""/>
             <div>
@@ -195,6 +223,6 @@
   <script src="js/mockdata.js"></script>
   <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
-  <script src="js/tripbuilder.js"></script>
+  <script src="js/trip-planner.js"></script>
 </body>
 </html>

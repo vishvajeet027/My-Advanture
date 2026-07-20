@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume - Harsh Dodiya</title>
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --dark-color: #3b3a36;
+            --light-color: #f0eee4;
+            --text-dark: #222;
+            --text-light: #fff;
+            --accent-line: #a0a0a0;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #cccccc;
+            display: flex;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .resume-wrapper {
+            width: 800px;
+            background-color: var(--light-color);
+            display: flex;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            position: relative;
+        }
+
+        /* SIDEBAR */
+        .sidebar {
+            width: 35%;
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            padding: 40px 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .profile-pic {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background-color: #e0e0e0;
+            border: 5px solid #a3a3a3;
+            overflow: hidden;
+            margin-bottom: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .profile-pic img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .sidebar-section {
+            width: 100%;
+            margin-bottom: 30px;
+        }
+
+        .sidebar-section h3 {
+            font-size: 16px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .sidebar-section hr {
+            border: 0;
+            height: 1px;
+            background-color: var(--text-light);
+            margin-bottom: 12px;
+        }
+
+        .sidebar-section ul {
+            list-style: none;
+        }
+
+        .sidebar-section ul li {
+            margin-bottom: 10px;
+            font-size: 13px;
+            display: flex;
+            align-items: center;
+            line-height: 1.4;
+        }
+
+        .contact-list i {
+            width: 20px;
+            margin-right: 10px;
+            font-size: 14px;
+        }
+
+        .skills-list li,
+        .languages-list li {
+            margin-bottom: 8px;
+        }
+
+        .skills-list li::before,
+        .languages-list li::before {
+            content: "•";
+            margin-right: 10px;
+            font-size: 18px;
+        }
+
+        .reference-text {
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .reference-text .bold {
+            font-weight: bold;
+        }
+
+        /* MAIN CONTENT */
+        .main-content {
+            width: 65%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* HEADER */
+        .header {
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            padding: 50px 40px 40px 40px;
+        }
+
+        .header h1 {
+            font-size: 34px;
+            letter-spacing: 2px;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+        }
+
+        .header h2 {
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            color: #d0d0d0;
+        }
+
+        /* CONTENT BODY */
+        .content-body {
+            padding: 40px;
+            color: var(--text-dark);
+        }
+
+        .section {
+            margin-bottom: 25px;
+        }
+
+        .section-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .section-icon {
+            width: 28px;
+            height: 28px;
+            background-color: var(--dark-color);
+            color: var(--text-light);
+            border-radius: 50%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-right: 15px;
+            z-index: 2;
+            font-size: 14px;
+        }
+
+        .section-header h3 {
+            font-size: 18px;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            flex-grow: 1;
+        }
+
+        .section-divider {
+            border-bottom: 1px solid #555;
+            width: 100%;
+            margin-top: -20px;
+            margin-bottom: 15px;
+            margin-left: 43px;
+        }
+
+        .profile-text {
+            font-size: 13.5px;
+            line-height: 1.5;
+            margin-left: 43px;
+            padding-bottom: 15px;
+            text-align: justify;
+        }
+
+        /* TIMELINE STYLES */
+        .timeline {
+            margin-left: 14px;
+            padding-bottom: 10px;
+        }
+
+        .timeline-item {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .timeline-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .entry-title {
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .entry-date {
+            font-size: 13px;
+            color: #444;
+            font-weight: 500;
+        }
+
+        .entry-subtitle {
+            font-weight: normal;
+            font-size: 14px;
+            margin-bottom: 5px;
+        }
+
+        .entry-location {
+            font-size: 13.5px;
+            margin-bottom: 5px;
+        }
+
+        .entry-details {
+            font-size: 13px;
+            margin-left: 20px;
+        }
+
+        .entry-details li {
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="resume-wrapper">
+
+        <!-- SIDEBAR -->
+        <div class="sidebar">
+            <div class="profile-pic">
+                <!-- User should place their image file here named "profile.jpg" -->
+                <img src="C:\Users\vishv\OneDrive\Pictures\Screenshots\Screenshot 2026-07-19 153756.png"
+                    alt="Profile Picture">
+            </div>
+
+            <div class="sidebar-section">
+                <h3>CONTACT</h3>
+                <hr>
+                <ul class="contact-list">
+                    <li><i class="fas fa-phone"></i> 7069893199</li>
+                    <li><i class="fas fa-envelope"></i> dodiyah561@gmail.com</li>
+                    <li><i class="fas fa-map-marker-alt"></i> Ahmedabad, Gujarat, India</li>
+                    <li><i class="fas fa-globe"></i> h-dodiya.com</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>SKILLS</h3>
+                <hr>
+                <ul class="skills-list">
+                    <li>Public Relations</li>
+                    <li>Teamwork</li>
+                    <li>Time Management</li>
+                    <li>Leadership</li>
+                    <li>Effective Communication</li>
+                    <li>Critical Thinking</li>
+                    <li>Digital Marketing</li>
+                    <li>Business Management</li>
+                    <li>Data Analysis</li>
+                    <li>MARKET RESEARCH</li>
+                </ul>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>LANGUAGES</h3>
+                <hr>
+                <ul class="languages-list">
+                    <li>Gujarati</li>
+                    <li>Hindi</li>
+                    <li>English (Basic)</li>
+                </ul>
+            </div>
+
+
+        </div>
+
+        <!-- MAIN CONTENT -->
+        <div class="main-content">
+
+            <div class="header">
+                <h1>HARSH DODIYA</h1>
+                <h2>BBA GRADUATE</h2>
+            </div>
+
+            <div class="content-body">
+
+                <!-- PROFILE SECTION -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="fas fa-user"></i></div>
+                        <h3>PROFILE</h3>
+                    </div>
+                    <div class="section-divider"></div>
+                    <div class="profile-text">
+                        Highly motivated and detail-oriented BBA graduate from GLS University. Seeking a challenging
+                        role where I can utilize my knowledge of business administration and contribute to an
+                        organization's growth. Strong academic record with excellent analytical and communication
+                        skills.
+                    </div>
+                </div>
+
+
+                <!-- EDUCATION SECTION -->
+                <div class="section">
+                    <div class="section-header">
+                        <div class="section-icon"><i class="fas fa-graduation-cap"></i></div>
+                        <h3>EDUCATION</h3>
+                    </div>
+                    <div class="section-divider"></div>
+
+                    <div class="timeline">
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="entry-title">GLS University, Ahmedabad</span>
+                                <span class="entry-date">2023-2026</span>
+                            </div>
+                            <div class="entry-location">Bachelor of Business Administration (BBA)<br>CGPA: 6.43 / 10.0
+                            </div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="entry-title">Pioneer School, Patan</span>
+                                <span class="entry-date">2023</span>
+                            </div>
+                            <div class="entry-location">HSC (12th Commerce)<br>Percentage: 85.86%</div>
+                        </div>
+
+                        <div class="timeline-item">
+                            <div class="timeline-header">
+                                <span class="entry-title">Pioneer School, Patan</span>
+                                <span class="entry-date">2021</span>
+                            </div>
+                            <div class="entry-location">SSC (10th)<br>Percentage: 90.67%</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

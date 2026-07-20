@@ -29,7 +29,7 @@
       height: 100%;
       object-fit: cover;
       z-index: 0;
-      opacity: 0.6;
+      opacity: 0.9; /* Improved visibility */
       filter: saturate(1.2);
     }
 
@@ -38,8 +38,8 @@
       bottom: 0;
       left: 0;
       width: 100%;
-      height: 80%;
-      background: linear-gradient(to top, var(--bg-main) 10%, transparent);
+      height: 50%;
+      background: linear-gradient(to top, var(--bg-main) 5%, transparent);
       z-index: 1;
     }
 
@@ -50,10 +50,11 @@
     }
 
     .dest-hero-content h1 {
-      font-size: 4rem;
+      font-size: 5.5rem;
+      font-weight: 900;
       margin-bottom: 10px;
       text-transform: uppercase;
-      letter-spacing: 2px;
+      letter-spacing: 3px;
     }
 
     .dest-hero-content p {
@@ -94,9 +95,9 @@
     }
     .search-input-wrap input {
       width: 100%;
-      background: rgba(0,0,0,0.5);
+      background: var(--bg-main);
       border: 1px solid var(--glass-border);
-      color: #fff;
+      color: var(--text-primary);
       padding: 15px 20px 15px 50px;
       border-radius: 12px;
       font-family: var(--font-body);
@@ -125,15 +126,15 @@
     }
     .filter-tags button.active, .filter-tags button:hover {
       background: var(--accent-primary);
-      color: var(--bg-main);
+      color: #ffffff;
       border-color: var(--accent-primary);
       font-weight: 600;
     }
 
     .sort-select {
-      background: rgba(0,0,0,0.5);
+      background: var(--bg-main);
       border: 1px solid var(--glass-border);
-      color: #fff;
+      color: var(--text-primary);
       padding: 12px 20px;
       border-radius: 12px;
       font-family: var(--font-body);
@@ -252,9 +253,9 @@
       <span>My<strong>Adventure</strong></span>
     </a>
     <div class="nav-right">
-      <a href="destinations.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Packages</a>
-      <a href="destinations.html?view=hotels" style="margin-right:20px;">Stays</a>
-      <a href="planner.html" style="margin-right:20px;">Flights</a>
+      <a href="explore.html" style="color:var(--accent-primary);font-weight:600;margin-right:20px;">Packages</a>
+      <a href="explore.html?view=hotels" style="margin-right:20px;">Stays</a>
+      <a href="flights.html" style="margin-right:20px;">Flights</a>
       <a href="dashboard.html" style="margin-right:20px;">Dashboard</a>
       <a href="login.html" class="nav-role-badge magnetic-btn" style="text-decoration:none;border:1px solid var(--glass-border)">Login</a>
     </div>
@@ -337,8 +338,8 @@
   <script src="js/animations.js"></script>
   <script src="js/app.js"></script>
   
-  <!-- We need to modify destinations.js to output .premium-card structures. -->
-  <script src="js/destinations.js"></script>
+  <!-- We need to modify explore.js to output .premium-card structures. -->
+  <script src="js/explore.js"></script>
 
 </body>
 </html>

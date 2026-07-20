@@ -28,7 +28,7 @@ function renderTrendingTrips() {
         <i class="fas fa-suitcase-rolling" style="font-size:3rem;color:#ccc;display:block;margin-bottom:16px;"></i>
         <h4 style="font-size:1.1rem;font-weight:700;color:#aaa;margin-bottom:8px;">No trips planned yet</h4>
         <p style="color:#bbb;font-size:0.88rem;margin-bottom:20px;">Create your first trip and it will appear here.</p>
-        <a href="planner.html" class="btn-primary" style="display:inline-flex;">
+        <a href="flights.html" class="btn-primary" style="display:inline-flex;">
           <i class="fas fa-plus"></i> Plan Your First Trip
         </a>
       </div>`;
@@ -56,7 +56,7 @@ function renderTrendingTrips() {
     const img = destImages[destName] || 'https://images.unsplash.com/photo-1476514525535-07fb3b4ae5f1?w=400&q=80';
 
     return `
-      <div class="trending-card" onclick="window.location.href='mytrips.html'">
+      <div class="trending-card" onclick="window.location.href='my-bookings.html'">
         <div class="trending-img-wrap">
           <img src="${img}" alt="${trip.dest}" loading="lazy"/>
           <div class="trending-overlay" style="background:${gradients[i]}88"></div>

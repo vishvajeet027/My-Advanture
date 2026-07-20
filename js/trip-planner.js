@@ -1,5 +1,5 @@
 /* ================================================================
-   tripbuilder.js — Day-by-Day Sidebar Trip Builder
+   trip-planner.js — Day-by-Day Sidebar Trip Builder
    ================================================================ */
 
 const INR = n => '₹' + Number(n).toLocaleString('en-IN');
@@ -147,32 +147,53 @@ function initializePage() {
 }
 
 function populateCities() {
-  const select = document.getElementById('citySelect');
-  if (!select) return;
+  const optionsList = document.getElementById('dropdownOptionsList');
+  if (!optionsList) return;
+
+  optionsList.innerHTML = ''; // clear out previous items
 
   MOCK_DESTINATIONS.forEach(dest => {
-    const option = document.createElement('option');
-    option.value = dest.name;
+    const option = document.createElement('div');
+    option.className = 'dropdown-option';
     option.textContent = `${dest.name}, ${dest.country}`;
-    option.dataset.id = dest.id;
-    option.dataset.country = dest.country;
-    option.dataset.image = dest.image;
-    option.dataset.desc = dest.desc;
-    select.appendChild(option);
+    option.onclick = () => selectCity(dest.name, dest.country, dest.image, dest.desc);
+    optionsList.appendChild(option);
   });
 }
 
-function onCityChange() {
-  const select = document.getElementById('citySelect');
-  const option = select.options[select.selectedIndex];
+function toggleDropdown() {
+  const optionsList = document.getElementById('dropdownOptionsList');
+  if (optionsList) {
+    optionsList.classList.toggle('hidden');
+  }
+}
+
+function selectCity(name, country, image, desc) {
+  document.getElementById('dropdownSelectedText').textContent = `${name}, ${country}`;
+  document.getElementById('dropdownOptionsList').classList.add('hidden');
+  
+  // Call onCityChange with the selected details
+  onCityChange(name, country, image, desc);
+}
+
+// Close dropdown when clicking outside
+document.addEventListener('click', function(event) {
+  const dropdown = document.getElementById('customCityDropdown');
+  if (dropdown && !dropdown.contains(event.target)) {
+    document.getElementById('dropdownOptionsList').classList.add('hidden');
+  }
+});
+
+function onCityChange(name, country, image, desc) {
   const daysPicker = document.getElementById('tripDaysPicker');
 
-  if (!option.value) {
+  if (!name) {
     selectedCity = null;
     selectedCityObj = null;
     clearTripDates({ silent: true });
     document.getElementById('cityPreview').classList.add('hidden');
     daysPicker.classList.add('hidden');
+    document.getElementById('dropdownSelectedText').textContent = 'Select your destination...';
     resetItinerary();
     updateSelectionList();
     updateDayStrip();
@@ -180,12 +201,12 @@ function onCityChange() {
     return;
   }
 
-  selectedCity = option.value;
+  selectedCity = name;
   selectedCityObj = MOCK_DESTINATIONS.find(d => d.name === selectedCity);
 
-  document.getElementById('cityPreviewImg').src = option.dataset.image;
+  document.getElementById('cityPreviewImg').src = image;
   document.getElementById('cityPreviewName').textContent = selectedCity;
-  document.getElementById('cityPreviewCountry').textContent = option.dataset.country;
+  document.getElementById('cityPreviewCountry').textContent = country;
   document.getElementById('cityPreview').classList.remove('hidden');
   daysPicker.classList.remove('hidden');
 
@@ -1171,7 +1192,7 @@ function saveTrip() {
 
   showToast('Trip saved successfully!', 'success');
   setTimeout(() => {
-    window.location.href = 'mytrips.html';
+    window.location.href = 'my-bookings.html';
   }, 1500);
 }
 

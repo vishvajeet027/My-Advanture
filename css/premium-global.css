@@ -1,18 +1,19 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Outfit:wght@300;400;500;600;700;800&display=swap');
 
 :root {
-  /* Color Palette - Luxury Dark Theme */
-  --bg-main: #050505;
+  /* Color Palette - Premium Dark Theme */
+  --bg-main: #080808;
   --bg-secondary: #121212;
-  --accent-primary: #e0a96d; /* Soft Gold */
-  --accent-secondary: #00d2ff; /* Neon Cyan for subtle glow */
+  --accent-primary: #3b82f6; /* Bright Blue */
+  --accent-secondary: #ffd29d; /* Peach */
+  --accent-tertiary: #10b981; /* Emerald */
   --text-primary: #ffffff;
   --text-secondary: #a0a0a0;
   
   /* Glassmorphism */
   --glass-bg: rgba(255, 255, 255, 0.03);
   --glass-border: rgba(255, 255, 255, 0.08);
-  --glass-blur: blur(16px);
+  --glass-blur: blur(12px);
   
   /* Typography */
   --font-body: 'Inter', sans-serif;
@@ -70,10 +71,19 @@ a {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(5, 5, 5, 0.5);
-  backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--glass-border);
+  background: transparent;
+  border-bottom: 1px solid transparent;
   transition: all 0.4s ease;
+  box-shadow: none;
+}
+
+.glass-nav.scrolled {
+  background: var(--glass-bg);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  border-bottom: 1px solid var(--glass-border);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  padding: 15px 40px;
 }
 
 .nav-logo {
@@ -99,6 +109,11 @@ a {
   display: flex;
   align-items: center;
   gap: 20px;
+}
+
+.nav-right a {
+  font-weight: 700;
+  font-size: 1.1rem;
 }
 
 .nav-role-badge {
@@ -152,15 +167,7 @@ a {
 
 /* Background Effects */
 .ambient-bg {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  z-index: -1;
-  background: radial-gradient(circle at 15% 50%, rgba(224, 169, 109, 0.08), transparent 25%),
-              radial-gradient(circle at 85% 30%, rgba(0, 210, 255, 0.05), transparent 25%);
-  pointer-events: none;
+  display: none;
 }
 
 .premium-card {
@@ -209,7 +216,7 @@ a {
 }
 
 .premium-card:hover .premium-card-glow {
-  border-color: rgba(224, 169, 109, 0.4);
+  border-color: rgba(139, 92, 246, 0.4);
 }
 
 .premium-card-content {
@@ -232,7 +239,7 @@ a {
   font-size: 0.8rem;
   font-weight: 600;
   color: var(--accent-primary);
-  border: 1px solid rgba(224, 169, 109, 0.3);
+  border: 1px solid rgba(139, 92, 246, 0.3);
 }
 
 .premium-card-title {

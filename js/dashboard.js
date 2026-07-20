@@ -45,13 +45,13 @@ function getDays(start, end) {
 }
 
 const CAT_COLORS = {
-  Flights:'#0abde3', Accommodation:'#6c5ce7', Food:'#00b894',
-  Activities:'#fdcb6e', Transport:'#fd79a8', Shopping:'#e17055',
+  Flights:'#06b6d4', Accommodation:'#8b5cf6', Food:'#10b981',
+  Activities:'#f43f5e', Transport:'#ec4899', Shopping:'#f59e0b',
 };
 const GRADIENTS = [
-  'linear-gradient(135deg,#0abde3,#00d2d3)', 'linear-gradient(135deg,#6c5ce7,#a29bfe)',
-  'linear-gradient(135deg,#fd79a8,#e84393)', 'linear-gradient(135deg,#00b894,#00cec9)',
-  'linear-gradient(135deg,#e17055,#d63031)', 'linear-gradient(135deg,#fdcb6e,#e67e22)',
+  'linear-gradient(135deg,#8b5cf6,#a78bfa)', 'linear-gradient(135deg,#06b6d4,#67e8f9)',
+  'linear-gradient(135deg,#10b981,#34d399)', 'linear-gradient(135deg,#ec4899,#f472b6)',
+  'linear-gradient(135deg,#f59e0b,#fbbf24)', 'linear-gradient(135deg,#f43f5e,#fb7185)',
 ];
 
 /* ================================================================
@@ -89,7 +89,7 @@ function renderWelcomeCard() {
       newTripBtn.href = 'admin.html';
       newTripBtn.innerHTML = '<i class="fas fa-database"></i> Manage Catalog';
     } else {
-      newTripBtn.href = 'tripbuilder.html';
+      newTripBtn.href = 'trip-planner.html';
       newTripBtn.innerHTML = '<i class="fas fa-plus"></i> New Trip';
     }
   }
@@ -100,7 +100,7 @@ function renderWelcomeCard() {
       planBtn.href = 'admin.html';
       planBtn.innerHTML = '<i class="fas fa-database"></i> Manage Catalog';
     } else {
-      planBtn.href = 'tripbuilder.html';
+      planBtn.href = 'trip-planner.html';
       planBtn.innerHTML = '<i class="fas fa-plus"></i> Plan Trip';
     }
   }
@@ -211,11 +211,11 @@ function renderRecentTrips() {
   if (!el) return;
   const trips = getTrips().slice(0,5);
   if (!trips.length) {
-    el.innerHTML='<p style="color:#aaa;text-align:center;padding:24px 0;font-size:0.88rem;">No trips saved yet. <a href="planner.html" style="color:var(--primary)">Plan one now!</a></p>';
+    el.innerHTML='<p style="color:#aaa;text-align:center;padding:24px 0;font-size:0.88rem;">No trips saved yet. <a href="flights.html" style="color:var(--primary)">Plan one now!</a></p>';
     return;
   }
   el.innerHTML = trips.map((t,i) => `
-    <div class="recent-trip-row" onclick="window.location.href='mytrips.html'">
+    <div class="recent-trip-row" onclick="window.location.href='my-bookings.html'">
       <div class="rtr-icon" style="background:${GRADIENTS[i%GRADIENTS.length]}"><i class="fas fa-map-marker-alt"></i></div>
       <div class="rtr-info">
         <strong>${t.name}</strong>
@@ -237,7 +237,7 @@ function renderAllTrips() {
   if (!el) return;
   const trips = getTrips();
   if (!trips.length) {
-    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-suitcase-rolling"></i></div><h3>No trips yet</h3><p>Start planning your next adventure!</p><a href="planner.html" class="btn-primary"><i class="fas fa-plus"></i> Plan a Trip</a></div>';
+    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-suitcase-rolling"></i></div><h3>No trips yet</h3><p>Start planning your next adventure!</p><a href="flights.html" class="btn-primary"><i class="fas fa-plus"></i> Plan a Trip</a></div>';
     return;
   }
   el.innerHTML = trips.map((t,i) => {
@@ -257,7 +257,7 @@ function renderAllTrips() {
           ${t.budget ? `<div class="trip-detail-row"><i class="fas fa-wallet"></i><span>Budget: <strong style="color:var(--primary)">${INR(t.budget)}</strong></span></div>` : ''}
         </div>
         <div class="trip-card-footer">
-          <button class="btn-view" onclick="window.location.href='mytrips.html'"><i class="fas fa-eye"></i> View</button>
+          <button class="btn-view" onclick="window.location.href='my-bookings.html'"><i class="fas fa-eye"></i> View</button>
         </div>
       </div>`;
   }).join('');
@@ -328,11 +328,11 @@ function renderFavorites() {
   if (!el) return;
   const favs = getFavs();
   if (!favs.length) {
-    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-heart"></i></div><h3>No favorites yet</h3><p>Explore packages and save your favorites.</p><a href="destinations.html" class="btn-primary"><i class="fas fa-compass"></i> Explore</a></div>';
+    el.innerHTML='<div class="empty-state"><div class="empty-state-icon"><i class="fas fa-heart"></i></div><h3>No favorites yet</h3><p>Explore packages and save your favorites.</p><a href="explore.html" class="btn-primary"><i class="fas fa-compass"></i> Explore</a></div>';
     return;
   }
   el.innerHTML = favs.map(f => `
-    <div class="dest-grid-card" onclick="window.location.href='destinations.html'">
+    <div class="dest-grid-card" onclick="window.location.href='explore.html'">
       <div class="card-img-wrap">
         <img src="${f.image}" alt="${f.name}" loading="lazy"/>
         <span class="card-category"><i class="fas fa-heart"></i> Saved</span>
